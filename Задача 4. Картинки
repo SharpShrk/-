@@ -1,0 +1,25 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_4.Картинки
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            int picturesInAlbom = 52;
+            int picturesInRow = 3;
+            int sumOfFullRow;
+            int picturesOfLastRow;
+
+            sumOfFullRow = picturesInAlbom / picturesInRow; //расчет количества полных рядов
+            picturesOfLastRow = picturesInAlbom % picturesInRow; //расчет количества картинок в последнем неполном ряду
+
+            Console.WriteLine($"Количество полных рядов с картинками: {sumOfFullRow}. В последнем неполном ряду картинок осталось {picturesOfLastRow} шт");
+
+        }
+    }
+}
