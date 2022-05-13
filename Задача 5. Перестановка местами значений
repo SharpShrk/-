@@ -1,0 +1,25 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_5.Перестановка_местами_значений
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            string name = "Ivanov";
+            string surname = "Ivan";
+            string buffer;
+
+            Console.WriteLine($"Имя до замены: {name}. Фамилия до замены: {surname}");
+            buffer = surname;
+            surname = name;
+            name = buffer;
+
+            Console.WriteLine($"Имя после замены: {name}. Фамилия после замены: {surname}");
+        }
+    }
+}
