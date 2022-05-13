@@ -1,0 +1,26 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_6.Магазин
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            int money;
+            int numberOfCrystals;
+            int crystalPrice = 10;
+
+            Console.WriteLine("Сколько золотых монет у вас есть?");
+            money = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine($"Один кристалл стоит {crystalPrice} золотых монет. Сколько кристаллов вы хотите купить?");
+            numberOfCrystals = Convert.ToInt32(Console.ReadLine());
+            money -= crystalPrice * numberOfCrystals;
+
+            Console.WriteLine($"У вас в рюкзаке {numberOfCrystals} кристаллов. У вас осталось {money} золотых монет");
+        }
+    }
+}
