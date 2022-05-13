@@ -15,12 +15,13 @@ namespace Задача_7.Поликлиника
             int waitingTimeHour;
             int waitingTimeMinute;
             int receptionTime = 10; //время приема одной старушки 10 минут
+            int minutesPerHour = 60;
 
             Console.WriteLine("Сколько старушек вы видите в очереди?");
             peopleInLine = Convert.ToInt32(Console.ReadLine());
             waitingTime = peopleInLine * receptionTime;
-            waitingTimeHour = waitingTime / 60;
-            waitingTimeMinute = waitingTime % 60;
+            waitingTimeHour = waitingTime / minutesPerHour;
+            waitingTimeMinute = waitingTime % minutesPerHour;
 
             Console.WriteLine($"Вы дожны отстоять в очереди {waitingTimeHour} часа {waitingTimeMinute} минут.");
         }
