@@ -19,7 +19,6 @@ namespace Задача_4.Картинки
             picturesOfLastRow = picturesInAlbom % picturesInRow; //расчет количества картинок в последнем неполном ряду
 
             Console.WriteLine($"Количество полных рядов с картинками: {sumOfFullRow}. В последнем неполном ряду картинок осталось {picturesOfLastRow} шт");
-
         }
     }
 }
