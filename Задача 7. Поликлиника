@@ -1,0 +1,28 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_7.Поликлиника
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            int peopleInLine;
+            int waitingTime;
+            int waitingTimeHour;
+            int waitingTimeMinute;
+            int receptionTime = 10; //время приема одной старушки 10 минут
+
+            Console.WriteLine("Сколько старушек вы видите в очереди?");
+            peopleInLine = Convert.ToInt32(Console.ReadLine());
+            waitingTime = peopleInLine * receptionTime;
+            waitingTimeHour = waitingTime / 60;
+            waitingTimeMinute = waitingTime % 60;
+
+            Console.WriteLine($"Вы дожны отстоять в очереди {waitingTimeHour} часа {waitingTimeMinute} минут.");
+        }
+    }
+}
