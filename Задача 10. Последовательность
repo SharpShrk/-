@@ -10,16 +10,16 @@ namespace Задача_10.Последовательность
     {
         static void Main(string[] args)
         {
-            int numberOutput = 5;
+            int numberOutput;
+            int startValue = 5;
             int maxNumberOutput = 96;
             int iterationStep = 7;
 
-            while (numberOutput <= maxNumberOutput)
+            for (int i = startValue; i <= maxNumberOutput; i += iterationStep)
             {
+                numberOutput = i;
                 Console.WriteLine(numberOutput);
-                numberOutput += iterationStep;
             }
-            Console.ReadKey();
         }
     }
 }
