@@ -16,9 +16,9 @@ namespace Задача_11.Сумма_чисел
             int multiplicity1 = 3;
             int multiplicity2 = 5;
             int sumMultiplicity = 0;
-            Random rand = new Random();
+            Random random = new Random();
 
-            number = rand.Next(minRandomNumber, maxRandomNumber);
+            number = random.Next(minRandomNumber, maxRandomNumber);
 
             for (int i = 0; i <= number; i++)
             {
@@ -29,7 +29,7 @@ namespace Задача_11.Сумма_чисел
             }
 
             Console.WriteLine("Сгенерированное случайное число: " + number);
-            Console.WriteLine("Сумма чисел кратных 3 и 5 равна: " + sumMultiplicity);
+            Console.WriteLine($"Сумма чисел кратных {multiplicity1} и {multiplicity2} равна: {sumMultiplicity}");
         }
     }
 }
