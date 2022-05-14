@@ -45,6 +45,7 @@ namespace Задача_12.Конвертер_валют
                 case 1:
                     Console.WriteLine("\nОбмен RUB на UZS. Сколько вы хотите обменять?");
                     currencyCount = Convert.ToSingle(Console.ReadLine());
+                    
                     if (rub >= currencyCount)
                     {
                         rub -= currencyCount;
@@ -55,10 +56,12 @@ namespace Задача_12.Конвертер_валют
                     {
                         Console.WriteLine("Недостаточно средств.");
                     }
+
                     break;
                 case 2:
                     Console.WriteLine("\nОбмен RUB на KZT. Сколько вы хотите обменять?");
                     currencyCount = Convert.ToSingle(Console.ReadLine());
+
                     if (rub >= currencyCount)
                     {
                         rub -= currencyCount;
@@ -69,10 +72,12 @@ namespace Задача_12.Конвертер_валют
                     {
                         Console.WriteLine("Недостаточно средств.");
                     }
+
                     break;
                 case 3:
                     Console.WriteLine("\nОбмен UZS на KZT. Сколько вы хотите обменять?");
                     currencyCount = Convert.ToSingle(Console.ReadLine());
+
                     if (uzs >= currencyCount)
                     {
                         uzs -= currencyCount;
@@ -83,10 +88,12 @@ namespace Задача_12.Конвертер_валют
                     {
                         Console.WriteLine("Недостаточно средств.");
                     }
+
                     break;
                 case 4:
                     Console.WriteLine("\nОбмен UZS на RUB. Сколько вы хотите обменять?");
                     currencyCount = Convert.ToSingle(Console.ReadLine());
+
                     if (uzs >= currencyCount)
                     {
                         uzs -= currencyCount;
@@ -97,10 +104,12 @@ namespace Задача_12.Конвертер_валют
                     {
                         Console.WriteLine("Недостаточно средств.");
                     }
+
                     break;
                 case 5:
                     Console.WriteLine("\nОбмен KZT на RUB. Сколько вы хотите обменять?");
                     currencyCount = Convert.ToSingle(Console.ReadLine());
+
                     if (kzt >= currencyCount)
                     {
                         kzt -= currencyCount;
@@ -111,10 +120,12 @@ namespace Задача_12.Конвертер_валют
                     {
                         Console.WriteLine("Недостаточно средств.");
                     }
+
                     break;
                 case 6:
                     Console.WriteLine("\nОбмен KZT на UZS. Сколько вы хотите обменять?");
                     currencyCount = Convert.ToSingle(Console.ReadLine());
+
                     if (kzt >= currencyCount)
                     {
                         kzt -= currencyCount;
@@ -125,6 +136,7 @@ namespace Задача_12.Конвертер_валют
                     {
                         Console.WriteLine("Недостаточно средств.");
                     }
+
                     break;
                 default:
                     Console.WriteLine("Ошибка ввода!");
