@@ -11,27 +11,32 @@ namespace Задача_9.Контроль_выхода
         static void Main(string[] args)
         {
             int randomNumber;
+            int minRandomNumber = 0;
+            int maxRandomNumber1 = 11;
+            int maxRandomNumber2 = 101;
             string userInput;
+            bool isExit = false;
             Random random = new Random();
 
-            while (true)
+            while (isExit == false)
             {
                 Console.WriteLine("Перед вами генератор случайных чисел.\nДля генерирования случайного числа выберите пункт меню:");
                 Console.WriteLine("1 - случайное число в диапазоне от 0 до 10.\n2 - случайное число в диапазоне от 0 до 100.\nДля выхода введите exit");
                 userInput = Console.ReadLine();
+                
                 if (userInput == "1")
                 {
-                    randomNumber = random.Next(0,11);
+                    randomNumber = random.Next(minRandomNumber,maxRandomNumber1);
                     Console.WriteLine("Ваше случайное число " + randomNumber + "\n");
                 }
                 else if (userInput == "2")
                 {
-                    randomNumber = random.Next(0, 101);
+                    randomNumber = random.Next(minRandomNumber, maxRandomNumber2);
                     Console.WriteLine("Ваше случайное число " + randomNumber + "\n");
                 }
                 else if (userInput == "exit")
                 {
-                    break;
+                    isExit = true;
                 }
             }
         }
