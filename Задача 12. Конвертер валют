@@ -1,0 +1,135 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_12.Конвертер_валют
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            float rub; //Российский рубль
+            float uzs; //Узбекский сум
+            float kzt; //Казахстанский тенге
+            float rubToUzs = 175.07f;
+            float rubToKzt = 6.82f;
+            float uzsToKzt = 0.04f;
+            float uzsToRub = 0.0057f;
+            float kztToRub = 0.15f;
+            float kztToUzs = 25.68f;
+            int userInput;
+            float currencyCount;
+
+            Console.Write("Добро пожаловать в наш обменник валют. \nВведите свой баланс в Российских рублях: ");
+            rub = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Введите свой баланс в Узбекских сумах: ");
+            uzs = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Введите свой баланс в Казахстанских тенге: ");
+            kzt = Convert.ToSingle(Console.ReadLine());
+
+            Console.WriteLine("\nДля обмена валюты выберите пункт меню:");
+            Console.WriteLine("1 - Обмен RUB на UZS по курсу 1 RUB = " + rubToUzs + " UZS.");
+            Console.WriteLine("2 - Обмен RUB на KZT по курсу 1 RUB = " + rubToKzt + " KZT.");
+            Console.WriteLine("3 - Обмен UZS на KZT по курсу 1 UZS = " + uzsToKzt + " KZT.");
+            Console.WriteLine("4 - Обмен UZS на RUB по курсу 1 UZS = " + uzsToRub + " RUB.");
+            Console.WriteLine("5 - Обмен KZT на RUB по курсу 1 KZT = " + kztToRub + " RUB.");
+            Console.WriteLine("6 - Обмен KZT на UZS по курсу 1 KZT = " + kztToUzs + " UZS.");
+            Console.WriteLine("7 - Выход из меню.");
+
+            userInput = Convert.ToInt32(Console.ReadLine());
+
+            switch (userInput)
+            {
+                case 1:
+                    Console.WriteLine("\nОбмен RUB на UZS. Сколько вы хотите обменять?");
+                    currencyCount = Convert.ToSingle(Console.ReadLine());
+                    if (rub >= currencyCount)
+                    {
+                        rub -= currencyCount;
+                        uzs += currencyCount * rubToUzs;
+                        Console.WriteLine($"Ваш текущий баланс:\n{rub} RUB.\n{uzs} UZS.\n{kzt} KZT.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Недостаточно средств.");
+                    }
+                    break;
+                case 2:
+                    Console.WriteLine("\nОбмен RUB на KZT. Сколько вы хотите обменять?");
+                    currencyCount = Convert.ToSingle(Console.ReadLine());
+                    if (rub >= currencyCount)
+                    {
+                        rub -= currencyCount;
+                        kzt += currencyCount * rubToKzt;
+                        Console.WriteLine($"Ваш текущий баланс:\n{rub} RUB.\n{uzs} UZS.\n{kzt} KZT.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Недостаточно средств.");
+                    }
+                    break;
+                case 3:
+                    Console.WriteLine("\nОбмен UZS на KZT. Сколько вы хотите обменять?");
+                    currencyCount = Convert.ToSingle(Console.ReadLine());
+                    if (uzs >= currencyCount)
+                    {
+                        uzs -= currencyCount;
+                        kzt += currencyCount * uzsToKzt;
+                        Console.WriteLine($"Ваш текущий баланс:\n{rub} RUB.\n{uzs} UZS.\n{kzt} KZT.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Недостаточно средств.");
+                    }
+                    break;
+                case 4:
+                    Console.WriteLine("\nОбмен UZS на RUB. Сколько вы хотите обменять?");
+                    currencyCount = Convert.ToSingle(Console.ReadLine());
+                    if (uzs >= currencyCount)
+                    {
+                        uzs -= currencyCount;
+                        rub += currencyCount * uzsToRub;
+                        Console.WriteLine($"Ваш текущий баланс:\n{rub} RUB.\n{uzs} UZS.\n{kzt} KZT.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Недостаточно средств.");
+                    }
+                    break;
+                case 5:
+                    Console.WriteLine("\nОбмен KZT на RUB. Сколько вы хотите обменять?");
+                    currencyCount = Convert.ToSingle(Console.ReadLine());
+                    if (kzt >= currencyCount)
+                    {
+                        kzt -= currencyCount;
+                        rub += currencyCount * kztToRub;
+                        Console.WriteLine($"Ваш текущий баланс:\n{rub} RUB.\n{uzs} UZS.\n{kzt} KZT.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Недостаточно средств.");
+                    }
+                    break;
+                case 6:
+                    Console.WriteLine("\nОбмен KZT на UZS. Сколько вы хотите обменять?");
+                    currencyCount = Convert.ToSingle(Console.ReadLine());
+                    if (kzt >= currencyCount)
+                    {
+                        kzt -= currencyCount;
+                        uzs += currencyCount * kztToUzs;
+                        Console.WriteLine($"Ваш текущий баланс:\n{rub} RUB.\n{uzs} UZS.\n{kzt} KZT.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Недостаточно средств.");
+                    }
+                    break;
+                default:
+                    Console.WriteLine("Ошибка ввода!");
+                    break;
+            }
+        }
+    }
+}
