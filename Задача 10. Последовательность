@@ -11,11 +11,13 @@ namespace Задача_10.Последовательность
         static void Main(string[] args)
         {
             int numberOutput = 5;
+            int maxNumberOutput = 96;
+            int iterationStep = 7;
 
-            while (numberOutput < 100)
+            while (numberOutput <= maxNumberOutput)
             {
                 Console.WriteLine(numberOutput);
-                numberOutput += 7;
+                numberOutput += iterationStep;
             }
             Console.ReadKey();
         }
