@@ -1,0 +1,39 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_9.Контроль_выхода
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            int randomNumber;
+            string userInput;
+            Random random = new Random();
+
+            while (true)
+            {
+                Console.WriteLine("Перед вами генератор случайных чисел.\nДля генерирования случайного числа выберите пункт меню:");
+                Console.WriteLine("1 - случайное число в диапазоне от 0 до 10.\n2 - случайное число в диапазоне от 0 до 100.\nДля выхода введите exit");
+                userInput = Console.ReadLine();
+                if (userInput == "1")
+                {
+                    randomNumber = random.Next(0,11);
+                    Console.WriteLine("Ваше случайное число " + randomNumber + "\n");
+                }
+                else if (userInput == "2")
+                {
+                    randomNumber = random.Next(0, 101);
+                    Console.WriteLine("Ваше случайное число " + randomNumber + "\n");
+                }
+                else if (userInput == "exit")
+                {
+                    break;
+                }
+            }
+        }
+    }
+}
