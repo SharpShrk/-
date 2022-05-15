@@ -1,0 +1,173 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_13.Консольное_меню
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            string name = "";
+            string password = "";
+            string passwordCheck;
+            string userInput;
+            string backgroundColor;
+            string foregroundColor;
+            bool isExit = false;
+
+            while (isExit == false)
+            {
+                Console.WriteLine("\nДобро пожаловать в меню. Список доступных команд:\n");
+                Console.WriteLine(" ________________________________________________________");
+                Console.WriteLine("|SetName             | Задать имя пользователя           |");
+                Console.WriteLine("|SetPassword         | Задать пароль                     |");
+                Console.WriteLine("|WriteName           | Вывести имя пользователя на экран |");
+                Console.WriteLine("|ChangePassword      | Сменить пароль                    |");
+                Console.WriteLine("|ChangeConsoleColor  | Изменить цвет консоли             |");
+                Console.WriteLine("|ChangeTextColor     | Изменить цвет текста в консоли    |");
+                Console.WriteLine("|Exit                | Выход из консоли                  |");
+                Console.WriteLine("|____________________|___________________________________|\n");
+                Console.Write("Введите команду: ");
+
+                userInput = Console.ReadLine();
+
+                switch(userInput)
+                {
+                    case "SetName":
+                        Console.WriteLine("\nВведите новое имя пользователя:");
+                        name = Console.ReadLine();
+                        break;
+                    case "SetPassword":
+
+                        if (string.IsNullOrEmpty(password))
+                        {
+                            Console.WriteLine("\nЗадайте новый пароль: ");
+                            password = Console.ReadLine();
+                        }
+                        else
+                        {
+                            Console.WriteLine("\nПароль уже был задан ранее. Для смены пароля воспользуйтесь соответствующим пунктом меню.");
+                        }
+
+                        break;
+                    case "WriteName":
+                        
+                        if (string.IsNullOrEmpty(name))
+                        {
+                            Console.WriteLine("\nИмя пользователя не задано. Сначала задайте имя пользователя в соответствующем меню.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("\nДля вывода имени пользователя на экран, сначала введите пароль: ");
+                            passwordCheck = Console.ReadLine();
+                            
+                            if (passwordCheck == password)
+                            {
+                                Console.WriteLine("Имя пользователя: " + name);
+                            }
+                            else
+                            {
+                                Console.WriteLine("Пароль неверный!");
+                            }
+                            
+                        }
+                        
+                        break;
+                    case "ChangePassword":
+                        
+                        if (string.IsNullOrEmpty(password))
+                        {
+                            Console.WriteLine("Пароль не задан. Воспользуйтесь соответствующим пунктом меню");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Для смены пароля сначала введите текущий пароль: ");
+                            passwordCheck = Console.ReadLine();
+                            
+                            if (passwordCheck == password)
+                            {
+                                Console.WriteLine("Пароль верный. Введите новый пароль: ");
+                                password = Console.ReadLine();
+                            }    
+                            else
+                            {
+                                Console.WriteLine("Пароль неверный!");
+                            }
+                        }
+
+                        break;
+                    case "ChangeConsoleColor":
+                        Console.WriteLine("Для смены цвета консоли, выберите один из предложенных вариантов:");
+                        Console.WriteLine("Red - красный цвет фона;");
+                        Console.WriteLine("Green - зеленый цвет фона;");
+                        Console.WriteLine("Blue - синий цвет фона;");
+                        Console.WriteLine("Reset - сброс цвета фона и текста на стандартный.");
+                        Console.Write("\nВведите команду на смену цвета: ");
+
+                        backgroundColor = Console.ReadLine();
+
+                        switch (backgroundColor)
+                        {
+                            case "Red":
+                                Console.BackgroundColor = ConsoleColor.Red;
+                                break;
+                            case "Green":
+                                Console.BackgroundColor = ConsoleColor.Green;
+                                break;
+                            case "Blue":
+                                Console.BackgroundColor = ConsoleColor.Blue;
+                                break;
+                            case "Reset":
+                                Console.ResetColor();
+                                break;
+                            default:
+                                Console.WriteLine("Ошибка ввода!");
+                                break;
+                        }
+
+                        break;
+                    case "ChangeTextColor":
+                        Console.WriteLine("Для смены цвета текста, выберите один из предложенных вариантов:");
+                        Console.WriteLine("Magenta - пурпурный цвет текста;");
+                        Console.WriteLine("Yellow - желтый цвет текста;");
+                        Console.WriteLine("Cyan - голубой цвет текста;");
+                        Console.WriteLine("Reset - сброс цвета фона и текста на стандартный.");
+                        Console.Write("\nВведите команду на смену цвета: ");
+
+                        foregroundColor = Console.ReadLine();
+
+                        switch (foregroundColor)
+                        {
+                            case "Magenta":
+                                Console.ForegroundColor = ConsoleColor.Magenta;
+                                break;
+                            case "Yellow":
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                break;
+                            case "Cyan":
+                                Console.ForegroundColor = ConsoleColor.Cyan;
+                                break;
+                            case "Reset":
+                                Console.ResetColor();
+                                break;
+                            default:
+                                Console.WriteLine("Ошибка ввода!");
+                                break;
+                        }
+
+                        break;
+                    case "Exit":
+                        isExit = true;
+                        break;
+                    default:
+                        Console.WriteLine("Ошибка ввода!");
+                        break;
+                }
+                
+            }
+        }
+    }
+}
