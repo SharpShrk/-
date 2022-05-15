@@ -1,0 +1,31 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_16.Кратные_числа
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            int numberN;
+            int minNumberN = 1; 
+            int maxNumberN = 28;
+            int upperLimit = 999; // предел поиска кратных чисел
+            int totalMultiples = 0; // счетчик количества кратных чисел
+            Random random = new Random();
+            
+            numberN = random.Next(minNumberN, maxNumberN);
+            Console.WriteLine("\nЧисло N равно: " + numberN);
+
+            for (int i = 0; i <= upperLimit; i += numberN)
+            {
+                totalMultiples++;
+            }    
+
+            Console.WriteLine("Количество чисел кратных " + numberN + " равняется: " + totalMultiples);
+        }
+    }
+}
