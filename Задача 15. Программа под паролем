@@ -1,0 +1,44 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_15.Программа_под_паролем
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            string password = "qwerty123";
+            string passwordInput;
+            int numberOfAttempts = 0;
+            int maxNumberOfAttempts = 3;
+            bool isAccessClosed = false;
+
+            Console.WriteLine("Для доступа к секретному сообщению введите пароль:");
+
+            while (isAccessClosed == false)
+            {
+                passwordInput = Console.ReadLine();
+
+                if (passwordInput == password)
+                {
+                    Console.WriteLine("Доступ к секретному сообщение открыт!");
+                }
+                else
+                {
+                    numberOfAttempts++;
+                    Console.WriteLine("Ошибка ввода пароля. У вас осталось " + (maxNumberOfAttempts - numberOfAttempts) + " попыток.");
+                    
+                    if (numberOfAttempts == maxNumberOfAttempts)
+                    {
+                        Console.WriteLine("Доступ к секретному сообщению закрыт!");
+                        isAccessClosed = true;
+                    }
+                }
+            }
+            
+        }
+    }
+}
