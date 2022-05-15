@@ -1,0 +1,52 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_18.Скобочное_выражение
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            string userInput;
+            int lineDepth = 0;
+            int maxLineDepth = 0;
+            
+            Console.WriteLine("Введите скобочное выражение используя символы '(' и ')'");
+            userInput = Console.ReadLine();
+
+            for (int i = 0; i < userInput.Length; i++)
+            {
+                if (userInput[i] == '(')
+                {
+                    lineDepth++;
+
+                    if (lineDepth > maxLineDepth)
+                    {
+                        maxLineDepth = lineDepth;
+                    }    
+                }
+                else if (userInput[i] == ')')
+                {
+                    lineDepth--;
+
+                    if (lineDepth < 0)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            if (lineDepth < 0)
+            {
+                Console.WriteLine("Скобочное выражение неккоректно!");
+            }
+            else
+            {
+                Console.WriteLine("Скобочное выражение корректно. Максимальная глубина скобочного выражения: " + maxLineDepth);
+            }
+        }
+    }
+}
