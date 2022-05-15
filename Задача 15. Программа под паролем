@@ -12,7 +12,6 @@ namespace Задача_15.Программа_под_паролем
         {
             string password = "qwerty123";
             string passwordInput;
-            int numberOfAttempts = 0;
             int maxNumberOfAttempts = 3;
 
             Console.WriteLine("Для доступа к секретному сообщению введите пароль:");
