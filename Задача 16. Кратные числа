@@ -13,8 +13,8 @@ namespace Задача_16.Кратные_числа
             int numberN;
             int minNumberN = 1; 
             int maxNumberN = 28;
-            int upperLimit = 999; // предел поиска кратных чисел
-            int totalMultiples = 0; // счетчик количества кратных чисел
+            int upperLimit = 999;
+            int totalMultiples = 0;
             Random random = new Random();
             
             numberN = random.Next(minNumberN, maxNumberN);
@@ -22,7 +22,10 @@ namespace Задача_16.Кратные_числа
 
             for (int i = 0; i <= upperLimit; i += numberN)
             {
-                totalMultiples++;
+                if (i >= 100)
+                {
+                    totalMultiples++;
+                }
             }    
 
             Console.WriteLine("Количество чисел кратных " + numberN + " равняется: " + totalMultiples);
