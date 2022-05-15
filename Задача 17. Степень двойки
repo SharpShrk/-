@@ -1,0 +1,33 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_17.Степень_двойки
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            int numberN;
+            int lowerLimit = 1;
+            int upperLimit = 1000;
+            int baseOfDegree = 2;
+            int valueOfExponent = 1;
+            int nextNumberNExp;
+            Random random = new Random();
+
+            numberN = random.Next(lowerLimit, upperLimit);
+            
+            for (int i = baseOfDegree; i < numberN; i*=baseOfDegree)
+            {
+                valueOfExponent++;
+            }
+
+            nextNumberNExp = Convert.ToInt32(Math.Pow(baseOfDegree, valueOfExponent));
+            Console.WriteLine($"Заданное число: {numberN};\nМинимальная степень следующего за заданным числом: {valueOfExponent};\nСледующее число в заданной степени: {nextNumberNExp}.");
+
+        }
+    }
+}
