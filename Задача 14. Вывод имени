@@ -1,0 +1,38 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_14.Вывод_имени
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            string name;
+            char symbol;
+
+            Console.Write("Введите ваше имя: ");
+            name = Console.ReadLine();
+            Console.Write("Введите символ: ");
+            symbol = Convert.ToChar(Console.ReadLine());
+
+            Console.WriteLine("\n");
+
+            for (int i = 0; i < name.Length + 2; i++)
+            {
+                Console.Write(symbol);
+            }
+
+            Console.WriteLine("\n" + symbol + name + symbol);
+
+            for (int i = 0; i < name.Length + 2; i++)
+            {
+                Console.Write(symbol);
+            }
+
+            Console.WriteLine("\n");
+        }
+    }
+}
