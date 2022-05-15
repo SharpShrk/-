@@ -14,11 +14,10 @@ namespace Задача_15.Программа_под_паролем
             string passwordInput;
             int numberOfAttempts = 0;
             int maxNumberOfAttempts = 3;
-            bool isAccessClosed = false;
 
             Console.WriteLine("Для доступа к секретному сообщению введите пароль:");
 
-            while (isAccessClosed == false)
+            for (int i = 1; i <= maxNumberOfAttempts; i++)
             {
                 passwordInput = Console.ReadLine();
 
@@ -28,17 +27,9 @@ namespace Задача_15.Программа_под_паролем
                 }
                 else
                 {
-                    numberOfAttempts++;
-                    Console.WriteLine("Ошибка ввода пароля. У вас осталось " + (maxNumberOfAttempts - numberOfAttempts) + " попыток.");
-                    
-                    if (numberOfAttempts == maxNumberOfAttempts)
-                    {
-                        Console.WriteLine("Доступ к секретному сообщению закрыт!");
-                        isAccessClosed = true;
-                    }
+                    Console.WriteLine("Ошибка ввода пароля. У вас осталось " + (maxNumberOfAttempts - i) + " попыток.");
                 }
             }
-            
         }
     }
 }
