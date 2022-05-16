@@ -15,7 +15,7 @@ namespace Задача_19.Бой_с_боссом
             int heroDamageMin = 20;
             int heroDamageMax = 40;
             int bossHealth = 500;
-            int bossDamage = 50;
+            int bossDamage; 
             int bossDamageMin = 35;
             int bossDamageMax = 60;
             int userInput;
