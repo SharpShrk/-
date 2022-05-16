@@ -1,0 +1,52 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_20.Работа_со_строками_и_столбцами
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            int[,] array = new int[5,5];
+            int minValue = 1;
+            int maxValue = 10;
+            int sum;
+            int sumLine = 1;
+            int product;
+            int productColumn = 0;
+            Random random = new Random();
+
+            Console.WriteLine("Исходная матрица: \n");
+
+            for (int i = 0; i < array.GetLength(0); i++)
+            {
+                for (int j = 0; j < array.GetLength(1); j++)
+                {
+                    array[i, j] = random.Next(minValue, maxValue);
+                    Console.Write(" " + array[i, j]);
+                    
+                }
+                Console.WriteLine();
+            }
+
+            sum = array[sumLine, 0];
+            product = array[0, productColumn];
+
+            for (int i = 1; i < array.GetLength(0); i++)
+            {
+                sum += array[sumLine, i];
+            }
+
+            for (int i = 1; i < array.GetLength(1); i++)
+            {
+                product *= array[i, productColumn];
+            }
+
+            Console.WriteLine("\nСумма чисел 2-ой строки равна: " + sum);
+            Console.WriteLine("Произведение чисел 1 столбца равно: " + product + "\n");
+        }
+    }
+}
