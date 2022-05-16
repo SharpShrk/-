@@ -1,0 +1,165 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_19.Бой_с_боссом
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            int heroHealth = 300;
+            int heroDamage;
+            int heroDamageMin = 20;
+            int heroDamageMax = 40;
+            int bossHealth = 500;
+            int bossDamage = 50;
+            int bossDamageMin = 35;
+            int bossDamageMax = 60;
+            int userInput;
+            int shadowCooldown = 0;
+            int shadowCooldownMax = 3;
+            int ambushDamage = 100;
+            int stealingLifeDamage = 25;
+            int bloodSacrifice = 15;
+            int criticalAttackMultiplier;
+            int criticalAttackMultiplierMin = 2;
+            int criticalAttackMultiplierMax = 4;
+            bool isDead = false;
+            bool isShadow = false;
+            Random random = new Random();
+
+            Console.WriteLine("Вы - граф Дракула, перед вами стоит известный охотник на вампиров Ван Хельсинг. Эта битва будет легендарной!");
+            
+            while (isDead == false)
+            {
+                heroDamage = random.Next(heroDamageMin, heroDamageMax);
+                bossDamage = random.Next(bossDamageMin, bossDamageMax);
+                criticalAttackMultiplier = random.Next(criticalAttackMultiplierMin, criticalAttackMultiplierMax);
+                Console.WriteLine("Ваши спецприемы:");
+
+                if (shadowCooldown == 0)
+                {
+                    Console.WriteLine("1 - Исчезновение. Позволяет скрыться в тени и увернуться от атаки на этом ходу.");
+                }
+                else
+                {
+                    Console.WriteLine($"1 - Исчезновение. Позволяет скрыться в тени и уворачиваться от всех атак. Перезарядка способности еще {shadowCooldown} хода.");
+                }
+
+                Console.WriteLine($"2 - Удар из тени. Наносит {ambushDamage} единиц урона противнику, если вы скрылись в тени. Будьте осторожны.");
+                Console.WriteLine($"3 - Вытягивание жизни. Похищение у противника {stealingLifeDamage} единиц здоровья.");
+                Console.WriteLine($"4 - Жертва крови. Потеря {bloodSacrifice} единиц здоровья для выполнения критической атаки " +
+                    $"(х{criticalAttackMultiplierMin}-х{criticalAttackMultiplierMax} от базовой атаки).");
+                Console.WriteLine("5 - Базовая атака.");
+                Console.WriteLine("\nГраф Дракула:");
+                Console.WriteLine($"Здоровье {heroHealth}. Базовый урон {heroDamage}.");
+                Console.WriteLine("\nВан Хельсинг:");
+                Console.WriteLine($"Здоровье {bossHealth}. Базовый урон {bossDamage}.");
+
+                Console.Write("\nВыберите атаку: ");
+                userInput = Convert.ToInt32(Console.ReadLine());
+
+                switch (userInput)
+                {
+                    case 1:
+                        
+                        if (shadowCooldown == 0)
+                        {
+                            Console.WriteLine("\nВы скрылись в тени. Вы увернулись от полученного урона и можете провести атаку из тени.\n");
+                            isShadow = true;
+                            shadowCooldown = shadowCooldownMax;
+                        }
+                        else
+                        {
+                            Console.WriteLine($"\nСкрыться в тени не удалось. Вас заметили, вы получили {bossDamage} урона!\n");
+                            heroHealth -= bossDamage;
+                            shadowCooldown--;
+                        }
+                        
+                        break;
+                    case 2:
+
+                        if (isShadow == true)
+                        {
+                            Console.WriteLine($"\nВы провели скрытую атаку и избежали ответного урона\n");
+                            bossHealth -= ambushDamage;
+
+                            if (shadowCooldown > 0)
+                            {
+                                shadowCooldown--;
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine($"\nАтака из засады провалилась! Противник нанес упреждающий удар!\n");
+                            heroHealth -= bossDamage;
+
+                            if (shadowCooldown > 0)
+                            {
+                                shadowCooldown--;
+                            }
+                        }
+
+                        break;
+                    case 3:
+                        Console.WriteLine($"\nВы похищаете здоровье противника!\n");
+                        heroHealth += stealingLifeDamage;
+                        bossHealth -= stealingLifeDamage;
+                        heroHealth -= bossDamage;
+
+                        if (shadowCooldown > 0)
+                        {
+                            shadowCooldown--;
+                        }
+
+                        break;
+                    case 4:
+                        Console.WriteLine($"\nЖертва крови в размере {bloodSacrifice} очков здоровья. Противник получается кртиический урон. Множитель критической атаки: х{criticalAttackMultiplier}\n");
+                        heroHealth -= bloodSacrifice;
+                        bossHealth -= heroDamage * criticalAttackMultiplier;
+                        heroHealth -= bossDamage;
+
+                        if (shadowCooldown > 0)
+                        {
+                            shadowCooldown--;
+                        }
+
+                        break;
+                    case 5:
+                        Console.WriteLine($"\nВы нанесли противнику урон базовой атакой в размере {heroDamage} единиц урона.\n");
+                        bossHealth -= heroDamage;
+                        heroHealth -= bossDamage;
+
+                        if (shadowCooldown > 0)
+                        {
+                            shadowCooldown--;
+                        }
+
+                        break;
+                    default:
+                        Console.WriteLine("\nНет такой способности. Попробуйте еще раз\n");
+                        break;
+                }
+
+                if (heroHealth <= 0 && bossHealth <= 0)
+                {
+                    Console.WriteLine("\nЭта битва была легендарной, однако оба соперника пали в равном бою. Об этом поединке будут слагать песни и рассказы.\n");
+                    isDead = true;
+                }
+                else if (heroHealth <= 0)
+                {
+                    Console.WriteLine("\nВан Хельсинг нанес вам смертельный урон. Вы потерпели поражение! Но всё равно потомки будут вас помнить и пугать рассказами о вас непослушных детей.\n");
+                    isDead = true;
+                }
+                else if (bossHealth <= 0)
+                {
+                    Console.WriteLine("\nВан Хельсинг повержен. Жалкие людишки будут бояться вас еще сильнее и никто больше не посмеет бросить вам вызов.\n");
+                    isDead = true;
+                }
+            }
+        }
+    }
+}
