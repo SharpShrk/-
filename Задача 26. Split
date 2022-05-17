@@ -1,0 +1,28 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_26.Split
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            /*Дана строка с текстом, используя метод строки String.Split() получить массив слов, 
+             *которые разделены пробелом в тексте и вывести массив, каждое слово с новой строки.*/
+
+            string line = "Cтрока c текстом в которой каждое слово нужно вывести с новой строки";
+
+            string[] subLine = line.Split(' ');
+
+            foreach (var sub in subLine)
+            {
+                Console.WriteLine(sub);
+            }
+
+            Console.WriteLine("");
+        }
+    }
+}
