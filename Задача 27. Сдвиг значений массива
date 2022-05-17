@@ -1,0 +1,57 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_27.Сдвиг_значений_массива
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            /*Дан массив чисел. Нужно его сдвинуть циклически на указанное пользователем значение позиций влево, 
+             * не используя других массивов. Пример для сдвига один раз: {1, 2, 3, 4} => {2, 3, 4, 1}*/
+
+            int[] array = new int[9];
+            int temp;
+            int userInput;
+            int minRandomValue = 0;
+            int maxRandomValue = 10;
+            Random random = new Random();
+
+            Console.WriteLine("Исходный массив:\n");
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                array[i] = random.Next(minRandomValue,maxRandomValue);
+                Console.Write(" " + array[i]);
+            }
+
+            Console.WriteLine("\n\nНа какое число позиций влево вы хотите сдвинуть значения массива: ");
+            userInput = Convert.ToInt32(Console.ReadLine());
+
+            for (int i = 0; i < userInput; i++)
+            {
+                temp = array[0];
+
+                for (int j = 0; j < array.Length - 1; j++)
+                {
+                    array[j] = array[j + 1];                    
+                }
+
+                array[array.Length - 1] = temp;
+            }
+
+            Console.WriteLine("\nМассив после сдвига:\n");
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                Console.Write(" " + array[i]);
+            }
+
+            Console.WriteLine("\n");
+
+        }
+    }
+}
