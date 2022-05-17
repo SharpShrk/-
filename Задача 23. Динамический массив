@@ -1,0 +1,73 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_23.Динамический_массив
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {            
+            int[] array= new int[0];
+            int sum = 0;
+            bool isExit = false;
+            string userInpit;
+            int tempUserInput = 0;
+
+            while (isExit == false)
+            {                
+                Console.WriteLine("Доступные команды: \nsum - вывести сумму всех чисел в массиве.\nexit - выход из программы.");
+                Console.WriteLine("Введите натуральное число, чтобы добавить его в массив.");
+                Console.Write("\nОжидаю ввода команды: ");
+                userInpit = Console.ReadLine();
+
+                bool canCovert = int.TryParse(userInpit, out tempUserInput);
+
+                if (canCovert == true)
+                {
+                    int[] tempArray = new int[array.Length + 1];
+
+                    for (int i = 0; i < array.Length; i++)
+                    {
+                        tempArray[i] = array[i];
+                    }
+
+                    tempArray[tempArray.Length-1] = tempUserInput;
+                    array = tempArray;
+
+                    Console.WriteLine("\nВведенные числа:\n");
+
+                    for (int i = 0; i < array.Length; i++)
+                    {
+                        Console.Write(" " + array[i]);
+                    }
+
+                    Console.WriteLine("\n");
+                }
+                else if (canCovert == false && userInpit != "sum" && userInpit != "exit")
+                {
+                    Console.WriteLine("\nНеверно введено значение. Повторите ввод\n");
+                }
+
+                if (userInpit == "sum" && array != null)
+                {
+                    
+                    for (int i = 0; i < array.Length; i++)
+                    {
+                        sum += array[i];
+                    }
+
+                    Console.WriteLine("\nСумма всех чисел в массиве:" + sum + "\n");
+
+                }
+
+                if (userInpit == "exit")
+                {
+                    isExit = true;
+                }                
+            }
+        }
+    }
+}
