@@ -46,7 +46,7 @@ namespace Задача_24.Подмассив_повторений_чисел
                         repeatingNumber = array[i];
                     }                   
                 }
-                else if (array[i] > array[i - 1] || array[i] < array[i - 1])
+                else
                 {
                     numberOfRepeating = 1;
                 }
