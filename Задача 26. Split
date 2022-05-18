@@ -15,11 +15,11 @@ namespace Задача_26.Split
 
             string line = "Cтрока c текстом в которой каждое слово нужно вывести с новой строки";
 
-            string[] subLine = line.Split(' ');
+            string[] arrayLine = line.Split(' ');
 
-            foreach (var sub in subLine)
+            foreach (var subLine in arrayLine)
             {
-                Console.WriteLine(sub);
+                Console.WriteLine(subLine);
             }
 
             Console.WriteLine("");
