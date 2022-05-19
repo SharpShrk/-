@@ -49,7 +49,7 @@ namespace Задача_28.Кадровый_учет
                         DeleteLastDossier(ref surname, ref position);
                         break;
                     case "4":
-                        SearchBySurname(ref surname, ref position);
+                        SearchBySurname(surname, position);
                         break;
                     case "5":
                         Console.Write("\nВы уверены, что хотите выйти? Нажмите 'y' если да, любую другую клавишу если нет: ");
@@ -60,11 +60,8 @@ namespace Задача_28.Кадровый_учет
                             isExit = true;
                             break;
                         }
-                        else
-                        {
-                            break;
-                        }
-                        
+
+                        break;
                     default:
                         string error = "Ошибка ввода!";
                         WriteError(error);
@@ -77,30 +74,45 @@ namespace Задача_28.Кадровый_учет
         static void AddDossier(ref string[] surname, ref string[] position)
         {
             string addInput;
-            string[] tempSurname = new string[surname.Length+1];
-            string[] tempPosition = new string[position.Length+1];
-
-            for (int i = 0; i < surname.Length; i++)
-            {
-                tempSurname[i] = surname[i];
-                tempPosition[i] = position[i];
-            }
+            IncreaseArray(ref surname);
+            IncreaseArray(ref position);
 
             Console.WriteLine("\nДобавление нового досье.");
             Console.Write("\nВведите фамилию: ");
             addInput = Console.ReadLine();
-            tempSurname[tempSurname.Length-1] = addInput; 
+            surname[surname.Length - 1] = addInput; 
 
             Console.Write("\nВведите должность: ");
             addInput = Console.ReadLine();
-            tempPosition[tempPosition.Length-1] = addInput;
-
-            surname = tempSurname;
-            position = tempPosition;
+            position[position.Length - 1] = addInput;
 
             Console.WriteLine("\nНовое досье добавлено");
             Thread.Sleep(1000);
             Console.Clear();
+        }
+
+        static void IncreaseArray (ref string[] array)
+        {
+            string[] tempArray = new string[array.Length + 1];
+            
+            for (int i = 0; i < array.Length; i++)
+            {
+                tempArray[i] = array[i];                
+            }
+
+            array = tempArray;
+        }
+
+        static void DecreaseArray(ref string[] array)
+        {
+            string[] tempArray = new string[array.Length - 1];
+
+            for (int i = 0; i < tempArray.Length; i++)
+            {
+                tempArray[i] = array[i];
+            }
+
+            array = tempArray;
         }
 
         static void WriteAllDossiers(string[] surname, string[] position)
@@ -140,7 +152,7 @@ namespace Задача_28.Кадровый_учет
             }           
         }
 
-        static void SearchBySurname (ref string[] surname, ref string[] position)
+        static void SearchBySurname (string[] surname, string[] position)
         {
             string userInput;
             bool isFound = false;
