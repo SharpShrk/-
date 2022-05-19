@@ -1,0 +1,109 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Threading;
+
+namespace Задача_28.Кадровый_учет
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            /*Будет 2 массива: 1) фио 2) должность.
+            Описать функцию заполнения массивов досье, функцию форматированного вывода, функцию поиска по фамилии и функцию удаления досье.
+            Функция расширяет уже имеющийся массив на 1 и дописывает туда новое значение.
+            Программа должна быть с меню, которое содержит пункты:
+            1) добавить досье
+            2) вывести все досье (в одну строку через “-” фио и должность с порядковым номером в начале)
+            3) удалить досье (Массивы уменьшаются на один элемент. Нужны дополнительные проверки, чтобы не возникало ошибок)
+            4) поиск по фамилии
+            5) выход*/
+
+            string[] surname = new string[0];
+            string[] position = new string[0];
+            bool isExit = false;
+            string userInput;            
+
+            while (isExit == false)
+            {                
+                Console.WriteLine("\nМеню программы кадрового учета:");
+                Console.WriteLine("1 - Добавить досье.");
+                Console.WriteLine("2 - Вывести все досье.");
+                Console.WriteLine("3 - Удалить досье.");
+                Console.WriteLine("4 - Поиск по фамилии.");
+                Console.WriteLine("5 - Выход из программы.");
+                Console.WriteLine("\nВыберите пункт меню: ");
+                userInput = Console.ReadLine();                
+
+                switch (userInput)
+                {
+                    case "1":
+                        AddDossier(ref surname, ref position);                        
+                        break;
+                    case "2":
+                        WriteAllDossiers(ref surname, ref position);
+                        break;
+                    case "3":
+                        break;
+                    case "4":
+                        break;
+                    case "5":
+                        break;
+                    default:
+                        WriteError();
+                        break;
+
+                }
+            }            
+        }
+
+        static void AddDossier(ref string[] surname, ref string[] position)
+        {
+            string addInput;
+            string[] tempSurname = new string[surname.Length+1];
+            string[] tempPosition = new string[position.Length+1];
+
+            for (int i = 0; i < tempSurname.Length; i++)
+            {
+                tempSurname[i] = surname[i];
+                tempPosition[i] = position[i];
+            }
+
+            Console.WriteLine("\nДобавление нового досье.");
+            Console.Write("\nВведите фамилию: ");
+            addInput = Console.ReadLine();
+            tempSurname[tempSurname.Length-1] = addInput; 
+
+            Console.Write("\nВведите должность: ");
+            addInput = Console.ReadLine();
+            tempPosition[tempPosition.Length-1] = addInput;
+
+            surname = tempSurname;
+            position = tempPosition;
+
+            Console.WriteLine("\nНовое досье добавлено");
+            Thread.Sleep(2000);
+            Console.Clear();
+        }
+
+        static void WriteAllDossiers(ref string[] surname, ref string[] position)
+        {
+            Console.WriteLine("Вывод всех досье:");
+            
+            for (int i = 0; i < surname.Length; i++)
+            {
+                Console.WriteLine($"{i+1}. {surname[i]} - {position[i]};");
+            }
+        }
+
+        static void WriteError()
+        {
+            ConsoleColor defaultColor = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("\nОшибка ввода!");
+            Console.ForegroundColor = defaultColor;
+        }
+    }
+}
