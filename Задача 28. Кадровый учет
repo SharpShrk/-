@@ -52,15 +52,7 @@ namespace Задача_28.Кадровый_учет
                         SearchBySurname(surname, position);
                         break;
                     case "5":
-                        Console.Write("\nВы уверены, что хотите выйти? Нажмите 'y' если да, любую другую клавишу если нет: ");
-                        userInput = Console.ReadLine();
-
-                        if (userInput == "y")
-                        {
-                            isExit = true;
-                            break;
-                        }
-
+                        isExit = true;
                         break;
                     default:
                         string error = "Ошибка ввода!";
@@ -129,15 +121,7 @@ namespace Задача_28.Кадровый_учет
 
         static void DeleteLastDossier(ref string[] surname, ref string[] position)
         {
-            string[] tempSurname = new string[surname.Length - 1];
-            string[] tempPosition = new string[position.Length - 1];
-
-            for (int i = 0; i < tempSurname.Length; i++)
-            {
-                tempSurname[i] = surname[i];
-                tempPosition[i] = position[i];
-            }
-
+                                   
             if (surname.Length == 0)
             {
                 string error = "Удаление невозможно. Список досье пуст!";
@@ -145,8 +129,8 @@ namespace Задача_28.Кадровый_учет
             }
             else
             {
-                surname = tempSurname;
-                position = tempPosition;
+                DecreaseArray(ref surname);
+                DecreaseArray(ref position);
                 Console.WriteLine("\nПоследнее досье удалено:");
                 WaitKey();
             }           
@@ -178,7 +162,7 @@ namespace Задача_28.Кадровый_учет
                 }
             }
 
-        }
+        }        
 
         static void WaitKey()
         {
@@ -197,5 +181,6 @@ namespace Задача_28.Кадровый_учет
             Console.WriteLine("\n" + error);
             Console.ForegroundColor = defaultColor;
         }
-    }
+
+    }   
 }
