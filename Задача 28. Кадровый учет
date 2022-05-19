@@ -31,7 +31,7 @@ namespace Задача_28.Кадровый_учет
                 Console.WriteLine("\nМеню программы кадрового учета:");
                 Console.WriteLine("1 - Добавить досье.");
                 Console.WriteLine("2 - Вывести все досье.");
-                Console.WriteLine("3 - Удалить досье.");
+                Console.WriteLine($"3 - Удалить последнее досье. (Сейчас в списке {surname.Length} досье.)");
                 Console.WriteLine("4 - Поиск по фамилии.");
                 Console.WriteLine("5 - Выход из программы.");
                 Console.WriteLine("\nВыберите пункт меню: ");
@@ -43,16 +43,31 @@ namespace Задача_28.Кадровый_учет
                         AddDossier(ref surname, ref position);                        
                         break;
                     case "2":
-                        WriteAllDossiers(ref surname, ref position);
+                        WriteAllDossiers(surname, position);
                         break;
                     case "3":
+                        DeleteLastDossier(ref surname, ref position);
                         break;
                     case "4":
+                        SearchBySurname(ref surname, ref position);
                         break;
                     case "5":
-                        break;
+                        Console.Write("\nВы уверены, что хотите выйти? Нажмите 'y' если да, любую другую клавишу если нет: ");
+                        userInput = Console.ReadLine();
+
+                        if (userInput == "y")
+                        {
+                            isExit = true;
+                            break;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                        
                     default:
-                        WriteError();
+                        string error = "Ошибка ввода!";
+                        WriteError(error);
                         break;
 
                 }
@@ -65,7 +80,7 @@ namespace Задача_28.Кадровый_учет
             string[] tempSurname = new string[surname.Length+1];
             string[] tempPosition = new string[position.Length+1];
 
-            for (int i = 0; i < tempSurname.Length; i++)
+            for (int i = 0; i < surname.Length; i++)
             {
                 tempSurname[i] = surname[i];
                 tempPosition[i] = position[i];
@@ -84,11 +99,11 @@ namespace Задача_28.Кадровый_учет
             position = tempPosition;
 
             Console.WriteLine("\nНовое досье добавлено");
-            Thread.Sleep(2000);
+            Thread.Sleep(1000);
             Console.Clear();
         }
 
-        static void WriteAllDossiers(ref string[] surname, ref string[] position)
+        static void WriteAllDossiers(string[] surname, string[] position)
         {
             Console.WriteLine("Вывод всех досье:");
             
@@ -96,13 +111,78 @@ namespace Задача_28.Кадровый_учет
             {
                 Console.WriteLine($"{i+1}. {surname[i]} - {position[i]};");
             }
+
+            WaitKey();                        
         }
 
-        static void WriteError()
+        static void DeleteLastDossier(ref string[] surname, ref string[] position)
+        {
+            string[] tempSurname = new string[surname.Length - 1];
+            string[] tempPosition = new string[position.Length - 1];
+
+            for (int i = 0; i < tempSurname.Length; i++)
+            {
+                tempSurname[i] = surname[i];
+                tempPosition[i] = position[i];
+            }
+
+            if (surname.Length == 0)
+            {
+                string error = "Удаление невозможно. Список досье пуст!";
+                WriteError(error);
+            }
+            else
+            {
+                surname = tempSurname;
+                position = tempPosition;
+                Console.WriteLine("\nПоследнее досье удалено:");
+                WaitKey();
+            }           
+        }
+
+        static void SearchBySurname (ref string[] surname, ref string[] position)
+        {
+            string userInput;
+            bool isFound = false;
+
+            Console.Write("\nПоиск по базе данных.\nВведите фамилию: ");
+            userInput = Console.ReadLine();
+
+            for (int i = 0; i < surname.Length; i++)
+            {
+
+                if (surname[i] == userInput)
+                {
+                    Console.WriteLine($"\nНайдено досье по запросу - {userInput}:");
+                    Console.WriteLine($"{i+1}. {surname[i]} - {position[i]}");
+                    isFound = true;
+                    WaitKey();
+                }
+                else if (i == surname.Length - 1 && isFound == false)
+                {
+                    string error = "Совпадение по базе данных не найдено!";
+                    WriteError(error);
+                    WaitKey();
+                }
+            }
+
+        }
+
+        static void WaitKey()
+        {
+            ConsoleColor defaultColor = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("\n\nДля продолжения нажмите любую клавишу...");
+            Console.ForegroundColor = defaultColor;
+            Console.ReadKey();
+            Console.Clear();
+        }
+
+        static void WriteError(string error)
         {
             ConsoleColor defaultColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("\nОшибка ввода!");
+            Console.WriteLine("\n" + error);
             Console.ForegroundColor = defaultColor;
         }
     }
