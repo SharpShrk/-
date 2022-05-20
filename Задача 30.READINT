@@ -1,0 +1,45 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_30.READINT
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            /*Написать функцию, которая запрашивает число у пользователя(с помощью метода Console.ReadLine() ) 
+            и пытается сконвертировать его в тип int(с помощью int.TryParse())
+            Если конвертация не удалась у пользователя запрашивается число повторно до тех пор, пока не будет введено верно. 
+            После ввода, который удалось преобразовать в число, число возвращается.
+            P.S Задача решается с помощью циклов
+            P.S Также в TryParse используется модфикатор параметра out*/
+
+            string userInput;
+            int output;
+            bool isConverted = false;
+
+            while (isConverted == false)
+            {
+                Console.Write("Введите число для конвертации: ");
+                userInput = Console.ReadLine();
+
+                bool success = int.TryParse (userInput, out output);
+
+                if (success == true)
+                {
+                    Console.WriteLine($"\nСтрока {'"' + userInput + '"'} успешно сконвертирована в число.");
+                    isConverted = true;
+                    Console.ReadKey();
+                }
+                else
+                {
+                    Console.WriteLine($"\nНе удалось сконвертировать строку {'"'+userInput+'"'} в число, повторите ввод строки еще раз.");
+                    Console.ReadKey();
+                }
+            }
+        }
+    }
+}
