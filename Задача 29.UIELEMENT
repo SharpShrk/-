@@ -1,0 +1,63 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_29.UIELEMENT
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            /*Разработайте функцию, которая рисует некий бар (Healthbar, Manabar) в определённой позиции. Она также принимает некий закрашенный процент.
+            При 40% бар выглядит так:
+            [####______]*/
+
+            int health;
+            int healthPosition = 1;
+            int mana;
+            int manaPosition = 2;
+            int exp;
+            int expPosition = 3;
+            int minRandomValue = 1;
+            int maxRandomValue = 10;
+            Random random = new Random();
+
+            health = random.Next(minRandomValue, maxRandomValue);
+            mana = random.Next(minRandomValue, maxRandomValue);
+            exp = random.Next(minRandomValue, maxRandomValue);
+
+            DrawBar(health, ConsoleColor.Red, healthPosition);
+            DrawBar(mana, ConsoleColor.Blue, manaPosition);
+            DrawBar(exp, ConsoleColor.Yellow, expPosition);
+        }
+
+        static void DrawBar (int value, ConsoleColor color, int position)
+        {
+            int maxValue = 10;
+            ConsoleColor defaulColor = Console.BackgroundColor;
+            string bar = "";
+
+            for (int i = 0; i < value; i++)
+            {
+                bar += ' ';
+            }
+
+            Console.SetCursorPosition(0, position);
+            Console.Write('[');
+            Console.BackgroundColor = color;
+            Console.Write(bar);
+            Console.BackgroundColor = defaulColor;
+
+            bar = "";
+
+            for (int i = value; i < maxValue; i++)
+            {
+                bar += ' ';
+            }
+
+            Console.Write(bar + ']' + " " + (value*10) + "%\n");
+        }
+    }
+}
