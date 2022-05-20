@@ -18,19 +18,19 @@ namespace Задача_29.UIELEMENT
             int healthPosition = 1;
             int mana;
             int manaPosition = 2;
-            int exp;
-            int expPosition = 3;
+            int experience;
+            int experiencePosition = 3;
             int minRandomValue = 1;
             int maxRandomValue = 10;
             Random random = new Random();
 
             health = random.Next(minRandomValue, maxRandomValue);
             mana = random.Next(minRandomValue, maxRandomValue);
-            exp = random.Next(minRandomValue, maxRandomValue);
+            experience = random.Next(minRandomValue, maxRandomValue);
 
             DrawBar(health, ConsoleColor.Red, healthPosition);
             DrawBar(mana, ConsoleColor.Blue, manaPosition);
-            DrawBar(exp, ConsoleColor.Yellow, expPosition);
+            DrawBar(experience, ConsoleColor.Yellow, experiencePosition);
         }
 
         static void DrawBar (int value, ConsoleColor color, int position)
