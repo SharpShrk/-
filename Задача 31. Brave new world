@@ -1,0 +1,114 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+
+namespace Задача_31.Brave_new_world
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            /*Сделать игровую карту с помощью двумерного массива. Сделать функцию рисования карты. 
+             * Помимо этого, дать пользователю возможность перемещаться по карте и взаимодействовать с элементами 
+             * (например пользователь не может пройти сквозь стену)
+             * Все элементы являются обычными символами*/
+
+            bool isPlaying = true;
+            bool isOpenPortal = false;
+            int heroX, heroY;
+            int heroDX = 0, heroDY = 0;
+            char[,] map = ReadMap("startLevel", out heroX, out heroY);
+
+            Console.CursorVisible = false;
+
+            DrawMap(map);
+
+            while (isPlaying)
+            {
+
+                if (Console.KeyAvailable)
+                {
+                    ConsoleKeyInfo key = Console.ReadKey(true);
+
+                    ChangeDirection (key, ref heroDX, ref heroDY);
+                    
+                    if (map[heroX + heroDX, heroY + heroDY] != '#')
+                    {
+                        Move (ref heroX, ref heroY, heroDX, heroDY);
+                    }
+                }
+            }
+        }
+
+        static void Move (ref int X, ref int Y, int DX, int DY)
+        {
+            Console.SetCursorPosition(Y, X);
+            Console.Write(' ');
+
+            X += DX;
+            Y += DY;
+
+            Console.SetCursorPosition(Y, X);
+            Console.Write('*');
+        }
+
+        static void ChangeDirection (ConsoleKeyInfo key, ref int DX, ref int DY)
+        {
+            switch (key.Key)
+            {
+                case ConsoleKey.UpArrow:
+                    DX = -1; DY = 0;
+                    break;
+                case ConsoleKey.DownArrow:
+                    DX = 1; DY = 0;
+                    break;
+                case ConsoleKey.LeftArrow:
+                    DX = 0; DY = -1;
+                    break;
+                case ConsoleKey.RightArrow:
+                    DX = 0; DY = 1;
+                    break;
+            }
+        }
+
+        static char[,] ReadMap(string mapName, out int heroX, out int heroY)
+        {
+            heroX = 0;
+            heroY = 0;
+            string[] newMap = File.ReadAllLines($"maps/{mapName}.txt");
+            char[,] map = new char[newMap.Length, newMap[0].Length];
+
+            for (int i = 0; i < map.GetLength(0); i++)
+            {
+                for (int j = 0; j < map.GetLength(1); j++)
+                {
+                    map[i, j] = newMap[i][j];
+
+                    if (map[i, j] == '*')
+                    {
+                        heroX = i;
+                        heroY = j;
+                    }
+                }                
+            }
+
+            return map;
+        }
+
+        static void DrawMap (char[,] map)
+        {
+            for (int i = 0; i < map.GetLength(0); i++)
+            {
+                for (int j = 0; j < map.GetLength(1); j++)
+                {
+                    Console.Write(map[i, j]);
+                }
+
+                Console.WriteLine("");
+            }
+        }
+    }
+}
