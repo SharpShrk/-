@@ -26,19 +26,25 @@ namespace Задача_30.READINT
                 Console.Write("Введите число для конвертации: ");
                 userInput = Console.ReadLine();
 
-                bool success = int.TryParse (userInput, out output);
+                ConversionStringToInt(ref isConverted, userInput);
+            }
+        }
 
-                if (success == true)
-                {
-                    Console.WriteLine($"\nСтрока {'"' + userInput + '"'} успешно сконвертирована в число.");
-                    isConverted = true;
-                    Console.ReadKey();
-                }
-                else
-                {
-                    Console.WriteLine($"\nНе удалось сконвертировать строку {'"'+userInput+'"'} в число, повторите ввод строки еще раз.");
-                    Console.ReadKey();
-                }
+        static void ConversionStringToInt (ref bool isConverted, string userInput)
+        {
+            int convertedStringToInt;
+            bool successConverted = int.TryParse(userInput, out convertedStringToInt);
+
+            if (successConverted == true)
+            {
+                Console.WriteLine($"\nСтрока {'"' + userInput + '"'} успешно сконвертирована в число.");
+                isConverted = true;
+                Console.ReadKey();
+            }
+            else
+            {
+                Console.WriteLine($"\nНе удалось сконвертировать строку {'"' + userInput + '"'} в число, повторите ввод строки еще раз.");
+                Console.ReadKey();
             }
         }
     }
