@@ -16,34 +16,40 @@ namespace Задача_30.READINT
             После ввода, который удалось преобразовать в число, число возвращается.
             P.S Задача решается с помощью циклов
             P.S Также в TryParse используется модфикатор параметра out*/
-                        
-            GetInt ();            
+            
+            int convertedStringToInt;  
+            
+            GetInt (out convertedStringToInt);            
         }
 
-        static void GetInt ()
+        static int GetInt (out int convertedStringToInt)
         {
             bool isConverted = false;
             string userInput;
+            convertedStringToInt = 0;
 
             while (isConverted == false)
             {
+                
                 Console.Write("Введите число для конвертации: ");
                 userInput = Console.ReadLine();
-                int convertedStringToInt;
+                
                 bool successConverted = int.TryParse(userInput, out convertedStringToInt);
 
                 if (successConverted == true)
                 {
                     Console.WriteLine($"\nСтрока {'"' + userInput + '"'} успешно сконвертирована в число.");
-                    isConverted = true;
+                    isConverted = true;                    
                     Console.ReadKey();
                 }
                 else
                 {
                     Console.WriteLine($"\nНе удалось сконвертировать строку {'"' + userInput + '"'} в число, повторите ввод строки еще раз.");
                     Console.ReadKey();
-                }
+                }                
             }
+
+            return convertedStringToInt;
         }
     }
 }
