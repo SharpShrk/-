@@ -16,35 +16,33 @@ namespace Задача_30.READINT
             После ввода, который удалось преобразовать в число, число возвращается.
             P.S Задача решается с помощью циклов
             P.S Также в TryParse используется модфикатор параметра out*/
+                        
+            GetInt ();            
+        }
 
-            string userInput;
-            int output;
+        static void GetInt ()
+        {
             bool isConverted = false;
+            string userInput;
 
             while (isConverted == false)
             {
                 Console.Write("Введите число для конвертации: ");
                 userInput = Console.ReadLine();
+                int convertedStringToInt;
+                bool successConverted = int.TryParse(userInput, out convertedStringToInt);
 
-                ConversionStringToInt(ref isConverted, userInput);
-            }
-        }
-
-        static void ConversionStringToInt (ref bool isConverted, string userInput)
-        {
-            int convertedStringToInt;
-            bool successConverted = int.TryParse(userInput, out convertedStringToInt);
-
-            if (successConverted == true)
-            {
-                Console.WriteLine($"\nСтрока {'"' + userInput + '"'} успешно сконвертирована в число.");
-                isConverted = true;
-                Console.ReadKey();
-            }
-            else
-            {
-                Console.WriteLine($"\nНе удалось сконвертировать строку {'"' + userInput + '"'} в число, повторите ввод строки еще раз.");
-                Console.ReadKey();
+                if (successConverted == true)
+                {
+                    Console.WriteLine($"\nСтрока {'"' + userInput + '"'} успешно сконвертирована в число.");
+                    isConverted = true;
+                    Console.ReadKey();
+                }
+                else
+                {
+                    Console.WriteLine($"\nНе удалось сконвертировать строку {'"' + userInput + '"'} в число, повторите ввод строки еще раз.");
+                    Console.ReadKey();
+                }
             }
         }
     }
