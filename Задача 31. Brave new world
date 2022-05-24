@@ -16,29 +16,105 @@ namespace Задача_31.Brave_new_world
              * (например пользователь не может пройти сквозь стену)
              * Все элементы являются обычными символами*/
 
-            bool isPlaying = true;
+            Console.CursorVisible = false;
+
+            //PlayingStartLevel();
+            PlayingFinishLevel();
+
+        }
+
+        static void PlayingStartLevel()
+        {
+            bool isLevelFinished = false;
             bool isOpenPortal = false;
             int heroX, heroY;
             int heroDX = 0, heroDY = 0;
-            char[,] map = ReadMap("startLevel", out heroX, out heroY);
+            char portalKey = '$';
+            string levelName = "startLevel";
 
-            Console.CursorVisible = false;
+            char[,] map = ReadMap(levelName, out heroX, out heroY);
+            DrawMap(map);            
 
-            DrawMap(map);
-
-            while (isPlaying)
+            while (isLevelFinished == false)
             {
+
+                if (map[heroX, heroY] == portalKey)
+                {
+                    isOpenPortal = true;
+                }                
 
                 if (Console.KeyAvailable)
                 {
                     ConsoleKeyInfo key = Console.ReadKey(true);
 
-                    ChangeDirection (key, ref heroDX, ref heroDY);
+                    ChangeDirection(key, ref heroDX, ref heroDY);
+
+                    if (map[heroX + heroDX, heroY + heroDY] != '#')
+                    {
+                        Move(ref heroX, ref heroY, heroDX, heroDY);
+                    }
+                }                
+
+                if (map[heroX, heroY] == 'O' && isOpenPortal == true)
+                {                                      
+                    isLevelFinished = true;
+                    Console.Clear();
+                    Console.SetCursorPosition(0, 1);
+                    Console.WriteLine("Вы проходите на следующий уровень!\nДля перехода на новый уровень нажмите любую клавишу.");
+                    Console.ReadKey();
+                    Console.Clear();
+                }
+            }
+        }
+
+        static void PlayingFinishLevel()
+        {
+            bool isLevelFinished = false;
+            bool isArthurSwordFound = false;
+            bool isHolyGrailFound = false;
+            int heroX, heroY;
+            int heroDX = 0, heroDY = 0;
+            string levelName = "finishLevel";
+            char holyGrail = 'G';
+            char kingArthurSword = 'S';
+
+            char[,] map = ReadMap(levelName, out heroX, out heroY);
+            DrawMap(map);            
+
+            while (isLevelFinished == false)
+            {
+
+                if (map[heroX, heroY] == holyGrail)
+                {
+                    isHolyGrailFound = true;
+                }
+                else if (map[heroX, heroY] == kingArthurSword)
+                {
+                    isArthurSwordFound = true;
+                }
+
+                WritingMessage(isArthurSwordFound, isHolyGrailFound, heroX, heroY);
+
+                if (Console.KeyAvailable)
+                {
+                    ConsoleKeyInfo key = Console.ReadKey(true);
+
+                    ChangeDirection(key, ref heroDX, ref heroDY);
                     
                     if (map[heroX + heroDX, heroY + heroDY] != '#')
                     {
-                        Move (ref heroX, ref heroY, heroDX, heroDY);
+                        Move(ref heroX, ref heroY, heroDX, heroDY);
                     }
+                }
+
+                if (map[heroX, heroY] == 'O' && isHolyGrailFound == true && isArthurSwordFound == true)
+                {
+                    isLevelFinished = true;
+                    Console.Clear();
+                    Console.SetCursorPosition(0, 1);
+                    Console.WriteLine("Вы прошли игру!\nДля выхода из игры нажмите любую клавишу.");
+                    Console.ReadKey();
+                    Console.Clear();
                 }
             }
         }
@@ -53,6 +129,48 @@ namespace Задача_31.Brave_new_world
 
             Console.SetCursorPosition(Y, X);
             Console.Write('*');
+        }
+
+        static void WritingMessage(bool isHolyGrailFound, bool isArthurSwordFound, int heroX, int heroY)
+        {
+            Console.SetCursorPosition(0, 15);
+            Console.WriteLine("Для прохождения уровня нужно найти меч Короля Артура А и Святой Грааль G");
+
+            if (isHolyGrailFound == true && isArthurSwordFound == false)
+            {
+                Console.WriteLine("Вы подобрали Святой Грааль.\nМеч Короля Артура не найден.\nПроход закрыт");
+            }
+            else if (isHolyGrailFound == false && isArthurSwordFound == true)
+            {
+                Console.WriteLine("Святой Грааль не найден.\nВы подобрали Меч Короля Артура.\nПроход закрыт");
+            }
+            else if (isHolyGrailFound == true && isArthurSwordFound == true)
+            {
+                Console.WriteLine("Вы подобрали Святой Грааль.\nВы подобрали Меч Короля Артура.\nПроход открыт. Поспешите к порталу");
+            }
+            else
+            {
+                Console.WriteLine("Святой Грааль не найден.\nМеч Короля Артура не найден.\nПроход закрыт");
+            }
+
+            Console.SetCursorPosition(heroY, heroX);
+        }
+
+        static void WritingMessage(bool isOpenPortal, int heroX, int heroY)
+        {
+            Console.SetCursorPosition(0, 15);
+            Console.WriteLine("Для прохода через портал, нужно найти портальный ключ $");
+
+            if (isOpenPortal == true)
+            {
+                Console.WriteLine("Портал открылся");
+            }
+            else
+            {
+                Console.WriteLine("Портал закрыт");
+            }
+
+            Console.SetCursorPosition(heroY, heroX);
         }
 
         static void ChangeDirection (ConsoleKeyInfo key, ref int DX, ref int DY)
