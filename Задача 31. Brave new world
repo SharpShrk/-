@@ -106,54 +106,6 @@ namespace Задача_31.Brave_new_world
             }
         }
 
-        /*static void PlayFinishLevel()
-        {
-            bool isLevelFinished = false;
-            int heroPositonX, heroPositonY;
-            int heroDX = 0, heroDY = 0;
-
-
-            char[,] map = ReadMap(levelName, out heroPositonX, out heroPositonY);
-            DrawMap(map);            
-
-            while (isLevelFinished == false)
-            {
-
-                if (map[heroPositonX, heroPositonY] == holyGrail)
-                {
-                    isHolyGrailFound = true;
-                }
-                else if (map[heroPositonX, heroPositonY] == kingArthurSword)
-                {
-                    isArthurSwordFound = true;
-                }
-
-                WriteMessage(isArthurSwordFound, isHolyGrailFound, heroPositonX, heroPositonY);
-
-                if (Console.KeyAvailable)
-                {
-                    ConsoleKeyInfo key = Console.ReadKey(true);
-
-                    ChangeDirection(key, ref heroDX, ref heroDY);
-                    
-                    if (map[heroPositonX + heroDX, heroPositonY + heroDY] != '#')
-                    {
-                        Move(ref heroPositonX, ref heroPositonY, heroDX, heroDY);
-                    }
-                }
-
-                if (map[heroPositonX, heroPositonY] == 'O' && isHolyGrailFound == true && isArthurSwordFound == true)
-                {
-                    isLevelFinished = true;
-                    Console.Clear();
-                    Console.SetCursorPosition(0, 1);
-                    Console.WriteLine("Вы прошли игру!\nДля выхода из игры нажмите любую клавишу.");
-                    Console.ReadKey();
-                    Console.Clear();
-                }
-            }
-        }*/
-
         static void Move (ref int heroPositonX, ref int heroPositonY, int heroDirectionX, int heroDirectionY)
         {
             Console.SetCursorPosition(heroPositonY, heroPositonX);
