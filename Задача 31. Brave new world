@@ -16,29 +16,54 @@ namespace Задача_31.Brave_new_world
              * (например пользователь не может пройти сквозь стену)
              * Все элементы являются обычными символами*/
 
+            string levelName1 = "startLevel";
+            string levelName2 = "finishLevel";
+
             Console.CursorVisible = false;
 
-            PlayStartLevel();
-            PlayFinishLevel();
+            PlayStartLevel(levelName1);
+            PlayStartLevel(levelName2);
+
         }
 
-        static void PlayStartLevel()
+        static void PlayStartLevel(string levelName)
         {
             bool isLevelFinished = false;
             bool isOpenPortal = false;
+            bool isArthurSwordFound = false;
+            bool isHolyGrailFound = false;
             int heroPositonX;
             int heroPositonY;
             int heroDirectionX = 0;
             int heroDirectionY = 0;
             char portalKey = '$';
-            string levelName = "startLevel";
+            char holyGrail = 'G';
+            char kingArthurSword = 'S';
 
             char[,] map = ReadMap(levelName, out heroPositonX, out heroPositonY);
             DrawMap(map);            
 
             while (isLevelFinished == false)
             {
-                WriteMessage(isOpenPortal, heroPositonX, heroPositonY);
+
+                if (map[heroPositonX, heroPositonY] == holyGrail)
+                {
+                    isHolyGrailFound = true;
+                }
+                else if (map[heroPositonX, heroPositonY] == kingArthurSword)
+                {
+                    isArthurSwordFound = true;
+                }
+
+                if (levelName == "startLevel")
+                {
+                    WriteMessage(isOpenPortal, heroPositonX, heroPositonY);
+                }
+                else
+                {
+                    WriteMessage(isArthurSwordFound, isHolyGrailFound, heroPositonX, heroPositonY);
+                }
+                
 
                 if (map[heroPositonX, heroPositonY] == portalKey)
                 {
@@ -58,27 +83,35 @@ namespace Задача_31.Brave_new_world
                 }                
 
                 if (map[heroPositonX, heroPositonY] == 'O' && isOpenPortal == true)
-                {                                      
+                {
+                    isOpenPortal = false;
                     isLevelFinished = true;
+
                     Console.Clear();
                     Console.SetCursorPosition(0, 1);
                     Console.WriteLine("Вы проходите на следующий уровень!\nДля перехода на новый уровень нажмите любую клавишу.");
                     Console.ReadKey();
                     Console.Clear();
                 }
+
+                if (map[heroPositonX, heroPositonY] == 'O' && isHolyGrailFound == true && isArthurSwordFound == true)
+                {
+                    isLevelFinished = true;
+                    Console.Clear();
+                    Console.SetCursorPosition(0, 1);
+                    Console.WriteLine("Вы прошли игру!\nДля выхода из игры нажмите любую клавишу.");
+                    Console.ReadKey();
+                    Console.Clear();
+                }
             }
         }
 
-        static void PlayFinishLevel()
+        /*static void PlayFinishLevel()
         {
             bool isLevelFinished = false;
-            bool isArthurSwordFound = false;
-            bool isHolyGrailFound = false;
             int heroPositonX, heroPositonY;
             int heroDX = 0, heroDY = 0;
-            string levelName = "finishLevel";
-            char holyGrail = 'G';
-            char kingArthurSword = 'S';
+
 
             char[,] map = ReadMap(levelName, out heroPositonX, out heroPositonY);
             DrawMap(map);            
@@ -119,7 +152,7 @@ namespace Задача_31.Brave_new_world
                     Console.Clear();
                 }
             }
-        }
+        }*/
 
         static void Move (ref int heroPositonX, ref int heroPositonY, int heroDirectionX, int heroDirectionY)
         {
