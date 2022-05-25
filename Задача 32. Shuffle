@@ -1,0 +1,45 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_32.Shuffle
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            //Реализуйте функцию Shuffle, которая перемешивает элементы массива в случайном порядке.
+
+            int[] startArray = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            int[] arrayShuffle;
+
+            arrayShuffle = Shuffle(startArray);
+
+            for (int i = 0; i < arrayShuffle.Length; i++)
+            {
+                Console.Write(arrayShuffle[i]);
+            }
+
+            Console.WriteLine();
+
+        }
+
+        static int[] Shuffle(int[] array)
+        {                       
+            Random random = new Random();
+
+            for (int i = array.Length - 1; i >= 1; i--)
+            {
+                int j = random.Next(i + 1);
+
+                int temp = array[j];
+                array[j] = array[i];
+                array[i] = temp;
+            }
+
+            return array;
+        }
+    }
+}
