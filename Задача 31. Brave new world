@@ -18,12 +18,12 @@ namespace Задача_31.Brave_new_world
 
             Console.CursorVisible = false;
 
-            PlayingStartLevel();
-            PlayingFinishLevel();
+            PlayStartLevel();
+            PlayFinishLevel();
 
         }
 
-        static void PlayingStartLevel()
+        static void PlayStartLevel()
         {
             bool isLevelFinished = false;
             bool isOpenPortal = false;
@@ -37,6 +37,7 @@ namespace Задача_31.Brave_new_world
 
             while (isLevelFinished == false)
             {
+                WriteMessage(isOpenPortal, heroX, heroY);
 
                 if (map[heroX, heroY] == portalKey)
                 {
@@ -67,7 +68,7 @@ namespace Задача_31.Brave_new_world
             }
         }
 
-        static void PlayingFinishLevel()
+        static void PlayFinishLevel()
         {
             bool isLevelFinished = false;
             bool isArthurSwordFound = false;
@@ -93,7 +94,7 @@ namespace Задача_31.Brave_new_world
                     isArthurSwordFound = true;
                 }
 
-                WritingMessage(isArthurSwordFound, isHolyGrailFound, heroX, heroY);
+                WriteMessage(isArthurSwordFound, isHolyGrailFound, heroX, heroY);
 
                 if (Console.KeyAvailable)
                 {
@@ -119,19 +120,19 @@ namespace Задача_31.Brave_new_world
             }
         }
 
-        static void Move (ref int X, ref int Y, int DX, int DY)
+        static void Move (ref int heroX, ref int heroY, int heroDX, int heroDY)
         {
-            Console.SetCursorPosition(Y, X);
+            Console.SetCursorPosition(heroY, heroX);
             Console.Write(' ');
 
-            X += DX;
-            Y += DY;
+            heroX += heroDX;
+            heroY += heroDY;
 
-            Console.SetCursorPosition(Y, X);
+            Console.SetCursorPosition(heroY, heroX);
             Console.Write('*');
         }
 
-        static void WritingMessage(bool isHolyGrailFound, bool isArthurSwordFound, int heroX, int heroY)
+        static void WriteMessage(bool isHolyGrailFound, bool isArthurSwordFound, int heroX, int heroY)
         {
             Console.SetCursorPosition(0, 15);
             Console.WriteLine("Для прохождения уровня нужно найти меч Короля Артура А и Святой Грааль G");
@@ -156,7 +157,7 @@ namespace Задача_31.Brave_new_world
             Console.SetCursorPosition(heroY, heroX);
         }
 
-        static void WritingMessage(bool isOpenPortal, int heroX, int heroY)
+        static void WriteMessage(bool isOpenPortal, int heroX, int heroY)
         {
             Console.SetCursorPosition(0, 15);
             Console.WriteLine("Для прохода через портал, нужно найти портальный ключ $");
@@ -178,16 +179,20 @@ namespace Задача_31.Brave_new_world
             switch (key.Key)
             {
                 case ConsoleKey.UpArrow:
-                    DX = -1; DY = 0;
+                    DX = -1; 
+                    DY = 0;
                     break;
                 case ConsoleKey.DownArrow:
-                    DX = 1; DY = 0;
+                    DX = 1; 
+                    DY = 0;
                     break;
                 case ConsoleKey.LeftArrow:
-                    DX = 0; DY = -1;
+                    DX = 0; 
+                    DY = -1;
                     break;
                 case ConsoleKey.RightArrow:
-                    DX = 0; DY = 1;
+                    DX = 0; 
+                    DY = 1;
                     break;
             }
         }
