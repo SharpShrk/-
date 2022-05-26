@@ -1,0 +1,47 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_33.Толковый_словарь
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            /*Создать программу, которая принимает от пользователя слово и выводит его значение. 
+             *Если такого слова нет, то следует вывести соответствующее сообщение.*/
+                       
+            ExtractDataDictionary();
+
+        }
+
+        static void ExtractDataDictionary ()
+        {
+            string userInput;
+            Dictionary<string, string> personnelRecords = new Dictionary<string, string>();
+
+            personnelRecords.Add("Иванов", "Электромонтер");
+            personnelRecords.Add("Петров", "Оператор-наладчик");
+            personnelRecords.Add("Сидоров", "Стропальщик");
+            personnelRecords.Add("Мышкин", "Водитель");
+            personnelRecords.Add("Крайний", "Главный инженер");
+
+            Console.WriteLine("Введите фамилию для поиска по базе данных кадрового учета.");
+            userInput = Console.ReadLine();
+
+            {
+                if (personnelRecords.ContainsKey(userInput))
+                {
+                    Console.WriteLine("\nПо базе данных найдено совпадение:");
+                    Console.WriteLine($"{userInput} - {personnelRecords[userInput]}");
+                }
+                else
+                {
+                    Console.WriteLine("\nСовпадений по базе данных не найдено.");
+                }                    
+            }                
+        }
+    }
+}
