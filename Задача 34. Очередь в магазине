@@ -1,0 +1,57 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_34.Очередь_в_магазине
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            /*У вас есть множество целых чисел. Каждое целое число - это сумма покупки.
+            Вам нужно обслуживать клиентов до тех пор, пока очередь не станет пуста.
+            После каждого обслуженного клиента деньги нужно добавлять на наш счёт и выводить его в консоль.
+            После обслуживания каждого клиента программа ожидает нажатия любой клавиши, после чего затирает консоль
+            и по новой выводит всю информацию, только уже со следующим клиентом. */
+
+            int cashBalance = 0;            
+            Queue<int> queueOfBuyers = new Queue<int>();
+
+            GenerationBuyers(ref queueOfBuyers);
+
+            foreach (var check in queueOfBuyers)
+            {
+                cashBalance += check;
+                Console.WriteLine($"\nПосле обслуживания покупателя денег в кассе: {cashBalance} монет");
+                Console.WriteLine("\nНажмите любую клавишу, чтобы перейти к следующему покупателю.");
+                Console.ReadKey();
+                Console.Clear();
+            }
+
+            Console.WriteLine($"\nОчередь пуста. Денег в кассе: {cashBalance} монет");
+
+        }
+
+        static void GenerationBuyers (ref Queue<int> queueOfBuyers)
+        {            
+            int minRandomBuyers = 5;
+            int maxRandomBuyers = 10;
+            int randomBuyers;
+            int minCheckSize = 100;
+            int maxCheckSize = 1000;
+            int checkSize;
+
+            Random random = new Random();
+
+            randomBuyers = random.Next(minRandomBuyers, maxRandomBuyers);
+
+            for (int i = 0; i <= randomBuyers; i++)
+            {
+                checkSize = random.Next(minCheckSize, maxCheckSize);
+                queueOfBuyers.Enqueue(checkSize);
+            }
+        }
+    }
+}
