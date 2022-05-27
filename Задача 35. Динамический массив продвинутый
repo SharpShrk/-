@@ -1,0 +1,90 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_35.Динамический_массив_продвинутый
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            /*В массивах вы выполняли задание "Динамический массив"
+            Используя всё изученное, напишите улучшенную версию динамического массива(не обязательно брать своё старое решение).
+            Задание нужно, чтобы вы освоились с List и прощупали его преимущество.
+            Проверка на ввод числа обязательна.
+            Пользователь вводит числа, и программа их запоминает.
+            Как только пользователь введёт команду sum, программа выведет сумму всех веденных чисел.
+            Выход из программы должен происходить только в том случае, если пользователь введет команду exit.*/
+
+            string userInput;
+            int sum = 0;
+            bool isExit = false;
+            List<int> numbers = new List<int>();
+
+            while (isExit == false)
+            {
+                Console.WriteLine("\nМеню программы:\n");
+                Console.WriteLine("1 - Ввод числа.");
+                Console.WriteLine("2 - Вычислить сумму всех введеных значений.");
+                Console.WriteLine("3 - Выйти из программы.");
+                Console.Write("\nВыберите пункт меню: ");
+
+                userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case "1":
+                        Console.Write("\nВведите число: ");
+                        userInput = Console.ReadLine();
+
+                        bool isConverted = int.TryParse(userInput, out int convertToInt);
+
+                        if (isConverted == true)
+                        {
+                            numbers.Add(convertToInt);
+                            Console.Write($"\nЧисло {convertToInt} добавлено. Для возврата в меню нажмите любую клавишу...");
+                            Console.ReadKey();
+                            Console.Clear();
+                        }
+                        else
+                        {
+                            WriteError();
+                        }
+                        
+                        break;
+                    case "2":
+
+                        foreach (int number in numbers)
+                        {
+                            sum += number;
+                        }
+
+                        Console.Write($"\nСумма всех введеных чисел равна {sum}. Для возврата в меню нажмите любую клавишу...");
+                        sum = 0;
+                        Console.ReadKey();
+                        Console.Clear();
+                        break;
+                    case "3":
+                        isExit = true;
+                        break;
+                    default:
+                        WriteError();
+                        break;
+                }                
+            }            
+        }
+
+        static void WriteError()
+        {
+            ConsoleColor defaultColor = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("\nОшибка ввода.");
+            Console.Write("Для возврата в меню нажмите любую клавишу...");
+            Console.ReadKey();
+            Console.ForegroundColor = defaultColor;
+            Console.Clear();
+        }
+    }
+}
