@@ -18,64 +18,67 @@ namespace Задача_35.Динамический_массив_продвину
             Как только пользователь введёт команду sum, программа выведет сумму всех веденных чисел.
             Выход из программы должен происходить только в том случае, если пользователь введет команду exit.*/
 
-            string userInput;
-            int sum = 0;
+            string userInput;            
             bool isExit = false;
             List<int> numbers = new List<int>();
 
             while (isExit == false)
             {
-                Console.WriteLine("\nМеню программы:\n");
-                Console.WriteLine("1 - Ввод числа.");
-                Console.WriteLine("2 - Вычислить сумму всех введеных значений.");
-                Console.WriteLine("3 - Выйти из программы.");
-                Console.Write("\nВыберите пункт меню: ");
+                Console.WriteLine("\nМеню программы. Введите число, чтобы добавить его в список. Или введите команду.\n");
+                Console.WriteLine("sum - Вычислить сумму всех введеных значений.");
+                Console.WriteLine("exit - Выйти из программы.");
+                Console.Write("\nВвод: ");
 
                 userInput = Console.ReadLine();
 
                 switch (userInput)
                 {
-                    case "1":
-                        Console.Write("\nВведите число: ");
-                        userInput = Console.ReadLine();
-
-                        bool isConverted = int.TryParse(userInput, out int convertToInt);
-
-                        if (isConverted == true)
-                        {
-                            numbers.Add(convertToInt);
-                            Console.Write($"\nЧисло {convertToInt} добавлено. Для возврата в меню нажмите любую клавишу...");
-                            Console.ReadKey();
-                            Console.Clear();
-                        }
-                        else
-                        {
-                            WriteError();
-                        }
-                        
+                    case "sum":
+                        Sum(numbers);
                         break;
-                    case "2":
-
-                        foreach (int number in numbers)
-                        {
-                            sum += number;
-                        }
-
-                        Console.Write($"\nСумма всех введеных чисел равна {sum}. Для возврата в меню нажмите любую клавишу...");
-                        sum = 0;
-                        Console.ReadKey();
-                        Console.Clear();
-                        break;
-                    case "3":
+                    case "exit":
                         isExit = true;
                         break;
                     default:
-                        WriteError();
+                        ConvertStringToInt(userInput, ref numbers);
                         break;
                 }                
             }            
         }
 
+        static void Sum (List<int> numbers)
+        {
+            
+            int sum = 0;
+
+            foreach (int number in numbers)
+            {
+                sum += number;
+            }
+
+            Console.Write($"\nСумма всех введеных чисел равна {sum}. Для возврата в меню нажмите любую клавишу...");
+            sum = 0;
+            Console.ReadKey();
+            Console.Clear();
+        }
+
+        static void ConvertStringToInt(string userInput, ref List<int> numbers)
+        {
+            bool isConverted = int.TryParse(userInput, out int convertToInt);
+
+            if (isConverted == true)
+            {
+                numbers.Add(convertToInt);
+                Console.Write($"\nЧисло {convertToInt} добавлено. Для возврата в меню нажмите любую клавишу...");
+                Console.ReadKey();
+                Console.Clear();
+            }
+            else
+            {
+                WriteError();
+            }
+        }
+            
         static void WriteError()
         {
             ConsoleColor defaultColor = Console.ForegroundColor;
