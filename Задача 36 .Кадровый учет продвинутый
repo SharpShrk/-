@@ -1,0 +1,117 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_36.Кадровый_учет_продвинутый
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            /*В функциях вы выполняли задание "Кадровый учёт"
+            Используя одну из изученных коллекций, вы смогли бы сильно себе упростить код выполненной программы, ведь у нас данные, это ФИО и позиция.
+            Поиск в данном задании не нужен.
+            1) добавить досье
+            2) вывести все досье (в одну строку через “-” фио и должность)
+            3) удалить досье
+            4) выход*/
+
+            Dictionary<string, string> personnelRecords = new Dictionary<string, string>();
+            bool isExit = false;
+            string userInput;
+
+            while (isExit == false)
+            {
+                Console.WriteLine("Меню программы кадрового учета.");
+                Console.WriteLine("1 - Добавить досье;");
+                Console.WriteLine("2 - Вывести все досье;");
+                Console.WriteLine("3 - Удалить досье;");
+                Console.WriteLine("4 - Выход из программы.");
+                Console.Write("\nВыберите пункт меню: ");
+                userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case "1":
+                        AddDossier(ref personnelRecords);
+                        break;
+                    case "2":
+                        WriteAllDossiers(personnelRecords);
+                        break;
+                    case "3":
+                        RemoveDossier(ref personnelRecords);
+                        break;
+                    case "4":
+                        isExit = true;
+                        break;
+                    default:
+                        WriteError();
+                        break;
+                }
+            }
+        }
+
+        static void AddDossier(ref Dictionary<string,string> personnelRecords)
+        {
+            string surname;
+            string jobPosition;
+
+            Console.Write("\nВведите фамилию: ");
+            surname = Console.ReadLine();
+            Console.Write("\nВведите должность: ");
+            jobPosition = Console.ReadLine();
+
+            personnelRecords.Add(surname, jobPosition);
+            Console.Write("Для возврата в меню нажмите любую клавишу...");
+            Console.ReadKey();
+            Console.Clear();
+        }
+
+        static void WriteAllDossiers(Dictionary<string, string> personnelRecords)
+        {
+            Console.WriteLine("Журнал кадрового учета:\n");
+
+            foreach (var dossier in personnelRecords)
+            {
+                Console.WriteLine($"{dossier.Key} - {dossier.Value}");
+            }
+
+            Console.Write("\nДля возврата в меню нажмите любую клавишу...");
+            Console.ReadKey();
+            Console.Clear();
+        }
+
+        static void RemoveDossier(ref Dictionary<string, string> personnelRecords)
+        {
+            string surname;
+
+            Console.Write("\nВведите фамилию для удаления из досье: ");
+            surname = Console.ReadLine();
+
+            if (personnelRecords.ContainsKey(surname))
+            {
+                personnelRecords.Remove(surname);
+                Console.Write("Досье удалено.\nДля возврата в меню нажмите любую клавишу...");
+                Console.ReadKey();
+                Console.Clear();
+            }
+            else
+            {
+                WriteError();
+            }            
+        }
+
+        static void WriteError()
+        {
+            ConsoleColor defaultColor = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("\nОшибка ввода.");
+            Console.Write("Для возврата в меню нажмите любую клавишу...");
+            Console.ReadKey();
+            Console.ForegroundColor = defaultColor;
+            Console.Clear();
+        }
+    }
+}
