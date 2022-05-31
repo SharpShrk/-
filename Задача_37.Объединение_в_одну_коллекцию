@@ -1,0 +1,40 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_37.Объединение_в_одну_коллекцию
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            /*Есть два массива строк. Надо их объединить в одну коллекцию, 
+             * исключив повторения, не используя Linq.Пример: { "1", "2", "1"} + { "3", "2"} => { "1", "2", "3"}*/
+
+            string[] array1 = new string[] { "1", "2", "1", "3"};
+            string[] array2 = new string[] { "2", "1", "2", "4", "5"};
+            List<string> unionArray = new List<string>();
+
+            for (int i = 0; i < array1.Length; i++)
+            {
+                unionArray.Add(array1[i]);
+            }
+
+            for (int i = 0; i < array2.Length; i++)
+            {
+                unionArray.Add(array2[i]);
+            }
+
+            HashSet<string> result = new HashSet<string>(unionArray);
+            unionArray.Clear();
+            unionArray.AddRange(result);
+
+            foreach (string number in unionArray)
+            {
+                Console.WriteLine(number);
+            }
+
+        }
+    }
+}
