@@ -1,0 +1,93 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_38.Работа_с_классами
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            /*Создать класс игрока, с полями, содержащими информацию об игроке и методом, который выводит информацию на экран.
+            В классе обязательно должен быть конструктор*/
+            string name = "Джордани Йованович";
+            int level;
+            int health;
+            int mana;
+            int experiencePoints;
+            int minRandomValue = 1;
+            int maxRandomValue = 10;
+            Random random = new Random();
+
+            health = random.Next(minRandomValue, maxRandomValue);
+            mana = random.Next(minRandomValue, maxRandomValue);
+            experiencePoints = random.Next(minRandomValue, maxRandomValue);
+            level = random.Next(minRandomValue, maxRandomValue);
+
+            Player player1 = new Player (name, level, health, mana, experiencePoints);
+
+            player1.ShowStats();
+        }
+    }
+
+    class Player
+    {
+        private string _name;
+        private int _health;
+        private int _mana;
+        private int _level;
+        private int _experiencePoints;
+
+        public Player(string name, int health, int mana, int level, int experiencePoints)
+        {
+            _name = name;
+            _health = health;
+            _mana = mana;
+            _level = level;
+            _experiencePoints = experiencePoints;
+        }
+
+        public void ShowStats()
+        {
+            int healthBarPosition = 2;
+            int manaBarPosition = 3;
+            int experienceBarPosition = 4;
+
+            Console.WriteLine($"Имя персонажа: {_name}");
+            Console.WriteLine($"Уровень: {_level}");
+
+            DrawBar(_health, ConsoleColor.Red, healthBarPosition);
+            DrawBar(_mana, ConsoleColor.Blue, manaBarPosition);
+            DrawBar(_experiencePoints, ConsoleColor.Yellow, experienceBarPosition);
+        }
+
+        static void DrawBar(int value, ConsoleColor color, int position)
+        {
+            int maxValue = 10;
+            ConsoleColor defaulColor = Console.BackgroundColor;
+            string bar = "";
+
+            for (int i = 0; i < value; i++)
+            {
+                bar += ' ';
+            }
+
+            Console.SetCursorPosition(0, position);
+            Console.Write('[');
+            Console.BackgroundColor = color;
+            Console.Write(bar);
+            Console.BackgroundColor = defaulColor;
+
+            bar = "";
+
+            for (int i = value; i < maxValue; i++)
+            {
+                bar += ' ';
+            }
+
+            Console.Write(bar + ']' + " " + (value * 10) + "%\n");
+        }
+    }
+}
