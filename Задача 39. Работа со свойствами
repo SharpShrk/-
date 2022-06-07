@@ -21,7 +21,7 @@ namespace Задача_39.Работа_со_свойствами
             Renderer renderer = new Renderer();
             Player player = new Player(xPosition, yPosition, playerSymbol);
 
-            renderer.DrawPlayer(xPosition,yPosition,playerSymbol);
+            renderer.DrawPlayer(player.XPosition, player.YPosition, player.PlayerSymbol);
         }
     }
 
@@ -31,10 +31,11 @@ namespace Задача_39.Работа_со_свойствами
         public int YPosition { get; private set; }
         public char PlayerSymbol { get; private set; }
 
-        public Player(int xPosition, int yPosition, char PlayerSymbol)
+        public Player(int xPosition, int yPosition, char playerSymbol)
         {
             XPosition = xPosition;
             YPosition = yPosition;
+            PlayerSymbol = playerSymbol;
         }
     }
 
