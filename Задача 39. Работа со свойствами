@@ -1,0 +1,50 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_39.Работа_со_свойствами
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            /*Создать класс игрока, у которого есть поля с его положением в x,y.
+            Создать класс отрисовщик, с методом, который отрисует игрока.
+            Попрактиковаться в работе со свойствами.*/
+
+            char playerSymbol = '#';
+            int xPosition = 10;
+            int yPosition = 5;
+
+            Renderer renderer = new Renderer();
+            Player player = new Player(xPosition, yPosition, playerSymbol);
+
+            renderer.DrawPlayer(xPosition,yPosition,playerSymbol);
+        }
+    }
+
+    class Player
+    {
+        public int XPosition { get; private set; }
+        public int YPosition { get; private set; }
+        public char PlayerSymbol { get; private set; }
+
+        public Player(int xPosition, int yPosition, char PlayerSymbol)
+        {
+            XPosition = xPosition;
+            YPosition = yPosition;
+        }
+    }
+
+    class Renderer
+    {
+        
+        public void DrawPlayer(int xPosition, int yPosition, char playerSymbol)
+        {
+            Console.SetCursorPosition(xPosition, yPosition);
+            Console.WriteLine(playerSymbol);
+        }
+    }
+}
