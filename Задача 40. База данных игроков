@@ -86,13 +86,12 @@ namespace Задача_40.База_данных_игроков
             int intInputId;
             bool resultConvertId = int.TryParse(inputId, out intInputId);
 
-            for (int i = 0; i < _players.Count; i++)
+            bool result = TryGetPlayer(inputId, out Player player);
+
+            if (player.Id == intInputId)
             {
-                if(_players[i].Id == intInputId)
-                {
-                    Console.WriteLine("\nИгрок с таким ID уже создан.");
-                    return;
-                }
+                Console.WriteLine("\nИгрок с таким ID уже существует!");
+                return;
             }
 
             if (resultConvertId == false)
