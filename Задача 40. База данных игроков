@@ -113,10 +113,17 @@ namespace Задача_40.База_данных_игроков
         {
             Console.WriteLine("\nВведите ID игрока для его удаления.");
             string inputId = Console.ReadLine();
-            int intInputId;
+
+            bool result = TryGetPlayer(inputId, out Player player);
+            
+            if (result)
+            {
+                _players.RemoveAt(player.Id);
+            }
+            /*int intInputId;
             bool result = int.TryParse(inputId, out intInputId);
 
-            if (result)
+            /*if (result)
             {
                 for (int i = 0; i < _players.Count; i++)
                 {
@@ -129,7 +136,7 @@ namespace Задача_40.База_данных_игроков
             else
             {
                 Console.WriteLine("\nОшибка ввода.");
-            }                       
+            }   */                    
         }
 
         public void ShowAllPlayers()
@@ -137,6 +144,37 @@ namespace Задача_40.База_данных_игроков
             for (int i = 0; i < _players.Count; i++)
             {
                 _players[i].ShowInfo();
+            }
+        }
+
+        private bool TryGetPlayer(string userInput, out Player player)
+        {
+            player = null;
+            int intInputId;
+            bool result = int.TryParse(userInput, out intInputId);
+
+            if (result)
+            {
+                for (int i = 0; i < _players.Count; i++)
+                {
+                    if (_players[i].Id == intInputId)
+                    {
+                        player = _players[i];
+                        return true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("\nОшибка.");
+                        player = null;
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("\nОшибка ввода.");
+                player = null;
+                return false;
             }
         }
 
