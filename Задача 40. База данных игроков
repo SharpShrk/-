@@ -80,14 +80,33 @@ namespace Задача_40.База_данных_игроков
         public void AddPlayer ()
         {
             Console.WriteLine("\nДля добавления игрока в базу данных введите его данные.");
-            Console.Write("Введите ID игрока: ");
-            int inputId = Convert.ToInt32(Console.ReadLine());
+            
+            Console.Write("Введите ID игрока: ");              
+            string inputId = Console.ReadLine();
+            int intInputId;
+            bool resultConvertId = int.TryParse(inputId, out intInputId);
+
+            if (resultConvertId == false)
+            {
+                Console.WriteLine("\nОшибка ввода ID игрока!");
+                return;
+            }
+
             Console.Write("Введите никнейм игрока: ");
             string inputNickname = Console.ReadLine();
+
             Console.Write("Введите уровень игрока: ");
-            int inputLevel = Convert.ToInt32(Console.ReadLine());
-            
-            _players.Add(new Player(inputId, inputNickname, inputLevel));
+            string inputLevel = Console.ReadLine();
+            int intInputLevel;
+            bool resultConvertLevel = int.TryParse(inputLevel, out intInputLevel);
+
+            if (resultConvertLevel == false)
+            {
+                Console.WriteLine("\nОшибка ввода уровня игрока!");
+                return;
+            }
+
+            _players.Add(new Player(intInputId, inputNickname, intInputLevel));
         }
         
         public void DeletePlayer ()
@@ -136,7 +155,7 @@ namespace Задача_40.База_данных_игроков
                     {
                         if (_players[i].IsBan == false)
                         {
-                            _players[i].BanPlayer();
+                            _players[i].Ban();
                         }
                         else
                         {
@@ -166,7 +185,7 @@ namespace Задача_40.База_данных_игроков
                     {
                         if (_players[i].IsBan == true)
                         {
-                            _players[i].UnbanPlayer();
+                            _players[i].Unban();
                         }
                         else
                         {
@@ -194,7 +213,7 @@ namespace Задача_40.База_данных_игроков
             Id = id;
             Nickname = nickname;
             Level = level;
-            this.IsBan = isBan;
+            IsBan = isBan;
         }
 
         public void ShowInfo()
@@ -209,12 +228,12 @@ namespace Задача_40.База_данных_игроков
             }            
         }
 
-        public void BanPlayer()
+        public void Ban()
         {
             IsBan = true;
         }
 
-        public void UnbanPlayer()
+        public void Unban()
         {
             IsBan = false;
         }
