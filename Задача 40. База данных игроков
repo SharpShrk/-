@@ -118,25 +118,8 @@ namespace Задача_40.База_данных_игроков
             
             if (result)
             {
-                _players.RemoveAt(player.Id);
-            }
-            /*int intInputId;
-            bool result = int.TryParse(inputId, out intInputId);
-
-            /*if (result)
-            {
-                for (int i = 0; i < _players.Count; i++)
-                {
-                    if (_players[i].Id == intInputId)
-                    {
-                        _players.RemoveAt(i);
-                    }
-                }
-            }
-            else
-            {
-                Console.WriteLine("\nОшибка ввода.");
-            }   */                    
+                _players.Remove(player);
+            }                        
         }
 
         public void ShowAllPlayers()
@@ -144,6 +127,32 @@ namespace Задача_40.База_данных_игроков
             for (int i = 0; i < _players.Count; i++)
             {
                 _players[i].ShowInfo();
+            }
+        }       
+
+        public void BanPlayer()
+        {
+            Console.WriteLine("\nВведите ID игрока, которого нужно забанить.");
+            string inputId = Console.ReadLine();
+
+            bool result = TryGetPlayer(inputId, out Player player);
+
+            if (result)
+            {
+                player.Ban();
+            }
+        }
+
+        public void UnbanPlayer()
+        {
+            Console.WriteLine("\nВведите ID игрока, которого нужно разбанить.");
+            string inputId = Console.ReadLine();
+
+            bool result = TryGetPlayer(inputId, out Player player);
+
+            if (result)
+            {
+                player.Unban();
             }
         }
 
@@ -162,80 +171,10 @@ namespace Задача_40.База_данных_игроков
                         player = _players[i];
                         return true;
                     }
-                    else
-                    {
-                        Console.WriteLine("\nОшибка.");
-                        player = null;
-                        return false;
-                    }
                 }
             }
-            else
-            {
-                Console.WriteLine("\nОшибка ввода.");
-                player = null;
-                return false;
-            }
-        }
-
-        public void BanPlayer()
-        {
-            Console.WriteLine("\nВведите ID игрока, которого нужно забанить.");
-            string inputId = Console.ReadLine();
-            int intInputId;
-            bool result = int.TryParse(inputId, out intInputId);
-
-            if (result == true)
-            {
-                for (int i = 0; i < _players.Count; i++)
-                {
-                    if (_players[i].Id == intInputId)
-                    {
-                        if (_players[i].IsBan == false)
-                        {
-                            _players[i].Ban();
-                        }
-                        else
-                        {
-                            Console.WriteLine("\nИгрок уже был забанен ранее.");
-                        }
-                    }
-                }
-            }
-            else
-            {
-                Console.WriteLine("\nОшибка ввода.");
-            }
-        }
-
-        public void UnbanPlayer()
-        {
-            Console.WriteLine("\nВведите ID игрока, которого нужно разбанить.");
-            string inputId = Console.ReadLine();
-            int intInputId;
-            bool result = int.TryParse(inputId, out intInputId);
-
-            if (result == true)
-            {
-                for (int i = 0; i < _players.Count; i++)
-                {
-                    if (_players[i].Id == intInputId)
-                    {
-                        if (_players[i].IsBan == true)
-                        {
-                            _players[i].Unban();
-                        }
-                        else
-                        {
-                            Console.WriteLine("\nИгрок не был забанен ранее.");
-                        }
-                    }
-                }
-            }
-            else
-            {
-                Console.WriteLine("\nОшибка ввода.");
-            }
+            Console.WriteLine("\nОшибка ввода.");
+            return false;
         }
     }
 
