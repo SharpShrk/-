@@ -19,7 +19,6 @@ namespace Задача_41.Колода_карт
             string[] values = new string[] { "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace" };
             bool isExit = false;
             string userInput;
-            int maxCardinDeck = 36;
 
             DeckOfCard deck = new DeckOfCard(values, suits);
             Player player = new Player();            
@@ -45,7 +44,7 @@ namespace Задача_41.Колода_карт
                         deck.ShowAllCards();
                         break;
                     case "3":
-                        TakeCards(deck, player, ref maxCardinDeck);
+                        TakeCards(deck, player);
                         break;
                     case "4":
                         player.ShowAllCards();
@@ -64,11 +63,12 @@ namespace Задача_41.Колода_карт
             }
         }
 
-        static void TakeCards(DeckOfCard deck, Player player, ref int maxCardInDeck)
+        static void TakeCards(DeckOfCard deck, Player player)
         {
             Card tempCard = null;
             string userInput;
-            int cardsCount;            
+            int cardsCount;
+            int maxCardInDeck = deck.GetNumberCards();
 
             Console.WriteLine("Сколько карт вы хотите взять?");
             userInput= Console.ReadLine();
@@ -79,7 +79,7 @@ namespace Задача_41.Колода_карт
             {
                 for (int i = 0; i < cardsCount; i++)
                 {
-                    deck.GiveCard(ref tempCard);
+                    deck.GiveCard();
                     player.TakeCard(tempCard);
                 }
                 maxCardInDeck -= cardsCount;
@@ -140,21 +140,25 @@ namespace Задача_41.Колода_карт
         public void Shuffle()
         {
             Random random = new Random();
-            int numbersOfCard = _cards.Count;
-            while (numbersOfCard > 1)
+            for (int i = 1; i < _cards.Count; i++)
             {
-                numbersOfCard--;
-                int temp = random.Next(numbersOfCard+1);
+                int temp = random.Next(i + 1);
                 Card value = _cards[temp];
-                _cards[temp] = _cards[numbersOfCard];
-                _cards[numbersOfCard] = value;
+                _cards[temp] = _cards[i];
+                _cards[i] = value;
             }
         }
 
-        public void GiveCard(ref Card card)
+        public Card GiveCard()
         {
-            card = _cards[_cards.Count - 1];
-            _cards.RemoveAt(_cards.Count - 1);
+            Card card = _cards[_cards.Count - 1];
+            return card;
+        }
+
+        public int GetNumberCards()
+        {
+            int numberCards = _cards.Count;
+            return numberCards;
         }
     }
 
