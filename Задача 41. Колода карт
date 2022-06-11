@@ -19,6 +19,7 @@ namespace Задача_41.Колода_карт
             string[] values = new string[] { "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace" };
             bool isExit = false;
             string userInput;
+            int maxCardinDeck = 36;
 
             DeckOfCard deck = new DeckOfCard(values, suits);
             Player player = new Player();            
@@ -41,13 +42,13 @@ namespace Задача_41.Колода_карт
                         deck.Shuffle();
                         break;
                     case "2":
-                        deck.ShowAllCardsInDeck();
+                        deck.ShowAllCards();
                         break;
                     case "3":
-                        TakeCards(deck, player);
+                        TakeCards(deck, player, ref maxCardinDeck);
                         break;
                     case "4":
-                        player.ShowAllCardsInHands();
+                        player.ShowAllCards();
                         break;
                     case "5":
                         isExit = true;
@@ -63,24 +64,29 @@ namespace Задача_41.Колода_карт
             }
         }
 
-        static void TakeCards(DeckOfCard deck, Player player)
+        static void TakeCards(DeckOfCard deck, Player player, ref int maxCardInDeck)
         {
-            Card tempCard;
+            Card tempCard = null;
             string userInput;
-            int intUserInput;
+            int cardsCount;            
 
             Console.WriteLine("Сколько карт вы хотите взять?");
             userInput= Console.ReadLine();
 
-            bool resultConvertId = int.TryParse(userInput, out intUserInput);
+            bool isNumber = int.TryParse(userInput, out cardsCount);
 
-            if (resultConvertId)
+            if (isNumber && cardsCount <= maxCardInDeck)
             {
-                for (int i = 0; i < intUserInput; i++)
+                for (int i = 0; i < cardsCount; i++)
                 {
-                    deck.GiveCardToPlayer(out tempCard);
+                    deck.GiveCard(ref tempCard);
                     player.TakeCard(tempCard);
                 }
+                maxCardInDeck -= cardsCount;
+            }
+            else if (maxCardInDeck <= cardsCount)
+            {
+                Console.WriteLine("Нельзя взять больше карт, чем осталось в колоде!");
             }
             else
             {
@@ -91,18 +97,18 @@ namespace Задача_41.Колода_карт
 
     class Card
     {
-        private string _suitOfCard;
-        private string _valueOfCard;
+        private string _suit;
+        private string _value;
 
         public Card (string valueOfCard, string suitOfCard)
         {
-            _suitOfCard = suitOfCard;
-            _valueOfCard = valueOfCard;
+            _suit = suitOfCard;
+            _value = valueOfCard;
         }
 
         public void ShowInfo()
         {
-            Console.WriteLine(_valueOfCard + " - " + _suitOfCard);
+            Console.WriteLine(_value + " - " + _suit);
         }
     }
 
@@ -121,7 +127,7 @@ namespace Задача_41.Колода_карт
             }            
         }
 
-        public void ShowAllCardsInDeck()
+        public void ShowAllCards()
         {
             Console.WriteLine($"\nВ колоде сейчас {_cards.Count} карт.\n");
 
@@ -145,7 +151,7 @@ namespace Задача_41.Колода_карт
             }
         }
 
-        public void GiveCardToPlayer(out Card card)
+        public void GiveCard(ref Card card)
         {
             card = _cards[_cards.Count - 1];
             _cards.RemoveAt(_cards.Count - 1);
@@ -161,7 +167,7 @@ namespace Задача_41.Колода_карт
             _cardsInHands.Add(card);
         }
         
-        public void ShowAllCardsInHands()
+        public void ShowAllCards()
         {
             if (_cardsInHands.Count == 0)
             {
