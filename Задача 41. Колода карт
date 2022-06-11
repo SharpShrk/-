@@ -1,0 +1,181 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_41.Колода_карт
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            /*Есть колода с картами. Игрок достает карты, пока не решит, что ему хватит карт 
+            (может быть как выбор пользователя, так и количество сколько карт надо взять). 
+            После выводиться вся информация о вытянутых картах.
+            Возможные классы: Карта, Колода, Игрок.*/
+
+            string[] suits = new string[] { "Hearts", "Spades", "Diamonds", "Clubs" };
+            string[] values = new string[] { "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace" };
+            bool isExit = false;
+            string userInput;
+
+            DeckOfCard deck = new DeckOfCard(values, suits);
+            Player player = new Player();            
+
+            while(isExit == false)
+            {
+                Console.WriteLine("\nПеред вами виртуальная колода карт.\n");
+                Console.WriteLine("1 - Перемешать колоду;");
+                Console.WriteLine("2 - Посмотреть все карты в колоде;");
+                Console.WriteLine("3 - Взять некоторое количество карт в руку;");
+                Console.WriteLine("4 - Посмотреть все карты в руке;");
+                Console.WriteLine("5 - Выйти.");
+                Console.Write("\nВыберите пункт меню: ");
+
+                userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case "1":
+                        deck.Shuffle();
+                        break;
+                    case "2":
+                        deck.ShowAllCardsInDeck();
+                        break;
+                    case "3":
+                        TakeCards(deck, player);
+                        break;
+                    case "4":
+                        player.ShowAllCardsInHands();
+                        break;
+                    case "5":
+                        isExit = true;
+                        break;
+                    default:
+                        Console.WriteLine("Ошибка ввода!");
+                        break;
+                }
+
+                Console.WriteLine("Нажмите любую клавишу для продолжения...");
+                Console.ReadKey();
+                Console.Clear();
+            }
+        }
+
+        static void TakeCards(DeckOfCard deck, Player player)
+        {
+            Card tempCard;
+            string userInput;
+            int intUserInput;
+
+            Console.WriteLine("Сколько карт вы хотите взять?");
+            userInput= Console.ReadLine();
+
+            bool resultConvertId = int.TryParse(userInput, out intUserInput);
+
+            if (resultConvertId)
+            {
+                for (int i = 0; i < intUserInput; i++)
+                {
+                    deck.GiveCardToPlayer(out tempCard);
+                    player.TakeCard(tempCard);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Ошибка ввода!");
+            }
+        }
+    }
+
+    class Card
+    {
+        private string _suitOfCard;
+        private string _valueOfCard;
+
+        public Card (string valueOfCard, string suitOfCard)
+        {
+            _suitOfCard = suitOfCard;
+            _valueOfCard = valueOfCard;
+        }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine(_valueOfCard + " - " + _suitOfCard);
+        }
+    }
+
+    class DeckOfCard
+    {        
+        private List<Card> _cards = new List<Card>();
+
+        public DeckOfCard (string[] values, string[] suits)
+        {
+            for (int i = 0; i < values.Length; i++)
+            {
+                for (int j = 0; j < suits.Length; j++)
+                {
+                    _cards.Add(new Card(values[i], suits[j]));
+                }
+            }            
+        }
+
+        public void ShowAllCardsInDeck()
+        {
+            Console.WriteLine($"\nВ колоде сейчас {_cards.Count} карт.\n");
+
+            for (int i = 0; i < _cards.Count; i++)
+            {
+                _cards[i].ShowInfo();
+            }
+        }
+
+        public void Shuffle()
+        {
+            Random random = new Random();
+            int numbersOfCard = _cards.Count;
+            while (numbersOfCard > 1)
+            {
+                numbersOfCard--;
+                int temp = random.Next(numbersOfCard+1);
+                Card value = _cards[temp];
+                _cards[temp] = _cards[numbersOfCard];
+                _cards[numbersOfCard] = value;
+            }
+        }
+
+        public void GiveCardToPlayer(out Card card)
+        {
+            card = _cards[_cards.Count - 1];
+            _cards.RemoveAt(_cards.Count - 1);
+        }
+    }
+
+    class Player
+    {
+        private List<Card> _cardsInHands = new List<Card>();
+
+        public void TakeCard(Card card)
+        {
+            _cardsInHands.Add(card);
+        }
+        
+        public void ShowAllCardsInHands()
+        {
+            if (_cardsInHands.Count == 0)
+            {
+                Console.WriteLine("\nКарт в руке нет.");
+            }
+            else
+            {
+                Console.WriteLine($"\nВ руке сейчас {_cardsInHands.Count} карт:\n");
+
+                for (int i = 0; i < _cardsInHands.Count; i++)
+                {                    
+                    _cardsInHands[i].ShowInfo();
+                }
+            }            
+        }
+    }
+}
