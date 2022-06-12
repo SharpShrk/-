@@ -1,0 +1,185 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_43.Магазин
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            /*Существует продавец, он имеет у себя список товаров, и при нужде, может вам его показать,
+            также продавец может продать вам товар. После продажи товар переходит к вам, и вы можете также посмотреть свои вещи.
+            Возможные классы – игрок, продавец, товар.
+            Вы можете сделать так, как вы видите это.*/
+
+            int buyersMoney = 500;
+            int salesmanMoney = 0;
+            string userInput;
+            bool isExit = false;
+            Product sellProduct = null;
+
+            Salesman salesman = new Salesman(salesmanMoney);
+            Buyer buyer = new Buyer(buyersMoney);
+
+            while (isExit == false)
+            {
+                Console.WriteLine($"Денег у продавца: {salesman.Money} рублей.");
+                Console.WriteLine($"Денег у покупателя: {buyer.Money} рублей.\n");
+                Console.WriteLine("Вы находитесь в лавке продуктов.\n");
+                Console.WriteLine("1 - Посмотреть ассортимент;");
+                Console.WriteLine("2 - Купить товар;");
+                Console.WriteLine("3 - Посмотреть товары в сумке;");
+                Console.WriteLine("4 - Выйти из лавки продуктов.");
+                Console.Write("\nВыберите пункт меню: ");
+                userInput = Console.ReadLine();
+                Console.WriteLine();
+
+                switch (userInput)
+                {
+                    case "1":
+                        salesman.ShowProducts();
+                        break;
+                    case "2":
+                        sellProduct = salesman.Sell();
+                        buyer.TakeProduct(sellProduct);
+                        break;
+                    case "3":
+                        buyer.ShowBag();
+                        break;
+                    case "4":
+                        isExit = true;
+                        break;
+                    default:
+                        Console.WriteLine("\nОшибка ввода!");
+                        break;
+                }
+
+                Console.WriteLine("\nНажмите любую клавишу для продолжения...");
+                Console.ReadKey();
+                Console.Clear();
+            }
+        }
+    }
+
+    class Salesman
+    {
+        public int Money { get; private set; }
+        
+        private List<Product> _products = new List<Product>();
+
+        public Salesman(int money)
+        {
+            Money = money;
+            _products.Add(new Product("Яблоко", 50));
+            _products.Add(new Product("Груша", 75));
+            _products.Add(new Product("Банан", 100));
+            _products.Add(new Product("Ананас", 80));
+            _products.Add(new Product("Дыня", 150));
+            _products.Add(new Product("Арбуз", 120));
+        }
+
+        public void ShowProducts()
+        {
+            Console.WriteLine("\nПеред вами список товаров:\n");
+
+            for (int i = 0; i < _products.Count; i++)
+            {
+                Console.Write($"{i + 1}. ");
+                _products[i].ShowInfo();
+            }
+        }
+
+        public Product Sell()
+        {
+            string inputNumber;
+            Product sellProduct = null;
+
+            Console.WriteLine("\nПеред вами список товаров:");
+
+            for (int i = 0; i < _products.Count; i++)
+            {
+                Console.Write($"{i + 1}. ");
+                _products[i].ShowInfo();
+            }
+
+            Console.Write("\n Введите порядковый номер товара, который хотите купить: ");
+            inputNumber = Console.ReadLine();
+
+            bool isConverted = int.TryParse(inputNumber, out int Number);
+
+            if (isConverted)
+            {
+                if (Number <= _products.Count)
+                {
+                    sellProduct = _products[Number - 1];
+                    _products.RemoveAt(Number - 1);
+                    Money += sellProduct.Price;
+                    return sellProduct;
+                }
+                else
+                {
+                    Console.WriteLine("\nТовара с таким порядковым номером в списке нет!");
+                }
+            }
+            else
+            {
+                Console.WriteLine("\nОшибка ввода!");
+            }
+
+            return sellProduct;
+        }
+    }
+
+    class Buyer
+    {
+        public int Money { get; private set; }
+        private List<Product> _products = new List<Product>();
+        
+        public Buyer (int money)
+        {
+            Money = money;
+        }
+
+        public void TakeProduct(Product product)
+        {
+            if (Money > product.Price)
+            {
+                _products.Add(product);
+                Money -= product.Price;
+            }
+            else
+            {
+                Console.WriteLine("У вас недостаточно денег.");
+            }
+        }
+
+        public void ShowBag()
+        {
+            Console.WriteLine("\nВ сумке сейчас лежит:\n");
+            for (int i = 0; i < _products.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {_products[i].Name}");
+            }
+        }
+    }
+
+    class Product
+    {
+        public int Price { get; private set; }
+        public string Name { get; private set; }
+        
+        public Product(string name, int price)
+        {
+            Name = name;
+            Price = price;
+        }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine($"{Name} - {Price} рублей.");
+        }
+    }
+}
