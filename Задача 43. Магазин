@@ -26,8 +26,8 @@ namespace Задача_43.Магазин
 
             while (isExit == false)
             {
-                salesmanMoney = salesman.GetMoney();
-                buyersMoney = buyer.GetMoney();
+                salesmanMoney = salesman.GetMoney;
+                buyersMoney = buyer.GetMoney;
 
                 Console.WriteLine($"Денег у продавца: {salesmanMoney} рублей.");
                 Console.WriteLine($"Денег у покупателя: {buyersMoney} рублей.\n");
@@ -71,6 +71,11 @@ namespace Задача_43.Магазин
     {
         protected int Money;
         protected List<Product> _products = new List<Product>();
+        public int GetMoney
+        {
+            get { return Money; }
+            protected set { }
+        }
 
         public void ShowProduct()
         {
@@ -79,11 +84,6 @@ namespace Задача_43.Магазин
             {
                 Console.WriteLine($"{i + 1}. {_products[i].Name}");
             }
-        }
-
-        public int GetMoney()
-        {
-            return Money;
         }
     }
 
