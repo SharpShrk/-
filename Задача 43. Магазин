@@ -70,7 +70,7 @@ namespace Задача_43.Магазин
     class Man
     {
         protected int Money;
-        protected List<Product> _products = new List<Product>();
+        protected List<Product> Products = new List<Product>();
         public int GetMoney
         {
             get { return Money; }
@@ -80,9 +80,9 @@ namespace Задача_43.Магазин
         public void ShowProduct()
         {
             Console.WriteLine("\nВ сумке сейчас лежит:\n");
-            for (int i = 0; i < _products.Count; i++)
+            for (int i = 0; i < Products.Count; i++)
             {
-                Console.WriteLine($"{i + 1}. {_products[i].Name}");
+                Console.WriteLine($"{i + 1}. {Products[i].Name}");
             }
         }
     }
@@ -92,12 +92,12 @@ namespace Задача_43.Магазин
         public Salesman() : base()
         {
             Money = 0;
-            _products.Add(new Product("Яблоко", 50));
-            _products.Add(new Product("Груша", 75));
-            _products.Add(new Product("Банан", 100));
-            _products.Add(new Product("Ананас", 80));
-            _products.Add(new Product("Дыня", 150));
-            _products.Add(new Product("Арбуз", 120));
+            Products.Add(new Product("Яблоко", 50));
+            Products.Add(new Product("Груша", 75));
+            Products.Add(new Product("Банан", 100));
+            Products.Add(new Product("Ананас", 80));
+            Products.Add(new Product("Дыня", 150));
+            Products.Add(new Product("Арбуз", 120));
         }
 
         public Product Sell()
@@ -107,10 +107,10 @@ namespace Задача_43.Магазин
 
             Console.WriteLine("\nПеред вами список товаров:");
 
-            for (int i = 0; i < _products.Count; i++)
+            for (int i = 0; i < Products.Count; i++)
             {
                 Console.Write($"{i + 1}. ");
-                _products[i].ShowInfo();
+                Products[i].ShowInfo();
             }
 
             Console.Write("\n Введите порядковый номер товара, который хотите купить: ");
@@ -120,10 +120,10 @@ namespace Задача_43.Магазин
 
             if (isConverted)
             {
-                if (Number <= _products.Count)
+                if (Number <= Products.Count)
                 {
-                    sellProduct = _products[Number - 1];
-                    _products.RemoveAt(Number - 1);
+                    sellProduct = Products[Number - 1];
+                    Products.RemoveAt(Number - 1);
                     Money += sellProduct.Price;
                     return sellProduct;
                 }
@@ -152,7 +152,7 @@ namespace Задача_43.Магазин
         {
             if (Money > product.Price)
             {
-                _products.Add(product);
+                Products.Add(product);
                 Money -= product.Price;
             }
             else
