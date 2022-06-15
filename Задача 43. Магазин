@@ -4,178 +4,170 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Задача_43.Магазин
+namespace Задача_44.Конфигуратор_пассажирских_поездов
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            /*Существует продавец, он имеет у себя список товаров, и при нужде, может вам его показать,
-            также продавец может продать вам товар. После продажи товар переходит к вам, и вы можете также посмотреть свои вещи.
-            Возможные классы – игрок, продавец, товар.
-            Вы можете сделать так, как вы видите это.*/
+            /*У вас есть программа, которая помогает пользователю составить план поезда.
+            Есть 4 основных шага в создании плана:
+            -Создать направление - создает направление для поезда(к примеру Бийск - Барнаул)
+            -Продать билеты - вы получаете рандомное кол-во пассажиров, которые купили билеты на это направление
+            -Сформировать поезд - вы создаете поезд и добавляете ему столько вагонов(вагоны могут быть разные по вместительности), сколько хватит для перевозки всех пассажиров.
+            -Отправить поезд - вы отправляете поезд, после чего можете снова создать направление.
+            В верхней части программы должна выводиться полная информация о текущем рейсе или его отсутствии.*/
 
-            string userInput;
-            int salesmanMoney;
-            int buyersMoney;
             bool isExit = false;
-            Product sellProduct = null;
+            bool isShipmentCreate = true;
+            string userInput;
 
-            Salesman salesman = new Salesman();
-            Buyer buyer = new Buyer();
+            Train train = new Train();
+            Route route = new Route("1","2"); //создаю для проверки маршрут
+            //route.GetRoute(); //получаю маршрут из метода
 
             while (isExit == false)
             {
-                salesmanMoney = salesman.GetMoney;
-                buyersMoney = buyer.GetMoney;
+                ShowInfo(isShipmentCreate, route); //вывожу информацию о маршруте
 
-                Console.WriteLine($"Денег у продавца: {salesmanMoney} рублей.");
-                Console.WriteLine($"Денег у покупателя: {buyersMoney} рублей.\n");
-                Console.WriteLine("Вы находитесь в лавке продуктов.\n");
-                Console.WriteLine("1 - Посмотреть ассортимент;");
-                Console.WriteLine("2 - Купить товар;");
-                Console.WriteLine("3 - Посмотреть товары в сумке;");
-                Console.WriteLine("4 - Выйти из лавки продуктов.");
-                Console.Write("\nВыберите пункт меню: ");
-                userInput = Console.ReadLine();
-                Console.WriteLine();
-
-                switch (userInput)
-                {
-                    case "1":
-                        salesman.ShowProduct();
-                        break;
-                    case "2":
-                        sellProduct = salesman.Sell();
-                        buyer.TakeProduct(sellProduct);
-                        break;
-                    case "3":
-                        buyer.ShowProduct();
-                        break;
-                    case "4":
-                        isExit = true;
-                        break;
-                    default:
-                        Console.WriteLine("\nОшибка ввода!");
-                        break;
-                }
-
-                Console.WriteLine("\nНажмите любую клавишу для продолжения...");
                 Console.ReadKey();
-                Console.Clear();
             }
-        }
-    }
-
-    class Man
-    {
-        protected int Money;
-        protected List<Product> Products = new List<Product>();
-        public int GetMoney
-        {
-            get { return Money; }
-            protected set { }
+            
+            /*Console.WriteLine("Перед вами меню программы управления поездами:\n");
+            train.CreateTrain(GetQuantityPassengers());
+            int seats = GetQuantityPassengers();
+            Console.WriteLine($"Количество пассажиров - {seats}");
+            train.ShowInfo();*/
         }
 
-        public void ShowProduct()
+        static int GetQuantityPassengers()
         {
-            Console.WriteLine("\nВ сумке сейчас лежит:\n");
-            for (int i = 0; i < Products.Count; i++)
+            int quantity;
+            int minQuantity = 250;
+            int maxQuantity = 1000;
+
+            Random random = new Random();
+            quantity = random.Next(minQuantity, maxQuantity);
+
+            return quantity;
+        }
+
+        static void ShowInfo(bool isShipmentCreate, Route route)
+        {
+            if (isShipmentCreate)
             {
-                Console.WriteLine($"{i + 1}. {Products[i].Name}");
-            }
-        }
-    }
-
-    class Salesman : Man
-    {        
-        public Salesman() : base()
-        {
-            Money = 0;
-            Products.Add(new Product("Яблоко", 50));
-            Products.Add(new Product("Груша", 75));
-            Products.Add(new Product("Банан", 100));
-            Products.Add(new Product("Ананас", 80));
-            Products.Add(new Product("Дыня", 150));
-            Products.Add(new Product("Арбуз", 120));
-        }
-
-        public Product Sell()
-        {
-            string inputNumber;
-            Product sellProduct = null;
-
-            Console.WriteLine("\nПеред вами список товаров:");
-
-            for (int i = 0; i < Products.Count; i++)
-            {
-                Console.Write($"{i + 1}. ");
-                Products[i].ShowInfo();
-            }
-
-            Console.Write("\n Введите порядковый номер товара, который хотите купить: ");
-            inputNumber = Console.ReadLine();
-
-            bool isConverted = int.TryParse(inputNumber, out int Number);
-
-            if (isConverted)
-            {
-                if (Number <= Products.Count)
-                {
-                    sellProduct = Products[Number - 1];
-                    Products.RemoveAt(Number - 1);
-                    Money += sellProduct.Price;
-                    return sellProduct;
-                }
-                else
-                {
-                    Console.WriteLine("\nТовара с таким порядковым номером в списке нет!");
-                }
+                route.ShowInfo(route);
             }
             else
             {
-                Console.WriteLine("\nОшибка ввода!");
-            }
-
-            return sellProduct;
-        }
-    }
-
-    class Buyer : Man
-    {
-        public Buyer () : base () 
-        {
-            Money = 500;
-        }
-
-        public void TakeProduct(Product product)
-        {
-            if (Money > product.Price)
-            {
-                Products.Add(product);
-                Money -= product.Price;
-            }
-            else
-            {
-                Console.WriteLine("У вас недостаточно денег.");
+                Console.WriteLine("Отправление не создано.\n");
             }
         }
     }
 
-    class Product
+    class Train
     {
-        public int Price { get; private set; }
-        public string Name { get; private set; }
-        
-        public Product(string name, int price)
+        private int _seats;
+        private List<TrainCar> _trainCars = new List<TrainCar>();
+
+        public void CreateTrain(int passengers)
         {
-            Name = name;
-            Price = price;
+            bool isFullTrain = false;
+
+            while (isFullTrain == false)
+            {
+                TrainCar tempTrainCar;
+                _trainCars.Add(new TrainCar());
+
+                tempTrainCar = _trainCars[_trainCars.Count - 1];
+                _seats = tempTrainCar.GetSeats();
+
+                passengers -= _seats;
+
+                if (passengers <= 0)
+                {
+                    isFullTrain = true;
+                }
+            }
         }
 
         public void ShowInfo()
         {
-            Console.WriteLine($"{Name} - {Price} рублей.");
+            for (int i = 0; i < _trainCars.Count; i++)
+            {
+                Console.Write($"Вагон №{i+1}. ");
+                _trainCars[i].ShowInfo();
+            }
+        }
+    }
+
+    class TrainCar
+    {
+        static Random random = new Random();
+        private int _seats;        
+        private int _minSeats = 25;
+        private int _maxSeats = 60;
+        
+        public TrainCar()
+        {            
+            _seats = random.Next(_minSeats, _maxSeats);
+        }
+
+        public int GetSeats()
+        {
+            return _seats;
+        }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine($"Всего мест в вагоне {_seats}.");
+        }
+    }
+
+    class Route
+    {
+        public string Route1 { get; private set; }
+        public string Route2 { get; private set; }
+        private List<Route> _routes = new List<Route>();
+
+        public Route (string route1, string route2)
+        {
+            Route1 = route1;
+            Route2 = route2;
+            //_routes.Add(new Route (Route1, Route2));
+            _routes.Add(new Route("Москва", "Адлер"));
+            _routes.Add(new Route("Ярославль", "Брянск"));
+            _routes.Add(new Route("Смоленск", "Воронеж"));
+            _routes.Add(new Route("Рязань", "Казань"));
+            _routes.Add(new Route("Нижний Новгород", "Сочи"));
+            _routes.Add(new Route("Екатеринбург", "Санкт-Петербург"));
+            _routes.Add(new Route("Владимир", "Иркутск"));
+            _routes.Add(new Route("Владивосток", "Архангельск"));
+            _routes.Add(new Route("Красноярск", "Волгоград"));
+            _routes.Add(new Route("Йошкар-Ола", "Ростов-на-Дону"));
+        }
+
+        public Route GetRoute()
+        {
+            Route tempRoute = null;
+            Random random = new Random();
+            int randomRoute = random.Next(0, _routes.Count());
+
+            for (int i = 0; i < _routes.Count; i++)
+            {
+                if (i == randomRoute)
+                {
+                    tempRoute = _routes[i];
+                    return tempRoute;
+                }
+            }
+
+            return tempRoute;
+        }
+
+        public void ShowInfo(Route route)
+        {
+            Console.WriteLine($"Создано направление: {route.Route1} - {route.Route2}");
         }
     }
 }
