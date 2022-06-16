@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Задача_44.Конфигуратор_пассажирских_поездов
 {
@@ -28,35 +26,37 @@ namespace Задача_44.Конфигуратор_пассажирских_по
             List<Route> routes = new List<Route>();
             Train train = new Train();
             Route route = null;
+            Dispatcher dispatcher = new Dispatcher();
 
-            CreateRoutes(routes);
+            dispatcher.CreateRoutes(routes);
+
 
             while (isExit == false)
-            {                
-                ShowInfo(isShipmentCreate, isTicketsSold, isTrainCreate, route, train, seats);
+            {
+                dispatcher.ShowInfo(isShipmentCreate, isTicketsSold, isTrainCreate, route, train, seats);
 
-                Console.WriteLine("Перед вами меню программы управления поездами:\n");
+                Console.WriteLine("\nПеред вами меню программы управления поездами:\n");
                 Console.WriteLine("1 - Создать маршрут поезда;");
                 Console.WriteLine("2 - Продать билеты;");
                 Console.WriteLine("3 - Сформировать поезд;");
                 Console.WriteLine("4 - Отправить поезд;");
-                Console.WriteLine("5 - Выйти из программы"\n);
+                Console.WriteLine("5 - Выйти из программы\n");
                 Console.Write("Выберите пункт меню: ");
                 userInput = Console.ReadLine();
 
                 switch (userInput)
                 {
                     case "1":
-                        GetRoute(routes, ref route, ref isShipmentCreate);
+                        dispatcher.GetRoute(routes, ref route, ref isShipmentCreate);
                         break;
                     case "2":
-                        SellTickets(isShipmentCreate, ref isTicketsSold, isTrainCreate, ref seats);
+                        dispatcher.SellTickets(isShipmentCreate, ref isTicketsSold, isTrainCreate, ref seats);
                         break;
                     case "3":
                         train.CreateTrain(isShipmentCreate, isTicketsSold, seats, ref isTrainCreate);
                         break;
                     case "4":
-                        SendTrain(ref isShipmentCreate, ref isTicketsSold, ref isTrainCreate);
+                        dispatcher.SendTrain(ref isShipmentCreate, ref isTicketsSold, ref isTrainCreate);
                         break;
                     case "5":
                         isExit = true;
@@ -72,116 +72,121 @@ namespace Задача_44.Конфигуратор_пассажирских_по
             }
         }
 
-        static void CreateRoutes(List<Route> routes)
-        {
-            routes.Add(new Route("Москва", "Адлер"));
-            routes.Add(new Route("Ярославль", "Брянск"));
-            routes.Add(new Route("Смоленск", "Воронеж"));
-            routes.Add(new Route("Рязань", "Казань"));
-            routes.Add(new Route("Нижний Новгород", "Сочи"));
-            routes.Add(new Route("Екатеринбург", "Санкт-Петербург"));
-            routes.Add(new Route("Владимир", "Иркутск"));
-            routes.Add(new Route("Владивосток", "Архангельск"));
-            routes.Add(new Route("Красноярск", "Волгоград"));
-            routes.Add(new Route("Йошкар-Ола", "Ростов-на-Дону"));
-        }
+        
 
-        static int GetQuantityPassengers()
-        {
-            int quantity;
-            int minQuantity = 250;
-            int maxQuantity = 1000;
-
-            Random random = new Random();
-            quantity = random.Next(minQuantity, maxQuantity);
-
-            return quantity;
-        }
-
-        static void SellTickets(bool isShipmentCreate, ref bool isTicketsSold, bool isTrainCreate, ref int seats)
-        {
-            if (isShipmentCreate && isTrainCreate)
+    class Dispatcher
+    {
+            public void CreateRoutes(List<Route> routes)
             {
-                Console.WriteLine("\nСоблюдайте порядок действий. Сначала создать направление, потом продать билеты,");
-                Console.WriteLine("затем сформировать поезд и в конце отправить поезд");                
+                routes.Add(new Route("Москва", "Адлер"));
+                routes.Add(new Route("Ярославль", "Брянск"));
+                routes.Add(new Route("Смоленск", "Воронеж"));
+                routes.Add(new Route("Рязань", "Казань"));
+                routes.Add(new Route("Нижний Новгород", "Сочи"));
+                routes.Add(new Route("Екатеринбург", "Санкт-Петербург"));
+                routes.Add(new Route("Владимир", "Иркутск"));
+                routes.Add(new Route("Владивосток", "Архангельск"));
+                routes.Add(new Route("Красноярск", "Волгоград"));
+                routes.Add(new Route("Йошкар-Ола", "Ростов-на-Дону"));
             }
-            else
+
+            public int GetQuantityPassengers()
             {
-                if (!isTicketsSold)
+                int quantity;
+                int minQuantity = 250;
+                int maxQuantity = 1000;
+
+                Random random = new Random();
+                quantity = random.Next(minQuantity, maxQuantity);
+
+                return quantity;
+            }
+
+            public void SellTickets(bool isShipmentCreate, ref bool isTicketsSold, bool isTrainCreate, ref int seats)
+            {
+                if (isShipmentCreate && isTrainCreate)
                 {
-                    seats = GetQuantityPassengers();
-                    isTicketsSold = true;
+                    Console.WriteLine("\nСоблюдайте порядок действий. Сначала создать направление, потом продать билеты,");
+                    Console.WriteLine("затем сформировать поезд и в конце отправить поезд");
                 }
                 else
                 {
-                    Console.WriteLine("\nБилеты уже проданы, сформируйте поезд...");
+                    if (!isTicketsSold)
+                    {
+                        seats = GetQuantityPassengers();
+                        isTicketsSold = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("\nБилеты уже проданы, сформируйте поезд...");
+                    }
                 }
             }
-        }
 
-        static void SendTrain(ref bool isShipmentCreate, ref bool isTicketsSold, ref bool isTrainCreate)
-        {
-            if (!isShipmentCreate|| !isTicketsSold || !isTrainCreate)
+            public void SendTrain(ref bool isShipmentCreate, ref bool isTicketsSold, ref bool isTrainCreate)
             {
-                Console.WriteLine("\nСоблюдайте порядок действий. Сначала создать направление, потом продать билеты,");
-                Console.WriteLine("затем сформировать поезд и в конце отправить поезд");
-            }
-            else
-            {
-                Console.WriteLine("\nПоздравляем! Поезд успешно отправлен!");
-                isShipmentCreate = false;
-                isTicketsSold = false;
-                isTrainCreate = false;
-            }
-        }
-
-        static void ShowInfo(bool isShipmentCreate, bool isTicketsSold, bool isTrainCreate, Route route, Train train, int seats)
-        {
-            if (isShipmentCreate && !isTicketsSold && !isTrainCreate)
-            {
-                route.ShowInfo(route);
-            }
-            else if (isShipmentCreate && isTicketsSold && !isTrainCreate)
-            {
-                route.ShowInfo(route);
-                Console.WriteLine($"Количество пассажиров - {seats}");
-            }
-            else if (isShipmentCreate && isTicketsSold && isTrainCreate)
-            {
-                route.ShowInfo(route);
-                Console.WriteLine($"Количество пассажиров - {seats}");
-                Console.WriteLine($"Количество вагонов в поезде - {train.GetNumberTrainCar()}");
-            }
-            else
-            {
-                Console.WriteLine("Отправление не создано.\n");
-            }
-        }
-
-        static void GetRoute(List<Route> routes, ref Route route, ref bool isShipmentCreate)
-        {
-            Route tempRoute = null;
-
-            if (isShipmentCreate)
-            {
-                Console.WriteLine("\nСоблюдайте порядок действий. Сначала создать направление, потом продать билеты,");
-                Console.WriteLine("затем сформировать поезд и в конце отправить поезд");
-            }
-            else
-            {
-                isShipmentCreate = false;                
-                Random random = new Random();
-                int randomRoute = random.Next(0, routes.Count());
-
-                for (int i = 0; i < routes.Count; i++)
+                if (!isShipmentCreate || !isTicketsSold || !isTrainCreate)
                 {
-                    if (i == randomRoute)
+                    Console.WriteLine("\nСоблюдайте порядок действий. Сначала создать направление, потом продать билеты,");
+                    Console.WriteLine("затем сформировать поезд и в конце отправить поезд");
+                }
+                else
+                {
+                    Console.WriteLine("\nПоздравляем! Поезд успешно отправлен!");
+                    isShipmentCreate = false;
+                    isTicketsSold = false;
+                    isTrainCreate = false;
+                }
+            }
+
+            public void ShowInfo(bool isShipmentCreate, bool isTicketsSold, bool isTrainCreate, Route route, Train train, int seats)
+            {
+                if (isShipmentCreate && !isTicketsSold && !isTrainCreate)
+                {
+                    route.ShowInfo(route);
+                }
+                else if (isShipmentCreate && isTicketsSold && !isTrainCreate)
+                {
+                    route.ShowInfo(route);
+                    Console.WriteLine($"Количество пассажиров - {seats}");
+                }
+                else if (isShipmentCreate && isTicketsSold && isTrainCreate)
+                {
+                    route.ShowInfo(route);
+                    Console.WriteLine($"Количество пассажиров - {seats}");
+                    Console.WriteLine($"Количество вагонов в поезде - {train.GetNumberTrainCar()}");
+                }
+                else
+                {
+                    Console.WriteLine("Отправление не создано.\n");
+                }
+            }
+
+            public void GetRoute(List<Route> routes, ref Route route, ref bool isShipmentCreate)
+            {
+                Route tempRoute = null;
+
+                if (isShipmentCreate)
+                {
+                    Console.WriteLine("\nСоблюдайте порядок действий. Сначала создать направление, потом продать билеты,");
+                    Console.WriteLine("затем сформировать поезд и в конце отправить поезд");
+                }
+                else
+                {
+                    isShipmentCreate = false;
+                    Random random = new Random();
+                    int randomRoute = random.Next(0, routes.Count());
+
+                    for (int i = 0; i < routes.Count; i++)
                     {
-                        tempRoute = routes[i];
-                        isShipmentCreate = true;
-                        route = tempRoute;
+                        if (i == randomRoute)
+                        {
+                            tempRoute = routes[i];
+                            isShipmentCreate = true;
+                            route = tempRoute;
+                        }
                     }
-                }               
+                }
             }
         }
     }
@@ -193,7 +198,7 @@ namespace Задача_44.Конфигуратор_пассажирских_по
 
         public void CreateTrain(bool isShipmentCreate, bool isTicketsSold, int passengers, ref bool isTrainCreate)
         {
-            
+
             bool isFullTrain = false;
 
             if (isTicketsSold == false || isShipmentCreate == false)
@@ -211,7 +216,7 @@ namespace Задача_44.Конфигуратор_пассажирских_по
                         _trainCars.Add(new TrainCar());
 
                         tempTrainCar = _trainCars[_trainCars.Count - 1];
-                        _seats = tempTrainCar.GetSeats();
+                        _seats = tempTrainCar.Seats;
 
                         passengers -= _seats;
 
@@ -227,7 +232,7 @@ namespace Задача_44.Конфигуратор_пассажирских_по
                 {
                     Console.WriteLine("\nПоезд уже сформирован...");
                 }
-            }               
+            }
         }
 
         public int GetNumberTrainCar()
@@ -239,40 +244,35 @@ namespace Задача_44.Конфигуратор_пассажирских_по
     class TrainCar
     {
         static Random random = new Random();
-        private int _seats;        
+        public int Seats { get; private set; }
         private int _minSeats = 25;
         private int _maxSeats = 60;
-        
-        public TrainCar()
-        {            
-            _seats = random.Next(_minSeats, _maxSeats);
-        }
 
-        public int GetSeats()
+        public TrainCar()
         {
-            return _seats;
+            Seats = random.Next(_minSeats, _maxSeats);
         }
 
         public void ShowInfo()
         {
-            Console.WriteLine($"Всего мест в вагоне {_seats}.");
+            Console.WriteLine($"Всего мест в вагоне {Seats}.");
         }
     }
 
     class Route
     {
-        public string Route1 { get; private set; }
-        public string Route2 { get; private set; }        
+        public string DeparturePoint { get; private set; }
+        public string Destination { get; private set; }
 
-        public Route (string route1, string route2)
+        public Route(string departurePoint, string destination)
         {
-            Route1 = route1;
-            Route2 = route2;
-        }        
+            DeparturePoint = departurePoint;
+            Destination = destination;
+        }
 
         public void ShowInfo(Route route)
         {
-            Console.WriteLine($"Создано направление: {route.Route1} - {route.Route2}");
+            Console.WriteLine($"Создано направление: {route.DeparturePoint} - {route.Destination}");
         }
     }
 }
