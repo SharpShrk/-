@@ -69,15 +69,13 @@ namespace Задача_44.Конфигуратор_пассажирских_по
                 Console.ReadKey();
                 Console.Clear();
             }
-        }
-
-        
+        }        
 
     class Dispatcher
-    {            
-            private List<Route> _routes = new List<Route>();
+    {                        
             public int _seats { get; private set; }
-            Route route = null;
+            public Route Route = null;
+            private List<Route> _routes = new List<Route>();
 
             public void CreateRoutes()
             {
@@ -91,19 +89,7 @@ namespace Задача_44.Конфигуратор_пассажирских_по
                 _routes.Add(new Route("Владивосток", "Архангельск"));
                 _routes.Add(new Route("Красноярск", "Волгоград"));
                 _routes.Add(new Route("Йошкар-Ола", "Ростов-на-Дону"));
-            }
-
-            public int GetQuantityPassengers()
-            {
-                int quantity;
-                int minQuantity = 250;
-                int maxQuantity = 1000;
-
-                Random random = new Random();
-                quantity = random.Next(minQuantity, maxQuantity);
-
-                return quantity;
-            }
+            }            
 
             public void SellTickets(bool isShipmentCreate, ref bool isTicketsSold, bool isTrainCreate)
             {
@@ -146,16 +132,16 @@ namespace Задача_44.Конфигуратор_пассажирских_по
             {
                 if (isShipmentCreate && isTicketsSold == false && isTrainCreate == false)
                 {
-                    route.ShowInfo(route);
+                    Route.ShowInfo(Route);
                 }
                 else if (isShipmentCreate && isTicketsSold && isTrainCreate == false)
                 {
-                    route.ShowInfo(route);
+                    Route.ShowInfo(Route);
                     Console.WriteLine($"Количество пассажиров - {_seats}");
                 }
                 else if (isShipmentCreate && isTicketsSold && isTrainCreate)
                 {
-                    route.ShowInfo(route);
+                    Route.ShowInfo(Route);
                     Console.WriteLine($"Количество пассажиров - {_seats}");
                     Console.WriteLine($"Количество вагонов в поезде - {train.GetNumberTrainCar()}");
                 }
@@ -186,10 +172,22 @@ namespace Задача_44.Конфигуратор_пассажирских_по
                         {
                             tempRoute = _routes[i];
                             isShipmentCreate = true;
-                            route = tempRoute;
+                            Route = tempRoute;
                         }
                     }
                 }
+            }
+
+            public int GetQuantityPassengers()
+            {
+                int quantity;
+                int minQuantity = 250;
+                int maxQuantity = 1000;
+
+                Random random = new Random();
+                quantity = random.Next(minQuantity, maxQuantity);
+
+                return quantity;
             }
         }
     }
