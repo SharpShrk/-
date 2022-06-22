@@ -17,25 +17,15 @@ namespace Задача_45.Гладиаторские_бои
             другой имеет 30% увернуться от полученного урона, кто-то при получении урона немного себя лечит. 
             Будут новые поля у наследников. У кого-то может быть мана и это только его особенность.*/
 
-            /*
-             Меню:
-            (бойцы могут быть одного класса)
-            -Выбрать бойца №1
-            -Выбрать бойца №2 (Сделать так, что сначала выбирался один персонаж, затем второй персонаж)
-            -вывод информации о всех бойцах
-            -Сделать вывод информации о бойцах наверху
-            -запустить поединок           
-             */
-
             bool isBattler1Created = false;
             bool isBattler2Created = false;
             bool isBattlersCreated = false;
-            bool isDead = false;            
+            bool isDead = false;
 
-            Battler battler1 = new Battler();
-            Battler battler2 = new Battler();
+            Fighter fighter = null;
+            Fighter leftFighter = null;
+            Fighter rightFighter = null;
 
-            //выяснить как я могу потом обратиться к созданному персонажу, если я заранее не знаю какой персонаж создан
             while (isBattlersCreated == false)
             {
                 Console.WriteLine("Добро пожаловать на арену.\n");
@@ -43,7 +33,8 @@ namespace Задача_45.Гладиаторские_бои
                 if (isBattler1Created == false && isBattler2Created == false)
                 {                    
                     Console.WriteLine("Выберите бойца №1\n");
-                    ChoiceBattler(ref battler1);                    
+                    ChoiceBattler(ref fighter);
+                    leftFighter = fighter;
                     Console.WriteLine("\nБоец №1 выбран.\nНажмите любую клавишу для продолжения...");
                     Console.ReadKey();
                     Console.Clear();
@@ -51,7 +42,10 @@ namespace Задача_45.Гладиаторские_бои
                 }
                 else if (isBattler1Created && isBattler2Created)
                 {
-                    // вывести статы обоих бойцов
+                    Console.WriteLine("Боец на левых воротах арены:");
+                    leftFighter.ShowInfo();
+                    Console.WriteLine("Боец на правых воротах арены:");
+                    rightFighter.ShowInfo();
                     Console.WriteLine("\nОба бойца выбраны. Приготовьтесь к поединку.\nНажмите любую клавишу для продолжения...");
                     Console.ReadKey();
                     Console.Clear();
@@ -59,9 +53,11 @@ namespace Задача_45.Гладиаторские_бои
                 }
                 else
                 {
-                    //вывести статы 1 бойца
+                    Console.WriteLine("Боец на левых воротах арены:");
+                    leftFighter.ShowInfo();
                     Console.WriteLine("Выберите бойца №2\n");
-                    ChoiceBattler(ref battler2);
+                    ChoiceBattler(ref fighter);
+                    rightFighter = fighter;
                     Console.WriteLine("\nБоец №2 выбран.\nНажмите любую клавишу для продолжения...");
                     Console.ReadKey();
                     Console.Clear();
@@ -69,20 +65,145 @@ namespace Задача_45.Гладиаторские_бои
                 }                
             }
 
-            /*while (isDead == false)
+            while (isDead == false)
             {
-                Fight();
-            }    */
+                
+                leftFighter.SpecialAttack();                
+                rightFighter.SpecialAttack();
+                leftFighter.TakeDamage(rightFighter.damage);
+                rightFighter.TakeDamage(leftFighter.damage);
+
+                if (leftFighter.health <= 0 || rightFighter.health <= 0)
+                {
+                    isDead = true;
+                }
+
+                Console.WriteLine("Боец на левых воротах арены:");
+                leftFighter.ShowInfo();
+                Console.WriteLine("Боец на правых воротах арены:");
+                rightFighter.ShowInfo();
+
+                Console.WriteLine("Нажмите кнопку для продолжения...");
+                Console.ReadKey();
+                Console.Clear();
+            }
+
+            Console.WriteLine("Поединок окончен!");
         }
 
-        static void Fight()
+        static Fighter CreatePaladin()
         {
+            int minHealth = 450;
+            int maxHealth = 500;
+            int health;
+            int minArmor = 15;
+            int maxArmor = 20;
+            int armor;
+            int minDamage = 40;
+            int maxDamage = 50;
+            int damage;
 
-        }
-
-        static void ChoiceBattler(ref Battler battler)
-        {
             Random random = new Random();
+
+            health = random.Next(minHealth, maxHealth);
+            armor = random.Next(minArmor, maxArmor);
+            damage = random.Next(minDamage, maxDamage);
+
+            Fighter paladin = new Paladin(health, damage, armor);
+            return paladin;
+        }
+
+        static Fighter CreateWarrior()
+        {
+            int minHealth = 450;
+            int maxHealth = 500;
+            int health;
+            int minArmor = 15;
+            int maxArmor = 20;
+            int armor;
+            int minDamage = 40;
+            int maxDamage = 50;
+            int damage;
+
+            Random random = new Random();
+
+            health = random.Next(minHealth, maxHealth);
+            armor = random.Next(minArmor, maxArmor);
+            damage = random.Next(minDamage, maxDamage);
+
+            Fighter warrior = new Warrior(health, damage, armor);
+            return warrior;
+        }
+
+        static Fighter CreateWizard()
+        {
+            int minHealth = 450;
+            int maxHealth = 500;
+            int health;
+            int minArmor = 15;
+            int maxArmor = 20;
+            int armor;
+            int minDamage = 40;
+            int maxDamage = 50;
+            int damage;
+            int mana = 200;
+
+            Random random = new Random();
+
+            health = random.Next(minHealth, maxHealth);
+            armor = random.Next(minArmor, maxArmor);
+            damage = random.Next(minDamage, maxDamage);
+
+            Fighter wizard = new Wizard(health, damage, armor, mana);
+            return wizard;
+        }
+
+        static Fighter CreateAssassin()
+        {
+            int minHealth = 450;
+            int maxHealth = 500;
+            int health;
+            int minArmor = 15;
+            int maxArmor = 20;
+            int armor;
+            int minDamage = 40;
+            int maxDamage = 50;
+            int damage;
+
+            Random random = new Random();
+
+            health = random.Next(minHealth, maxHealth);
+            armor = random.Next(minArmor, maxArmor);
+            damage = random.Next(minDamage, maxDamage);
+
+            Fighter assassin = new Assassin(health, damage, armor);
+            return assassin;
+        }
+
+        static Fighter CreateDarkKnight()
+        {
+            int minHealth = 450;
+            int maxHealth = 500;
+            int health;
+            int minArmor = 15;
+            int maxArmor = 20;
+            int armor;
+            int minDamage = 40;
+            int maxDamage = 50;
+            int damage;
+
+            Random random = new Random();
+
+            health = random.Next(minHealth, maxHealth);
+            armor = random.Next(minArmor, maxArmor);
+            damage = random.Next(minDamage, maxDamage);
+
+            Fighter darkKnight = new DarkKnight(health, damage, armor);
+            return darkKnight;
+        }
+
+        static void ChoiceBattler(ref Fighter fighter)
+        {
             string userInput;
             
             Console.WriteLine("1 - Паладин");
@@ -97,19 +218,19 @@ namespace Задача_45.Гладиаторские_бои
             switch (userInput)
             {
                 case "1":
-                    battler.CreatePaladin(random);
+                    fighter = CreatePaladin();
                     break;
                 case "2":
-                    battler.CreateWarrior(random);
+                    fighter = CreateWarrior();
                     break;
                 case "3":
-                    battler.CreateWizard(random);
+                    fighter = CreateWizard();
                     break;
                 case "4":
-                    battler.CreateAssassin(random);
+                    fighter = CreateAssassin();
                     break;
                 case "5":
-                    battler.CreateDarkKnight(random);
+                    fighter = CreateDarkKnight();
                     break;
                 default:
                     Console.WriteLine("Бойца с таким номером нет");
@@ -119,114 +240,64 @@ namespace Задача_45.Гладиаторские_бои
         
     }
 
-    class Battler
-    {
-        private int _minHealth = 450;
-        private int _maxHealth = 500;
-        private int _health;
-        private int _minArmor = 15;
-        private int _maxArmor = 20;
-        private int _armor;
-        private int _minDamage = 40;
-        private int _maxDamage = 50;
-        private int _damage;
-        private bool _isDodged = false;
-        private int _mana = 150;
-        
-        public void CreatePaladin (Random random)
-        {
-            _health = random.Next(_minHealth,_maxHealth);
-            _armor = random.Next(_minArmor,_maxArmor);
-            _damage = random.Next(_minDamage,_maxDamage);
-
-            Paladin paladin = new Paladin(_health, _damage, _armor, _isDodged);
-        }
-
-        public void CreateWarrior(Random random)
-        {
-            _health = random.Next(_minHealth, _maxHealth);
-            _armor = random.Next(_minArmor, _maxArmor);
-            _damage = random.Next(_minDamage, _maxDamage);
-
-            Warrior warrior = new Warrior(_health, _damage, _armor, _isDodged);
-        }
-
-        public void CreateWizard(Random random)
-        {
-            _health = random.Next(_minHealth, _maxHealth);
-            _armor = random.Next(_minArmor, _maxArmor);
-            _damage = random.Next(_minDamage, _maxDamage);
-
-            Wizard wizard = new Wizard(_health, _damage, _armor, _mana, _isDodged);
-        }
-
-        public void CreateAssassin(Random random)
-        {
-            _health = random.Next(_minHealth, _maxHealth);
-            _armor = random.Next(_minArmor, _maxArmor);
-            _damage = random.Next(_minDamage, _maxDamage);
-
-            Assassin assassin = new Assassin(_health, _damage, _armor, _isDodged);
-        }
-
-        public void CreateDarkKnight(Random random)
-        {
-            _health = random.Next(_minHealth, _maxHealth);
-            _armor = random.Next(_minArmor, _maxArmor);
-            _damage = random.Next(_minDamage, _maxDamage);
-
-            DarkKnight darkKnight = new DarkKnight(_health, _damage, _armor, _isDodged);
-        }
-    }
-
-    class CharacterClass
+    abstract class Fighter
     {
         protected int Health;
         protected int Damage;
         protected int Armor;
-        protected bool IsDodged;
 
-        public CharacterClass(int health, int damage, int armor, bool isDodged)
+        public int damage
+        {
+            get { return Damage; }
+        }
+
+        public int health
+        {
+            get { return Health; }
+        }
+
+        public Fighter(int health, int damage, int armor)
         {
             Health = health;
             Damage = damage;
             Armor = armor;
-            isDodged = false;
         }
 
-        public void TakeDamage(int damage, bool isDodged)
+        public virtual void TakeDamage(int damage)
         {
-            if (isDodged == false)
+            if (Armor < damage)
             {
                 Health -= damage - Armor;
             }
-            else
-            {
-                Console.WriteLine("\nУклонился от атаки!");
-            }
         }
 
-        public void ShowInfo()
+        public abstract void SpecialAttack();
+
+        public virtual void ShowInfo()
         {
             Console.WriteLine($"HP: {Health}\nDMG: {Damage}\nARM: {Armor}\n");
         }
     }
 
-    class Paladin : CharacterClass
+    class Paladin : Fighter
     {            
         private int _maxHealth;
         private int _cooldown = 0;
         private int _bonusArmor = 10;
         private int _heal = 50;
 
-        public Paladin (int health, int damage, int armor, bool isDodged) : base (health,damage,armor,isDodged) 
-        {
-            
+        public Paladin (int health, int damage, int armor) : base (health,damage,armor) 
+        {            
             _maxHealth = health;
             Armor += _bonusArmor;
         }
 
-        public void DivineTouch()
+        public override void SpecialAttack()
+        {
+            DivineTouch();
+        }
+
+        private void DivineTouch()
         {
             if (Health < _maxHealth && _cooldown == 2)
             {
@@ -240,29 +311,42 @@ namespace Задача_45.Гладиаторские_бои
                 _cooldown = 0;
             }
 
+            Console.WriteLine("Паладин применяет исцеление.");
             _cooldown++;
         }
     }
 
-    class Warrior : CharacterClass
+    class Warrior : Fighter
     {
         private int _bonusHealth = 150;
         private int _damageIncrease = 30;
         private int _armorDecrease = 10;
+        private bool _isRageActivated = false;
 
-        public Warrior(int health, int damage, int armor, bool isDodged) : base(health, damage, armor, isDodged)
+        public Warrior(int health, int damage, int armor) : base(health, damage, armor)
         {            
             Health += _bonusHealth;
         }
 
-        public void Rage()
-        {            
-            Armor -= _armorDecrease;
-            Damage += _damageIncrease;
+        public override void SpecialAttack()
+        {
+            Rage();
+        }
+
+        private void Rage()
+        {   
+            if (_isRageActivated == false)
+            {
+                Console.WriteLine($"Воин активировал Ярость. Броня уменьшилась на {_armorDecrease}, урон увеличился на {_damageIncrease}.");
+                Armor -= _armorDecrease;
+                Damage += _damageIncrease;
+            }
+
+            _isRageActivated = true;
         }
     }
 
-    class Wizard : CharacterClass
+    class Wizard : Fighter
     {
         private int _mana;
         private int _maxMana;
@@ -273,7 +357,7 @@ namespace Задача_45.Гладиаторские_бои
         private int _healthDecrease = 100;
         private int _fireballDamage = 150;
 
-        public Wizard(int health, int damage, int armor, int mana, bool isDodged) : base(health, damage, armor, isDodged)
+        public Wizard(int health, int damage, int armor, int mana) : base(health, damage, armor)
         {            
             _mana = mana;
             _maxMana = mana;
@@ -282,12 +366,25 @@ namespace Задача_45.Гладиаторские_бои
             Health -= _healthDecrease;
         }
 
-        public void Fireball()
+        public override void SpecialAttack()
         {
-            if (_mana < _maxMana && _cooldown == 1 && _mana > _manacostFireball)
+            Fireball();
+        }
+
+        public override void ShowInfo()
+        {
+            Console.WriteLine($"HP: {Health}\nDMG: {Damage}\nARM: {Armor}\nMANA: {_mana}\n");
+        }
+
+        private void Fireball()
+        {
+            
+            if (_cooldown == 1 && _mana >= _manacostFireball)
             {
                 Damage = _fireballDamage;
                 _cooldown = 0;
+                Console.WriteLine($"Маг атакуует огненным шаром. Урон: {Damage}");
+                _mana -= _manacostFireball;
             }
             else
             {
@@ -298,7 +395,7 @@ namespace Задача_45.Гладиаторские_бои
         }
     }
 
-    class Assassin : CharacterClass
+    class Assassin : Fighter
     {
         private int _armorDecrease = 10;
         private int _healthDecrease = 75;
@@ -306,30 +403,38 @@ namespace Задача_45.Гладиаторские_бои
         private int _pousionDamageIncrease = 10;
         private int _maxPousionDamage = 50;
         private int _knifeDamage;
+        private bool _isDodged = false;
 
         Random random = new Random();
 
-        public Assassin(int health, int damage, int armor, bool isDodged) : base(health, damage, armor, isDodged)
+        public Assassin(int health, int damage, int armor) : base(health, damage, armor)
         {
             Armor -= _armorDecrease;
             Health -= _healthDecrease;
             _knifeDamage = Damage;
         }
 
-        public void Dodge()
+        public override void TakeDamage(int damage)
         {
-            int minDodgeChance = 0;
-            int maxDodgeChance = 11;
-            int minDodge = 0;
-            int maxDodge = 3;
-            int dodgeChance;
-            
-            dodgeChance = random.Next(minDodgeChance, maxDodgeChance);
-            
-            if (dodgeChance >= minDodge && dodgeChance <= maxDodge)
+            Dodge();
+
+            if (_isDodged == false)
             {
-                IsDodged = true;
+                if (Armor < damage)
+                {
+                    Health -= damage - Armor;
+                    Console.WriteLine("Ассасин не смог уклониться от атаки!");
+                }               
             }
+            else
+            {
+                Console.WriteLine("Ассасин уклонился от атаки!");
+            }
+        }
+
+        public override void SpecialAttack()
+        {
+            AttackPousion();
         }
 
         public void AttackPousion()
@@ -346,22 +451,48 @@ namespace Задача_45.Гладиаторские_бои
             }
             
             Damage += _pousionDamage;
+
+            Console.WriteLine("Дополнительный урон от яда: " + _pousionDamage);
+        }
+
+        private void Dodge()
+        {
+            int minDodgeChance = 0;
+            int maxDodgeChance = 11;
+            int minDodge = 0;
+            int maxDodge = 3;
+            int dodgeChance;
+
+            dodgeChance = random.Next(minDodgeChance, maxDodgeChance);
+
+            _isDodged = false;
+
+            if (dodgeChance >= minDodge && dodgeChance <= maxDodge)
+            {
+                _isDodged = true;
+            }
         }
     }
 
-    class DarkKnight : CharacterClass
+    class DarkKnight : Fighter
     {
         private int _armorIncrease = 10;
         private int _maxHealth;
         private int _healtSteal = 15;
 
-        public DarkKnight(int health, int damage, int armor, bool isDodged) : base(health, damage, armor, isDodged) 
+        public DarkKnight(int health, int damage, int armor) : base(health, damage, armor) 
         {
             Armor += _armorIncrease;
             _maxHealth = Health;
+            Damage += _healtSteal;
         }
 
-        public void Lifesteal()
+        public override void SpecialAttack()
+        {
+            Lifesteal();
+        }
+
+        private void Lifesteal()
         {
             Health += _healtSteal;
 
