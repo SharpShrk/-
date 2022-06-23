@@ -16,22 +16,32 @@ namespace Задача_45.Гладиаторские_бои
             Пример, что может быть уникальное у бойцов. Кто-то каждый 3 удар наносит удвоенный урон, 
             другой имеет 30% увернуться от полученного урона, кто-то при получении урона немного себя лечит. 
             Будут новые поля у наследников. У кого-то может быть мана и это только его особенность.*/
+            
+            bool isDead = false;
+            
+            Fighter leftFighter = null;
+            Fighter rightFighter = null;
+
+            ChoiceFighters(ref leftFighter, ref rightFighter);
+
+            Arena arena = new Arena(leftFighter, rightFighter);
+            arena.Fight();            
+        }        
+
+        static void ChoiceFighters(ref Fighter leftFighter, ref Fighter rightFighter)
+        {
+            Fighter fighter = null;
 
             bool isBattler1Created = false;
             bool isBattler2Created = false;
             bool isBattlersCreated = false;
-            bool isDead = false;
-
-            Fighter fighter = null;
-            Fighter leftFighter = null;
-            Fighter rightFighter = null;
 
             while (isBattlersCreated == false)
             {
                 Console.WriteLine("Добро пожаловать на арену.\n");
 
                 if (isBattler1Created == false && isBattler2Created == false)
-                {                    
+                {
                     Console.WriteLine("Выберите бойца №1\n");
                     ChoiceBattler(ref fighter);
                     leftFighter = fighter;
@@ -62,33 +72,8 @@ namespace Задача_45.Гладиаторские_бои
                     Console.ReadKey();
                     Console.Clear();
                     isBattler2Created = true;
-                }                
-            }
-
-            while (isDead == false)
-            {
-                
-                leftFighter.SpecialAttack();                
-                rightFighter.SpecialAttack();
-                leftFighter.TakeDamage(rightFighter.damage);
-                rightFighter.TakeDamage(leftFighter.damage);
-
-                if (leftFighter.health <= 0 || rightFighter.health <= 0)
-                {
-                    isDead = true;
                 }
-
-                Console.WriteLine("Боец на левых воротах арены:");
-                leftFighter.ShowInfo();
-                Console.WriteLine("Боец на правых воротах арены:");
-                rightFighter.ShowInfo();
-
-                Console.WriteLine("Нажмите кнопку для продолжения...");
-                Console.ReadKey();
-                Console.Clear();
             }
-
-            Console.WriteLine("Поединок окончен!");
         }
 
         static Fighter CreatePaladin()
@@ -238,6 +223,47 @@ namespace Задача_45.Гладиаторские_бои
             }
         }
         
+    }
+
+    class Arena
+    {
+        private Fighter _leftFighter;
+        private Fighter _rightFighter;
+
+        public Arena(Fighter leftFighter, Fighter rightFighter)
+        {
+            _leftFighter = leftFighter;
+            _rightFighter = rightFighter;
+        }
+        
+        public void Fight()
+        {
+            private bool _isDead = false;
+
+            while (_isDead == false)
+            {                
+                leftFighter.SpecialAttack();                
+                rightFighter.SpecialAttack();
+                leftFighter.TakeDamage(rightFighter.damage);
+                rightFighter.TakeDamage(leftFighter.damage);
+
+                if (leftFighter.health <= 0 || rightFighter.health <= 0)
+                {
+                   isDead = true;
+                }
+
+                Console.WriteLine("Боец на левых воротах арены:");
+                leftFighter.ShowInfo();
+                Console.WriteLine("Боец на правых воротах арены:");
+                rightFighter.ShowInfo();
+
+                Console.WriteLine("Нажмите кнопку для продолжения...");
+                Console.ReadKey();
+                Console.Clear();
+            }
+
+            Console.WriteLine("Поединок окончен!");
+        }            
     }
 
     abstract class Fighter
@@ -405,7 +431,7 @@ namespace Задача_45.Гладиаторские_бои
         private int _knifeDamage;
         private bool _isDodged = false;
 
-        Random random = new Random();
+        private Random _random = new Random();
 
         public Assassin(int health, int damage, int armor) : base(health, damage, armor)
         {
@@ -463,7 +489,7 @@ namespace Задача_45.Гладиаторские_бои
             int maxDodge = 3;
             int dodgeChance;
 
-            dodgeChance = random.Next(minDodgeChance, maxDodgeChance);
+            dodgeChance = _random.Next(minDodgeChance, maxDodgeChance);
 
             _isDodged = false;
 
