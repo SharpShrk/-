@@ -15,20 +15,20 @@ namespace Задача_45.Гладиаторские_бои
             Если можно выбрать одинаковых бойцов, то это не должна быть одна и та же ссылка на одного бойца, чтобы он не атаковал сам себя.
             Пример, что может быть уникальное у бойцов. Кто-то каждый 3 удар наносит удвоенный урон, 
             другой имеет 30% увернуться от полученного урона, кто-то при получении урона немного себя лечит. 
-            Будут новые поля у наследников. У кого-то может быть мана и это только его особенность.*/
-            
-            bool isDead = false;
+            Будут новые поля у наследников. У кого-то может быть мана и это только его особенность.*/            
             
             Fighter leftFighter = null;
             Fighter rightFighter = null;
 
-            ChoiceFighters(ref leftFighter, ref rightFighter);
+            FactorySoldier factorySoldier = new FactorySoldier();
+
+            ChoiceFighters(ref leftFighter, ref rightFighter, factorySoldier);
 
             Arena arena = new Arena(leftFighter, rightFighter);
             arena.Fight();            
         }        
 
-        static void ChoiceFighters(ref Fighter leftFighter, ref Fighter rightFighter)
+        static void ChoiceFighters(ref Fighter leftFighter, ref Fighter rightFighter , FactorySoldier factorySoldier)
         {
             Fighter fighter = null;
 
@@ -43,7 +43,7 @@ namespace Задача_45.Гладиаторские_бои
                 if (isBattler1Created == false && isBattler2Created == false)
                 {
                     Console.WriteLine("Выберите бойца №1\n");
-                    ChoiceBattler(ref fighter);
+                    ChoiceBattler(ref fighter, factorySoldier);
                     leftFighter = fighter;
                     Console.WriteLine("\nБоец №1 выбран.\nНажмите любую клавишу для продолжения...");
                     Console.ReadKey();
@@ -66,7 +66,7 @@ namespace Задача_45.Гладиаторские_бои
                     Console.WriteLine("Боец на левых воротах арены:");
                     leftFighter.ShowInfo();
                     Console.WriteLine("Выберите бойца №2\n");
-                    ChoiceBattler(ref fighter);
+                    ChoiceBattler(ref fighter, factorySoldier);
                     rightFighter = fighter;
                     Console.WriteLine("\nБоец №2 выбран.\nНажмите любую клавишу для продолжения...");
                     Console.ReadKey();
@@ -74,9 +74,48 @@ namespace Задача_45.Гладиаторские_бои
                     isBattler2Created = true;
                 }
             }
-        }
+        }        
 
-        static Fighter CreatePaladin()
+        static void ChoiceBattler(ref Fighter fighter, FactorySoldier factorySoldier)
+        {
+            string userInput;
+            
+            Console.WriteLine("1 - Паладин");
+            Console.WriteLine("2 - Воин");
+            Console.WriteLine("3 - Маг");
+            Console.WriteLine("4 - Ассасин");
+            Console.WriteLine("5 - Темный рыцарь");
+            Console.Write("\nВаш выбор: ");
+
+            userInput = Console.ReadLine();
+
+            switch (userInput)
+            {
+                case "1":
+                    fighter = factorySoldier.CreatePaladin();                   
+                    break;
+                case "2":
+                    fighter = factorySoldier.CreateWarrior();
+                    break;
+                case "3":
+                    fighter = factorySoldier.CreateWizard();
+                    break;
+                case "4":
+                    fighter = factorySoldier.CreateAssassin();
+                    break;
+                case "5":
+                    fighter = factorySoldier.CreateDarkKnight();
+                    break;
+                default:
+                    Console.WriteLine("Бойца с таким номером нет");
+                    break;
+            }
+        }        
+    }
+
+    class FactorySoldier
+    {
+        public Fighter CreatePaladin()
         {
             int minHealth = 450;
             int maxHealth = 500;
@@ -98,7 +137,7 @@ namespace Задача_45.Гладиаторские_бои
             return paladin;
         }
 
-        static Fighter CreateWarrior()
+        public Fighter CreateWarrior()
         {
             int minHealth = 450;
             int maxHealth = 500;
@@ -120,7 +159,7 @@ namespace Задача_45.Гладиаторские_бои
             return warrior;
         }
 
-        static Fighter CreateWizard()
+        public Fighter CreateWizard()
         {
             int minHealth = 450;
             int maxHealth = 500;
@@ -143,7 +182,7 @@ namespace Задача_45.Гладиаторские_бои
             return wizard;
         }
 
-        static Fighter CreateAssassin()
+        public Fighter CreateAssassin()
         {
             int minHealth = 450;
             int maxHealth = 500;
@@ -165,7 +204,7 @@ namespace Задача_45.Гладиаторские_бои
             return assassin;
         }
 
-        static Fighter CreateDarkKnight()
+        public Fighter CreateDarkKnight()
         {
             int minHealth = 450;
             int maxHealth = 500;
@@ -186,43 +225,6 @@ namespace Задача_45.Гладиаторские_бои
             Fighter darkKnight = new DarkKnight(health, damage, armor);
             return darkKnight;
         }
-
-        static void ChoiceBattler(ref Fighter fighter)
-        {
-            string userInput;
-            
-            Console.WriteLine("1 - Паладин");
-            Console.WriteLine("2 - Воин");
-            Console.WriteLine("3 - Маг");
-            Console.WriteLine("4 - Ассасин");
-            Console.WriteLine("5 - Темный рыцарь");
-            Console.Write("\nВаш выбор: ");
-
-            userInput = Console.ReadLine();
-
-            switch (userInput)
-            {
-                case "1":
-                    fighter = CreatePaladin();
-                    break;
-                case "2":
-                    fighter = CreateWarrior();
-                    break;
-                case "3":
-                    fighter = CreateWizard();
-                    break;
-                case "4":
-                    fighter = CreateAssassin();
-                    break;
-                case "5":
-                    fighter = CreateDarkKnight();
-                    break;
-                default:
-                    Console.WriteLine("Бойца с таким номером нет");
-                    break;
-            }
-        }
-        
     }
 
     class Arena
@@ -244,10 +246,10 @@ namespace Задача_45.Гладиаторские_бои
             {                
                 _leftFighter.SpecialAttack();                
                 _rightFighter.SpecialAttack();
-                _leftFighter.TakeDamage(_rightFighter.damage);
-                _rightFighter.TakeDamage(_leftFighter.damage);
+                _leftFighter.TakeDamage(_rightFighter.Damage);
+                _rightFighter.TakeDamage(_leftFighter.Damage);
 
-                if (_leftFighter.health <= 0 || _rightFighter.health <= 0)
+                if (_leftFighter.Health <= 0 || _rightFighter.Health <= 0)
                 {
                    isDead = true;
                 }
@@ -268,19 +270,12 @@ namespace Задача_45.Гладиаторские_бои
 
     abstract class Fighter
     {
-        protected int Health;
-        protected int Damage;
+        //protected int Health;
+        //protected int Damage;
         protected int Armor;
 
-        public int damage
-        {
-            get { return Damage; }
-        }
-
-        public int health
-        {
-            get { return Health; }
-        }
+        public int Damage { get; protected set; }
+        public int Health { get; protected set; }
 
         public Fighter(int health, int damage, int armor)
         {
