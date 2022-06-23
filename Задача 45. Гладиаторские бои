@@ -238,24 +238,24 @@ namespace Задача_45.Гладиаторские_бои
         
         public void Fight()
         {
-            private bool _isDead = false;
+            bool isDead = false;
 
-            while (_isDead == false)
+            while (isDead == false)
             {                
-                leftFighter.SpecialAttack();                
-                rightFighter.SpecialAttack();
-                leftFighter.TakeDamage(rightFighter.damage);
-                rightFighter.TakeDamage(leftFighter.damage);
+                _leftFighter.SpecialAttack();                
+                _rightFighter.SpecialAttack();
+                _leftFighter.TakeDamage(_rightFighter.damage);
+                _rightFighter.TakeDamage(_leftFighter.damage);
 
-                if (leftFighter.health <= 0 || rightFighter.health <= 0)
+                if (_leftFighter.health <= 0 || _rightFighter.health <= 0)
                 {
                    isDead = true;
                 }
 
                 Console.WriteLine("Боец на левых воротах арены:");
-                leftFighter.ShowInfo();
+                _leftFighter.ShowInfo();
                 Console.WriteLine("Боец на правых воротах арены:");
-                rightFighter.ShowInfo();
+                _rightFighter.ShowInfo();
 
                 Console.WriteLine("Нажмите кнопку для продолжения...");
                 Console.ReadKey();
