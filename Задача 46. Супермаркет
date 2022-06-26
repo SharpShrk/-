@@ -16,65 +16,183 @@ namespace Задача_46.Супермаркет
             Клиент, когда подходит на кассу, получает итоговую сумму покупки и старается её оплатить.
             Если оплатить клиент не может, то он рандомный товар из корзины выкидывает до тех пор, пока его денег не хватит для оплаты.
             Клиентов можно делать ограниченное число на старте программы*/
+            
+            string userInput;
+            int numberBuyers;
 
-            //спросить сколько будет клиентов
+            Console.WriteLine("Добро пожаловать в продуктовую лавку. Сколько клиентов в очереди?");
+            userInput = Console.ReadLine();
+            bool isConverted = int.TryParse(userInput, out numberBuyers);
+            
+            if (isConverted)
+            {
+                Supermarket supermarket = new Supermarket(numberBuyers);
+                supermarket.ShowBuyers();
+                Console.WriteLine();
 
-            CartProducts cartProducts = new CartProducts();
-            CartProducts cartProducts2 = new CartProducts();
-            cartProducts.ShowCart();
-            Console.WriteLine();
-            cartProducts2.ShowCart();
+                supermarket.ServeBuyer();
+            }
+            else
+            {
+                Console.WriteLine("Ошибка ввода!");
+            }           
         }
     }
 
-    /*class Buyer
-    {
-        private int _money;
-        List<Product> products = new List<Product>();
+    class Buyer
+    {        
+        static Random random = new Random();
+        private int _minMoney = 200;
+        private int _maxMoney = 2000;
+        public int TotalPrice { get; private set; }
+        public int Money { get; private set; }
+
+        CartProducts cartProducts = new CartProducts();
+
+        public Buyer()
+        {
+            Money = random.Next(_minMoney, _maxMoney);
+            TotalPrice = cartProducts.TotalPrice;            
+        }     
+        
+        public void ShowInfo()
+        {
+            Console.WriteLine($"Денег в кошельке - {Money}. Товаров в корзине {cartProducts.Count}");
+        }        
+
+        public void RemoveProducts()
+        {
+            int counter = 0;
+
+            while (Money < TotalPrice)
+            {
+                int priceRemovedProduct = 0;
+
+                Console.WriteLine("\nДенег не хватает. Нажмите любую клавишу, чтобы удалить случайный товар из корзины...");
+                Console.ReadKey();
+                cartProducts.Remove(ref priceRemovedProduct);
+                TotalPrice -= priceRemovedProduct;
+                counter++;
+                Console.WriteLine("\nТовары в корзине после удаления лишних:\n");
+                ShowCart();
+            }
+
+            Console.WriteLine("\nУдалено товаров - " + counter);
+            
+        }
+
+        public void ShowCart()
+        {
+            cartProducts.ShowInfo();
+        }
     }
 
     class Supermarket
     {
-        List<Buyer> buyerList = new List<Buyer>();
+        private int _money = 0;        
+        List<Buyer> buyers = new List<Buyer>();
+
+        public Supermarket(int numberBuyers)
+        {
+            for (int i = 0; i < numberBuyers; i++)
+            {
+                buyers.Add(new Buyer());
+            }
+        }
+
+        public void ShowBuyers()
+        {
+            for (int i = 0; i < buyers.Count; i++)
+            {
+                Console.Write($"Клиент №{i+1}. ");
+                buyers[i].ShowInfo();
+            }
+        }
+        
+        public void ServeBuyer()
+        {
+            for (int i = 0; i < buyers.Count; i++)
+            {
+                Console.WriteLine($"В корзине у покупателя товаров на сумму {buyers[i].TotalPrice} рублей.\nДенег в кошельке: {buyers[i].Money} рублей.\nТоваров в корзине:\n");
+                buyers[i].ShowCart();
+
+                if (buyers[i].Money < buyers[i].TotalPrice)
+                {
+                    buyers[i].RemoveProducts();
+                    _money += buyers[i].TotalPrice;
+                    Console.WriteLine($"\nКлиент №{i + 1} расплатился за товар. Клиент заплатил: {buyers[i].TotalPrice}");
+                }
+                else
+                {
+                    _money += buyers[i].TotalPrice;
+                    Console.WriteLine($"\nКлиент №{i + 1} расплатился за товар. Клиент заплатил: {buyers[i].TotalPrice}");
+                }
+
+                Console.WriteLine($"\nДенег в кассе {_money}. \n\nНажмите любую клавишу, чтобы перейти к следующему клиенту...");
+                Console.ReadKey();
+                Console.Clear();
+            }
+
+            Console.WriteLine("Все клиенты обслужены. Денег в кассе:" + _money);
+        }
     }
-    */
+    
     class Product
     {
-        private string _name;
-        private int _price;
+        public string Name { get; private set; }
+        public int Price { get; private set; }        
 
         public Product(string name, int price)
         {
-            _name = name;
-            _price = price;
+            Name = name;
+            Price = price;
         }
 
         public void ShowInfo()
         {
-            Console.WriteLine($"{_name} - {_price}");
+            Console.WriteLine($"{Name} - {Price}");
         }
     }
 
     class CartProducts
     {
+        static Random random = new Random();
         private int _numberProducts;
         private List<Product> _products = new List<Product>();
-        private Random _random = new Random();
+        public int TotalPrice { get; private set; }
+        public int Count
+        {
+            get
+            {
+                return _products.Count;
+            }
+            private set { }
+        }
 
-        Assortment assortment = new Assortment();
+            Assortment assortment = new Assortment();
 
         public CartProducts()
-        {            
+        {
             int minNumberProduct = 5;
-            _numberProducts = _random.Next(minNumberProduct, assortment.NumberProducts);
+            _numberProducts = random.Next(minNumberProduct, assortment.NumberProducts);
+            TotalPrice = 0;
 
             for (int i = 0; i <= _numberProducts; i++)
             {
                 _products.Add(assortment.GetProducts());
+                TotalPrice += _products[i].Price;
             }
         }
 
-        public void ShowCart()
+        public void Remove(ref int priceRemovedProduct)
+        {
+            int numberProduct = random.Next(0, _products.Count);
+
+            priceRemovedProduct = _products[numberProduct].Price;
+            _products.RemoveAt(numberProduct);            
+        }
+
+        public void ShowInfo()
         {
             for (int i = 0; i < _products.Count; i++)
             {
@@ -85,8 +203,8 @@ namespace Задача_46.Супермаркет
 
     class Assortment
     {
-        private List<Product> _products = new List<Product>();
-        private Random _random = new Random();
+        static Random random = new Random();
+        private List<Product> _products = new List<Product>();        
 
         public int NumberProducts { get; private set; }
 
@@ -111,7 +229,7 @@ namespace Задача_46.Супермаркет
         {
             int numberProduct;
 
-            numberProduct = _random.Next(1, _products.Count);
+            numberProduct = random.Next(1, _products.Count);
 
             return _products[numberProduct];
         }
