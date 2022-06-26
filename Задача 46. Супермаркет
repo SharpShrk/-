@@ -1,0 +1,119 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_46.Супермаркет
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            /*Написать программу администрирования супермаркетом.
+            В супермаркете есть очередь клиентов.
+            У каждого клиента в корзине есть товары, также у клиентов есть деньги.
+            Клиент, когда подходит на кассу, получает итоговую сумму покупки и старается её оплатить.
+            Если оплатить клиент не может, то он рандомный товар из корзины выкидывает до тех пор, пока его денег не хватит для оплаты.
+            Клиентов можно делать ограниченное число на старте программы*/
+
+            //спросить сколько будет клиентов
+
+            CartProducts cartProducts = new CartProducts();
+            CartProducts cartProducts2 = new CartProducts();
+            cartProducts.ShowCart();
+            Console.WriteLine();
+            cartProducts2.ShowCart();
+        }
+    }
+
+    /*class Buyer
+    {
+        private int _money;
+        List<Product> products = new List<Product>();
+    }
+
+    class Supermarket
+    {
+        List<Buyer> buyerList = new List<Buyer>();
+    }
+    */
+    class Product
+    {
+        private string _name;
+        private int _price;
+
+        public Product(string name, int price)
+        {
+            _name = name;
+            _price = price;
+        }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine($"{_name} - {_price}");
+        }
+    }
+
+    class CartProducts
+    {
+        private int _numberProducts;
+        private List<Product> _products = new List<Product>();
+        private Random _random = new Random();
+
+        Assortment assortment = new Assortment();
+
+        public CartProducts()
+        {            
+            int minNumberProduct = 5;
+            _numberProducts = _random.Next(minNumberProduct, assortment.NumberProducts);
+
+            for (int i = 0; i <= _numberProducts; i++)
+            {
+                _products.Add(assortment.GetProducts());
+            }
+        }
+
+        public void ShowCart()
+        {
+            for (int i = 0; i < _products.Count; i++)
+            {
+                _products[i].ShowInfo();
+            }
+        }
+    }
+
+    class Assortment
+    {
+        private List<Product> _products = new List<Product>();
+        private Random _random = new Random();
+
+        public int NumberProducts { get; private set; }
+
+        public Assortment()
+        {
+            _products.Add(new Product("Апельсин", 50));
+            _products.Add(new Product("Ананас", 250));
+            _products.Add(new Product("Дыня", 220));
+            _products.Add(new Product("Банан", 75));
+            _products.Add(new Product("Яблоко", 25));
+            _products.Add(new Product("Груша", 60));
+            _products.Add(new Product("Арбуз", 200));
+            _products.Add(new Product("Вишня", 180));
+            _products.Add(new Product("Клубника", 120));
+            _products.Add(new Product("Манго", 110));
+            _products.Add(new Product("Лайм", 90));
+
+            NumberProducts = _products.Count;
+        }
+
+        public Product GetProducts()
+        {
+            int numberProduct;
+
+            numberProduct = _random.Next(1, _products.Count);
+
+            return _products[numberProduct];
+        }
+    }
+}
