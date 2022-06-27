@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Задача_46.Супермаркет
 {
@@ -17,7 +14,6 @@ namespace Задача_46.Супермаркет
             Если оплатить клиент не может, то он рандомный товар из корзины выкидывает до тех пор, пока его денег не хватит для оплаты.
             Клиентов можно делать ограниченное число на старте программы*/
 
-            Random random = new Random();
             string userInput;
             int numberBuyers;
 
@@ -27,7 +23,7 @@ namespace Задача_46.Супермаркет
 
             if (isConverted)
             {
-                Supermarket supermarket = new Supermarket(numberBuyers, random);
+                Supermarket supermarket = new Supermarket(numberBuyers);
                 supermarket.ShowBuyers();
                 Console.WriteLine();
 
@@ -42,18 +38,17 @@ namespace Задача_46.Супермаркет
 
     class Buyer
     {
-        private Random _random = new Random();
+        private static Random _random = new Random();
         private int _minMoney = 200;
         private int _maxMoney = 2000;
         public int TotalPrice { get; private set; }
         public int Money { get; private set; }
 
-        CartProducts cartProducts = new CartProducts(); //проблема тут
+        CartProducts cartProducts = new CartProducts();
 
-        public Buyer(Random random)
+        public Buyer()
         {
-            _random = random;
-            Money = random.Next(_minMoney, _maxMoney);
+            Money = _random.Next(_minMoney, _maxMoney);
             TotalPrice = cartProducts.TotalPrice;
         }
 
@@ -80,7 +75,6 @@ namespace Задача_46.Супермаркет
             }
 
             Console.WriteLine("\nУдалено товаров - " + counter);
-
         }
 
         public void ShowCart()
@@ -94,11 +88,11 @@ namespace Задача_46.Супермаркет
         private int _money = 0;
         List<Buyer> buyers = new List<Buyer>();
 
-        public Supermarket(int numberBuyers, Random random)
+        public Supermarket(int numberBuyers)
         {
             for (int i = 0; i < numberBuyers; i++)
             {
-                buyers.Add(new Buyer(random));
+                buyers.Add(new Buyer());
             }
         }
 
@@ -158,8 +152,7 @@ namespace Задача_46.Супермаркет
 
     class CartProducts
     {
-        //private Random _random = new Random();
-        Random _random;
+        private static Random _random = new Random();
         private int _numberProducts;
         private List<Product> _products = new List<Product>();
         public int TotalPrice { get; private set; }
@@ -174,9 +167,8 @@ namespace Задача_46.Супермаркет
 
         Assortment assortment = new Assortment();
 
-        public CartProducts(Random random)
+        public CartProducts()
         {
-            _random = random;
             int minNumberProduct = 5;
             _numberProducts = _random.Next(minNumberProduct, assortment.NumberProducts);
             TotalPrice = 0;
@@ -207,7 +199,7 @@ namespace Задача_46.Супермаркет
 
     class Assortment
     {
-        private Random _random = new Random();
+        private static Random _random = new Random();
         private List<Product> _products = new List<Product>();
 
         public int NumberProducts { get; private set; }
