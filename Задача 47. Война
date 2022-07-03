@@ -281,7 +281,6 @@ namespace Задача_47.Война
 
         public abstract void TakeDamage(float damage, string type);
         public abstract string GetType();
-        public abstract float GetDamage();
 
     }
 
@@ -317,11 +316,6 @@ namespace Задача_47.Война
         {
             return _type;
         }
-
-        public override float GetDamage()
-        { 
-            return (float)Damage;
-        }
     }
 
     class Spearman : Soldier
@@ -356,11 +350,6 @@ namespace Задача_47.Война
         {
             return _type;
         }
-
-        public override float GetDamage()
-        {
-            return (float)Damage;
-        }
     }
 
     class Cavalry : Soldier
@@ -394,11 +383,6 @@ namespace Задача_47.Война
         public override string GetType()
         {
             return _type;
-        }
-
-        public override float GetDamage()
-        {
-            return (float)Damage;
         }
     }
 }
