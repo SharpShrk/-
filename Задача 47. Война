@@ -1,0 +1,404 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_47.Война
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            /*Есть 2 взвода. 1 взвод страны один, 2 взвод страны два.
+            Каждый взвод внутри имеет солдат.
+            Нужно написать программу, которая будет моделировать бой этих взводов.
+            Каждый боец - это уникальная единица, он может иметь уникальные способности или же уникальные характеристики, такие как повышенная сила.
+            Побеждает та страна, во взводе которой остались выжившие бойцы.
+            Не важно, какой будет бой, рукопашный, стрелковый.*/
+
+            Recruiting recruiting = new Recruiting();
+            BattleField battleField = new BattleField();
+            List<Soldier> greekArmy = new List<Soldier>();
+            List<Soldier> romanArmy = new List<Soldier>();
+
+            recruiting.CreateArmy();
+            recruiting.GetArmy(ref greekArmy, ref romanArmy);
+            battleField.Battle(greekArmy, romanArmy);
+        }
+    }
+
+    class BattleField
+    {
+        public void Battle(List<Soldier> greekArmy, List<Soldier> romanArmy)
+        {
+            bool isWin = false;
+            bool isEnterPressed = false;
+            int numberGreekSoldiers = 0;
+            int numberRomanSoldiers = 0;
+
+            while (isWin == false)
+            {
+                Console.WriteLine($"Осталось греков - {greekArmy.Count}. Осталось римлян - {romanArmy.Count}");
+
+                if (greekArmy.Count == 0)
+                {
+                    isWin = true;
+                    Console.WriteLine("\nГреческая армия повержена.");
+                    break;
+                }
+                else if (romanArmy.Count == 0)
+                {
+                    isWin = true;
+                    Console.WriteLine("\nРимская армия повержена.");
+                    break;
+                }
+
+                greekArmy[0].TakeDamage(romanArmy[0].Damage, romanArmy[0].GetType());
+                romanArmy[0].TakeDamage(greekArmy[0].Damage, greekArmy[0].GetType());
+                Console.WriteLine($"\nГреческий воин получил {romanArmy[0].Damage} урона. Здоровья осталось: {greekArmy[0].Health}");
+                Console.WriteLine($"Римский воин получил {greekArmy[0].Damage} урона. Здоровья осталось: {romanArmy[0].Health}\n");
+
+                GetInfo(greekArmy, romanArmy, ref isEnterPressed, ref numberGreekSoldiers, ref numberRomanSoldiers);
+            }         
+
+            Console.WriteLine($"\nРимлян убито - {numberRomanSoldiers}. Греков убито - {numberGreekSoldiers}.");
+        }
+
+        private void GetInfo(List<Soldier> greekArmy, List<Soldier> romanArmy, ref bool isEnterPressed, ref int numberGreekSoldiers, ref int numberRomanSoldiers)
+        {            
+            if (greekArmy[0].Health <= 0)
+            {
+                greekArmy.Remove(greekArmy[0]);
+                Console.WriteLine("Грек пал смертью война.");
+                numberGreekSoldiers++;
+
+                if (isEnterPressed == false)
+                {
+                    Console.WriteLine("\nНажмите <Enter> чтобы узнать результат всего боя... ");
+                    Console.WriteLine("Нажмите люубю клавишу для перехода к следующему поединку. ");
+
+                    if (Console.ReadKey().Key == ConsoleKey.Enter)
+                    {
+                        isEnterPressed = true;
+                    }
+                }
+                
+                Console.Clear();
+            }
+            else if (romanArmy[0].Health <= 0)
+            {
+                romanArmy.Remove(romanArmy[0]);
+                Console.WriteLine("Римлянин пал смертью война.");
+                numberRomanSoldiers++;
+
+                if (isEnterPressed == false)
+                {
+                    Console.WriteLine("\nНажмите <Enter> чтобы узнать результат всего боя... ");
+                    Console.WriteLine("Нажмите люубю клавишу для перехода к следующему поединку. ");
+
+                    if (Console.ReadKey().Key == ConsoleKey.Enter)
+                    {
+                        isEnterPressed = true;
+                    }
+                }
+
+                Console.Clear();
+            }
+        }
+    }
+
+    class Recruiting
+    {
+        static Random random = new Random();
+        private List<Soldier> _greekArmy = new List<Soldier>();
+        private List<Soldier> _romanArmy = new List<Soldier>();
+
+        public void CreateArmy()
+        {
+            int minSoldiers = 10;
+            int maxSoldiers = 20;
+            int numberSworsmen = random.Next(minSoldiers, maxSoldiers);
+            int numberSpearmen = random.Next(minSoldiers, maxSoldiers);
+            int numberCavalry = random.Next(minSoldiers, maxSoldiers);
+
+            CreateSwordsman(numberSworsmen);
+            CreateSpearman(numberSpearmen);
+            CreateCavary(numberCavalry);
+
+            Shuffle(ref _greekArmy, ref _romanArmy);
+        }
+
+        public void GetArmy(ref List<Soldier> greekArmy, ref List<Soldier> romanArmy)
+        {
+            greekArmy = _greekArmy;
+            romanArmy = _romanArmy;
+        }
+
+        private void Shuffle(ref List<Soldier> greekArmy, ref List<Soldier> romanArmy)
+        {
+            Random random = new Random();
+
+            for (int i = greekArmy.Count - 1; i >= 1; i--)
+            {
+                int j = random.Next(i + 1);
+
+                Soldier temp = greekArmy[j];
+                greekArmy[j] = greekArmy[i];
+                greekArmy[i] = temp;
+            }
+
+            for (int i = romanArmy.Count - 1; i >= 1; i--)
+            {
+                int j = random.Next(i + 1);
+
+                Soldier temp = romanArmy[j];
+                romanArmy[j] = romanArmy[i];
+                romanArmy[i] = temp;
+            }
+        }
+
+        private void CreateSwordsman(int numberSoldiers)
+        {
+            int minHealth = 150;
+            int maxHealth = 200;
+            int health;
+            int minDamage = 20;
+            int maxDamage = 25;
+            int damage;
+            int minArmor = 5;
+            int maxArmor = 8;
+            int armor;
+
+            for (int i = 0; i <= numberSoldiers; i++)
+            {
+                health = Recruiting.random.Next(minHealth, maxHealth);
+                armor = Recruiting.random.Next(minArmor, maxArmor);
+                damage = Recruiting.random.Next(minDamage, maxDamage);
+
+                Soldier soldier = new Swordsman(health,damage,armor);
+
+                _greekArmy.Add(soldier);                
+            }
+
+            for (int i = 0; i <= numberSoldiers; i++)
+            {
+                health = Recruiting.random.Next(minHealth, maxHealth);
+                armor = Recruiting.random.Next(minArmor, maxArmor);
+                damage = Recruiting.random.Next(minDamage, maxDamage);
+
+                Soldier soldier = new Swordsman(health, damage, armor);
+
+                _romanArmy.Add(soldier);
+            }
+        }
+
+        private void CreateSpearman(int numberSoldiers)
+        {
+            int minHealth = 150;
+            int maxHealth = 200;
+            int health;
+            int minDamage = 25;
+            int maxDamage = 30;
+            int damage;
+            int minArmor = 8;
+            int maxArmor = 12;
+            int armor;
+
+            for (int i = 0; i <= numberSoldiers; i++)
+            {
+                health = Recruiting.random.Next(minHealth, maxHealth);
+                armor = Recruiting.random.Next(minArmor, maxArmor);
+                damage = Recruiting.random.Next(minDamage, maxDamage);
+
+                Soldier soldier = new Swordsman(health, damage, armor);
+
+                _greekArmy.Add(soldier);
+            }
+
+            for (int i = 0; i <= numberSoldiers; i++)
+            {
+                health = Recruiting.random.Next(minHealth, maxHealth);
+                armor = Recruiting.random.Next(minArmor, maxArmor);
+                damage = Recruiting.random.Next(minDamage, maxDamage);
+
+                Soldier soldier = new Swordsman(health, damage, armor);
+
+                _romanArmy.Add(soldier);
+            }
+        }
+
+        private void CreateCavary(int numberSoldiers)
+        {
+            int minHealth = 200;
+            int maxHealth = 250;
+            int health;
+            int minDamage = 20;
+            int maxDamage = 30;
+            int damage;
+            int minArmor = 8;
+            int maxArmor = 10;
+            int armor;
+
+            for (int i = 0; i <= numberSoldiers; i++)
+            {
+                health = Recruiting.random.Next(minHealth, maxHealth);
+                armor = Recruiting.random.Next(minArmor, maxArmor);
+                damage = Recruiting.random.Next(minDamage, maxDamage);
+
+                Soldier soldier = new Swordsman(health, damage, armor);
+
+                _greekArmy.Add(soldier);
+            }
+
+            for (int i = 0; i <= numberSoldiers; i++)
+            {
+                health = Recruiting.random.Next(minHealth, maxHealth);
+                armor = Recruiting.random.Next(minArmor, maxArmor);
+                damage = Recruiting.random.Next(minDamage, maxDamage);
+
+                Soldier soldier = new Swordsman(health, damage, armor);
+
+                _romanArmy.Add(soldier);
+            }
+        }
+    }
+
+    abstract class Soldier
+    {
+        protected float DamageEncrease = 1.25f;
+        protected float DamageDecrease = 0.75f;
+        protected int Armor;
+        public float Damage { get; private set; }
+        public float Health { get; protected set; }
+
+        public Soldier (int health, float damage, int armor)
+        {
+            Health = health;
+            Damage = damage;
+            Armor = armor;
+        }
+
+        public abstract void TakeDamage(float damage, string type);
+        public abstract string GetType();
+        public abstract float GetDamage();
+
+    }
+
+    class Swordsman : Soldier
+    {
+        private string _type;
+
+        public Swordsman(int health, float damage, int armor) : base(health, damage, armor)
+        {
+            _type = "sworsman";
+        }
+
+        public override void TakeDamage(float damage, string typeEnemy)
+        {
+            if (damage > Armor)
+            {
+                if (typeEnemy == "spearman")
+                {
+                    Health -= damage * DamageDecrease - Armor;
+                }
+                else if (typeEnemy == "sworsman")
+                {
+                    Health -= damage - Armor;
+                }
+                else if (typeEnemy == "cavalry")
+                {
+                    Health -= damage * DamageEncrease - Armor;
+                }
+            }            
+        }
+
+        public override string GetType()
+        {
+            return _type;
+        }
+
+        public override float GetDamage()
+        { 
+            return (float)Damage;
+        }
+    }
+
+    class Spearman : Soldier
+    {
+        private string _type;
+
+        public Spearman(int health, float damage, int armor) : base(health, damage, armor)
+        {
+            _type = "spearman";
+        }
+
+        public override void TakeDamage(float damage, string typeEnemy)
+        {
+            if (damage > Armor)
+            {
+                if (typeEnemy == "spearman")
+                {                    
+                    Health -= damage - Armor;
+                }
+                else if (typeEnemy == "sworsman")
+                {
+                    Health -= damage * DamageEncrease - Armor;
+                }
+                else if (typeEnemy == "cavalry")
+                {
+                    Health -= damage * DamageDecrease - Armor;                    
+                }
+            }
+        }
+
+        public override string GetType()
+        {
+            return _type;
+        }
+
+        public override float GetDamage()
+        {
+            return (float)Damage;
+        }
+    }
+
+    class Cavalry : Soldier
+    {
+        private string _type;
+
+        public Cavalry(int health, float damage, int armor) : base(health, damage, armor)
+        {
+            _type = "cavalry";
+        }
+
+        public override void TakeDamage(float damage, string typeEnemy)
+        {
+            if (damage > Armor)
+            {
+                if (typeEnemy == "spearman")
+                {
+                    Health -= damage * DamageEncrease - Armor;                   
+                }
+                else if (typeEnemy == "sworsman")
+                {
+                    Health -= damage - Armor;
+                }
+                else if (typeEnemy == "cavalry")
+                {
+                    Health -= damage - Armor;                    
+                }
+            }
+        }
+
+        public override string GetType()
+        {
+            return _type;
+        }
+
+        public override float GetDamage()
+        {
+            return (float)Damage;
+        }
+    }
+}
