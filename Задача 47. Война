@@ -23,9 +23,9 @@ namespace Задача_47.Война
             List<Soldier> romanArmy = new List<Soldier>();
             
             Squad squad1 = new Squad(greekArmy);
-            greekArmy = squad1.GetArmy();
+            squad1.GetArmy(ref greekArmy);
             Squad squad2 = new Squad(romanArmy);
-            romanArmy = squad2.GetArmy();
+            squad2.GetArmy(ref romanArmy);
 
             battleField.Battle(greekArmy, romanArmy);
         }
@@ -40,19 +40,19 @@ namespace Задача_47.Война
 
     class Squad
     {
-        private List<Soldier> _greekArmy = new List<Soldier>();
+        private List<Soldier> _squad = new List<Soldier>();
 
-        public Squad(List<Soldier> greekArmy)
+        public Squad(List<Soldier> squad)
         {
-            _greekArmy = greekArmy;
-            Recruiting recruiting = new Recruiting(_greekArmy);
+            _squad = squad;
+            Recruiting recruiting = new Recruiting(_squad);
             recruiting.CreateArmy();
-            recruiting.GetArmy(ref _greekArmy);
+            recruiting.GetArmy(ref _squad);
         }
 
-        public List<Soldier> GetArmy()
+        public void GetArmy(ref List<Soldier> army)
         {
-            return _greekArmy;
+            army = _squad;
         }
     }
 
