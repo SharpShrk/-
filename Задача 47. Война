@@ -17,14 +17,60 @@ namespace Задача_47.Война
             Побеждает та страна, во взводе которой остались выжившие бойцы.
             Не важно, какой будет бой, рукопашный, стрелковый.*/
 
-            Recruiting recruiting = new Recruiting();
+            
             BattleField battleField = new BattleField();
             List<Soldier> greekArmy = new List<Soldier>();
             List<Soldier> romanArmy = new List<Soldier>();
+            
+            Squad1 squad1 = new Squad1(greekArmy);
+            greekArmy = squad1.GetArmy();
+            Squad2 squad2 = new Squad2(romanArmy);
+            romanArmy = squad2.GetArmy();
 
-            recruiting.CreateArmy();
-            recruiting.GetArmy(ref greekArmy, ref romanArmy);
             battleField.Battle(greekArmy, romanArmy);
+        }
+    }
+
+    enum TypeSoldier
+    {
+        swordsman,
+        spearman,
+        cavalry
+    }
+
+    class Squad1
+    {
+        private List<Soldier> _greekArmy = new List<Soldier>();
+
+        public Squad1(List<Soldier> greekArmy)
+        {
+            _greekArmy = greekArmy;
+            Recruiting recruiting = new Recruiting(_greekArmy);
+            recruiting.CreateArmy();
+            recruiting.GetArmy(ref _greekArmy);
+        }
+
+        public List<Soldier> GetArmy()
+        {
+            return _greekArmy;
+        }
+    }
+
+    class Squad2
+    {
+        private List<Soldier> _romanArmy = new List<Soldier>();
+
+        public Squad2(List<Soldier> romanArmy)
+        {
+            _romanArmy = romanArmy;
+            Recruiting recruiting = new Recruiting(_romanArmy);
+            recruiting.CreateArmy();
+            recruiting.GetArmy(ref _romanArmy);
+        }
+
+        public List<Soldier> GetArmy()
+        {
+            return _romanArmy;
         }
     }
 
@@ -38,9 +84,7 @@ namespace Задача_47.Война
             int numberRomanSoldiers = 0;
 
             while (isWin == false)
-            {
-                Console.WriteLine($"Осталось греков - {greekArmy.Count}. Осталось римлян - {romanArmy.Count}");
-
+            {                
                 if (greekArmy.Count == 0)
                 {
                     isWin = true;
@@ -62,7 +106,8 @@ namespace Задача_47.Война
                 GetInfo(greekArmy, romanArmy, ref isEnterPressed, ref numberGreekSoldiers, ref numberRomanSoldiers);
             }         
 
-            Console.WriteLine($"\nРимлян убито - {numberRomanSoldiers}. Греков убито - {numberGreekSoldiers}.");
+            Console.WriteLine($"\nГреков убито - {numberGreekSoldiers}. Римлян убито - {numberRomanSoldiers}.");
+            Console.WriteLine($"Осталось греков - {greekArmy.Count}. Осталось римлян - {romanArmy.Count}");
         }
 
         private void GetInfo(List<Soldier> greekArmy, List<Soldier> romanArmy, ref bool isEnterPressed, ref int numberGreekSoldiers, ref int numberRomanSoldiers)
@@ -72,89 +117,77 @@ namespace Задача_47.Война
                 greekArmy.Remove(greekArmy[0]);
                 Console.WriteLine("Грек пал смертью война.");
                 numberGreekSoldiers++;
-
-                if (isEnterPressed == false)
-                {
-                    Console.WriteLine("\nНажмите <Enter> чтобы узнать результат всего боя... ");
-                    Console.WriteLine("Нажмите люубю клавишу для перехода к следующему поединку. ");
-
-                    if (Console.ReadKey().Key == ConsoleKey.Enter)
-                    {
-                        isEnterPressed = true;
-                    }
-                }
-                
-                Console.Clear();
+                ReadEnter(ref isEnterPressed, greekArmy, romanArmy);
             }
             else if (romanArmy[0].Health <= 0)
             {
                 romanArmy.Remove(romanArmy[0]);
                 Console.WriteLine("Римлянин пал смертью война.");
                 numberRomanSoldiers++;
-
-                if (isEnterPressed == false)
-                {
-                    Console.WriteLine("\nНажмите <Enter> чтобы узнать результат всего боя... ");
-                    Console.WriteLine("Нажмите люубю клавишу для перехода к следующему поединку. ");
-
-                    if (Console.ReadKey().Key == ConsoleKey.Enter)
-                    {
-                        isEnterPressed = true;
-                    }
-                }
-
-                Console.Clear();
+                ReadEnter(ref isEnterPressed, greekArmy, romanArmy);
             }
+        }
+
+        private void ReadEnter(ref bool isEnterPressed, List<Soldier> greekArmy, List<Soldier> romanArmy)
+        {
+            Console.WriteLine($"Осталось греков - {greekArmy.Count}. Осталось римлян - {romanArmy.Count}");
+
+            if (isEnterPressed == false)
+            {
+                Console.WriteLine("\nНажмите <Enter> чтобы узнать результат всего боя... ");
+                Console.WriteLine("Нажмите люубю клавишу для перехода к следующему поединку. ");
+
+                if (Console.ReadKey().Key == ConsoleKey.Enter)
+                {
+                    isEnterPressed = true;
+                }
+            }
+
+            Console.Clear();
         }
     }
 
     class Recruiting
     {
-        static Random random = new Random();
-        private List<Soldier> _greekArmy = new List<Soldier>();
-        private List<Soldier> _romanArmy = new List<Soldier>();
+        private static Random _random = new Random();
+        private List<Soldier> _squad = new List<Soldier>();
+
+        public Recruiting(List<Soldier> squad)
+        {
+            _squad = squad;
+        }
 
         public void CreateArmy()
         {
             int minSoldiers = 10;
             int maxSoldiers = 20;
-            int numberSworsmen = random.Next(minSoldiers, maxSoldiers);
-            int numberSpearmen = random.Next(minSoldiers, maxSoldiers);
-            int numberCavalry = random.Next(minSoldiers, maxSoldiers);
+            int numberSworsmen = _random.Next(minSoldiers, maxSoldiers);
+            int numberSpearmen = _random.Next(minSoldiers, maxSoldiers);
+            int numberCavalry = _random.Next(minSoldiers, maxSoldiers);
 
             CreateSwordsman(numberSworsmen);
             CreateSpearman(numberSpearmen);
             CreateCavary(numberCavalry);
 
-            Shuffle(ref _greekArmy, ref _romanArmy);
+            Shuffle(ref _squad);
         }
 
-        public void GetArmy(ref List<Soldier> greekArmy, ref List<Soldier> romanArmy)
+        public void GetArmy(ref List<Soldier> squad)
         {
-            greekArmy = _greekArmy;
-            romanArmy = _romanArmy;
+            squad = _squad;
         }
 
-        private void Shuffle(ref List<Soldier> greekArmy, ref List<Soldier> romanArmy)
+        private void Shuffle(ref List<Soldier> squad)
         {
             Random random = new Random();
 
-            for (int i = greekArmy.Count - 1; i >= 1; i--)
+            for (int i = squad.Count - 1; i >= 1; i--)
             {
                 int j = random.Next(i + 1);
 
-                Soldier temp = greekArmy[j];
-                greekArmy[j] = greekArmy[i];
-                greekArmy[i] = temp;
-            }
-
-            for (int i = romanArmy.Count - 1; i >= 1; i--)
-            {
-                int j = random.Next(i + 1);
-
-                Soldier temp = romanArmy[j];
-                romanArmy[j] = romanArmy[i];
-                romanArmy[i] = temp;
+                Soldier temp = squad[j];
+                squad[j] = squad[i];
+                squad[i] = temp;
             }
         }
 
@@ -172,24 +205,13 @@ namespace Задача_47.Война
 
             for (int i = 0; i <= numberSoldiers; i++)
             {
-                health = Recruiting.random.Next(minHealth, maxHealth);
-                armor = Recruiting.random.Next(minArmor, maxArmor);
-                damage = Recruiting.random.Next(minDamage, maxDamage);
+                health = _random.Next(minHealth, maxHealth);
+                armor = _random.Next(minArmor, maxArmor);
+                damage = _random.Next(minDamage, maxDamage);
 
                 Soldier soldier = new Swordsman(health,damage,armor);
 
-                _greekArmy.Add(soldier);                
-            }
-
-            for (int i = 0; i <= numberSoldiers; i++)
-            {
-                health = Recruiting.random.Next(minHealth, maxHealth);
-                armor = Recruiting.random.Next(minArmor, maxArmor);
-                damage = Recruiting.random.Next(minDamage, maxDamage);
-
-                Soldier soldier = new Swordsman(health, damage, armor);
-
-                _romanArmy.Add(soldier);
+                _squad.Add(soldier);                
             }
         }
 
@@ -207,24 +229,13 @@ namespace Задача_47.Война
 
             for (int i = 0; i <= numberSoldiers; i++)
             {
-                health = Recruiting.random.Next(minHealth, maxHealth);
-                armor = Recruiting.random.Next(minArmor, maxArmor);
-                damage = Recruiting.random.Next(minDamage, maxDamage);
+                health = _random.Next(minHealth, maxHealth);
+                armor = _random.Next(minArmor, maxArmor);
+                damage = _random.Next(minDamage, maxDamage);
 
                 Soldier soldier = new Swordsman(health, damage, armor);
 
-                _greekArmy.Add(soldier);
-            }
-
-            for (int i = 0; i <= numberSoldiers; i++)
-            {
-                health = Recruiting.random.Next(minHealth, maxHealth);
-                armor = Recruiting.random.Next(minArmor, maxArmor);
-                damage = Recruiting.random.Next(minDamage, maxDamage);
-
-                Soldier soldier = new Swordsman(health, damage, armor);
-
-                _romanArmy.Add(soldier);
+                _squad.Add(soldier);
             }
         }
 
@@ -242,24 +253,13 @@ namespace Задача_47.Война
 
             for (int i = 0; i <= numberSoldiers; i++)
             {
-                health = Recruiting.random.Next(minHealth, maxHealth);
-                armor = Recruiting.random.Next(minArmor, maxArmor);
-                damage = Recruiting.random.Next(minDamage, maxDamage);
+                health = _random.Next(minHealth, maxHealth);
+                armor = _random.Next(minArmor, maxArmor);
+                damage = _random.Next(minDamage, maxDamage);
 
                 Soldier soldier = new Swordsman(health, damage, armor);
 
-                _greekArmy.Add(soldier);
-            }
-
-            for (int i = 0; i <= numberSoldiers; i++)
-            {
-                health = Recruiting.random.Next(minHealth, maxHealth);
-                armor = Recruiting.random.Next(minArmor, maxArmor);
-                damage = Recruiting.random.Next(minDamage, maxDamage);
-
-                Soldier soldier = new Swordsman(health, damage, armor);
-
-                _romanArmy.Add(soldier);
+                _squad.Add(soldier);
             }
         }
     }
@@ -279,110 +279,110 @@ namespace Задача_47.Война
             Armor = armor;
         }
 
-        public abstract void TakeDamage(float damage, string type);
-        public abstract string GetType();
+        public abstract void TakeDamage(float damage, TypeSoldier type);
+        public abstract TypeSoldier GetType();
 
     }
 
     class Swordsman : Soldier
     {
-        private string _type;
+        private TypeSoldier _typeSoldier;
 
         public Swordsman(int health, float damage, int armor) : base(health, damage, armor)
         {
-            _type = "sworsman";
+            _typeSoldier = TypeSoldier.swordsman;
         }
 
-        public override void TakeDamage(float damage, string typeEnemy)
+        public override void TakeDamage(float damage, TypeSoldier typeEnemy)
         {
             if (damage > Armor)
             {
-                if (typeEnemy == "spearman")
+                if (typeEnemy == TypeSoldier.spearman)
                 {
                     Health -= damage * DamageDecrease - Armor;
                 }
-                else if (typeEnemy == "sworsman")
+                else if (typeEnemy == TypeSoldier.swordsman)
                 {
                     Health -= damage - Armor;
                 }
-                else if (typeEnemy == "cavalry")
+                else if (typeEnemy == TypeSoldier.cavalry)
                 {
                     Health -= damage * DamageEncrease - Armor;
                 }
             }            
         }
 
-        public override string GetType()
+        public override TypeSoldier GetType()
         {
-            return _type;
+            return _typeSoldier;
         }
     }
 
     class Spearman : Soldier
     {
-        private string _type;
+        private TypeSoldier _typeSoldier;
 
         public Spearman(int health, float damage, int armor) : base(health, damage, armor)
         {
-            _type = "spearman";
+            _typeSoldier = TypeSoldier.spearman;
         }
 
-        public override void TakeDamage(float damage, string typeEnemy)
+        public override void TakeDamage(float damage, TypeSoldier typeEnemy)
         {
             if (damage > Armor)
             {
-                if (typeEnemy == "spearman")
+                if (typeEnemy == TypeSoldier.spearman)
                 {                    
                     Health -= damage - Armor;
                 }
-                else if (typeEnemy == "sworsman")
+                else if (typeEnemy == TypeSoldier.swordsman)
                 {
                     Health -= damage * DamageEncrease - Armor;
                 }
-                else if (typeEnemy == "cavalry")
+                else if (typeEnemy == TypeSoldier.cavalry)
                 {
                     Health -= damage * DamageDecrease - Armor;                    
                 }
             }
         }
 
-        public override string GetType()
+        public override TypeSoldier GetType()
         {
-            return _type;
+            return _typeSoldier;
         }
     }
 
     class Cavalry : Soldier
     {
-        private string _type;
+        private TypeSoldier _typeSoldier;
 
         public Cavalry(int health, float damage, int armor) : base(health, damage, armor)
         {
-            _type = "cavalry";
+            _typeSoldier = TypeSoldier.cavalry;
         }
 
-        public override void TakeDamage(float damage, string typeEnemy)
+        public override void TakeDamage(float damage, TypeSoldier typeEnemy)
         {
             if (damage > Armor)
             {
-                if (typeEnemy == "spearman")
+                if (typeEnemy == TypeSoldier.spearman)
                 {
                     Health -= damage * DamageEncrease - Armor;                   
                 }
-                else if (typeEnemy == "sworsman")
+                else if (typeEnemy == TypeSoldier.swordsman)
                 {
                     Health -= damage - Armor;
                 }
-                else if (typeEnemy == "cavalry")
+                else if (typeEnemy == TypeSoldier.cavalry)
                 {
                     Health -= damage - Armor;                    
                 }
             }
         }
 
-        public override string GetType()
+        public override TypeSoldier GetType()
         {
-            return _type;
+            return _typeSoldier;
         }
     }
 }
