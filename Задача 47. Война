@@ -22,9 +22,9 @@ namespace Задача_47.Война
             List<Soldier> greekArmy = new List<Soldier>();
             List<Soldier> romanArmy = new List<Soldier>();
             
-            Squad1 squad1 = new Squad1(greekArmy);
+            Squad squad1 = new Squad(greekArmy);
             greekArmy = squad1.GetArmy();
-            Squad2 squad2 = new Squad2(romanArmy);
+            Squad squad2 = new Squad(romanArmy);
             romanArmy = squad2.GetArmy();
 
             battleField.Battle(greekArmy, romanArmy);
@@ -38,11 +38,11 @@ namespace Задача_47.Война
         cavalry
     }
 
-    class Squad1
+    class Squad
     {
         private List<Soldier> _greekArmy = new List<Soldier>();
 
-        public Squad1(List<Soldier> greekArmy)
+        public Squad(List<Soldier> greekArmy)
         {
             _greekArmy = greekArmy;
             Recruiting recruiting = new Recruiting(_greekArmy);
@@ -56,24 +56,6 @@ namespace Задача_47.Война
         }
     }
 
-    class Squad2
-    {
-        private List<Soldier> _romanArmy = new List<Soldier>();
-
-        public Squad2(List<Soldier> romanArmy)
-        {
-            _romanArmy = romanArmy;
-            Recruiting recruiting = new Recruiting(_romanArmy);
-            recruiting.CreateArmy();
-            recruiting.GetArmy(ref _romanArmy);
-        }
-
-        public List<Soldier> GetArmy()
-        {
-            return _romanArmy;
-        }
-    }
-
     class BattleField
     {
         public void Battle(List<Soldier> greekArmy, List<Soldier> romanArmy)
@@ -84,26 +66,24 @@ namespace Задача_47.Война
             int numberRomanSoldiers = 0;
 
             while (isWin == false)
-            {                
+            {                                
+                greekArmy[0].TakeDamage(romanArmy[0].Damage, romanArmy[0].TypeSoldier);
+                romanArmy[0].TakeDamage(greekArmy[0].Damage, greekArmy[0].TypeSoldier);
+                Console.WriteLine($"\nГреческий воин получил {romanArmy[0].Damage} урона. Здоровья осталось: {greekArmy[0].Health}");
+                Console.WriteLine($"Римский воин получил {greekArmy[0].Damage} урона. Здоровья осталось: {romanArmy[0].Health}\n");
+
+                GetInfo(greekArmy, romanArmy, ref isEnterPressed, ref numberGreekSoldiers, ref numberRomanSoldiers);
+
                 if (greekArmy.Count == 0)
                 {
                     isWin = true;
                     Console.WriteLine("\nГреческая армия повержена.");
-                    break;
                 }
                 else if (romanArmy.Count == 0)
                 {
                     isWin = true;
                     Console.WriteLine("\nРимская армия повержена.");
-                    break;
                 }
-
-                greekArmy[0].TakeDamage(romanArmy[0].Damage, romanArmy[0].GetType());
-                romanArmy[0].TakeDamage(greekArmy[0].Damage, greekArmy[0].GetType());
-                Console.WriteLine($"\nГреческий воин получил {romanArmy[0].Damage} урона. Здоровья осталось: {greekArmy[0].Health}");
-                Console.WriteLine($"Римский воин получил {greekArmy[0].Damage} урона. Здоровья осталось: {romanArmy[0].Health}\n");
-
-                GetInfo(greekArmy, romanArmy, ref isEnterPressed, ref numberGreekSoldiers, ref numberRomanSoldiers);
             }         
 
             Console.WriteLine($"\nГреков убито - {numberGreekSoldiers}. Римлян убито - {numberRomanSoldiers}.");
@@ -269,6 +249,7 @@ namespace Задача_47.Война
         protected float DamageEncrease = 1.25f;
         protected float DamageDecrease = 0.75f;
         protected int Armor;
+        public TypeSoldier TypeSoldier  { get; protected set; }
         public float Damage { get; private set; }
         public float Health { get; protected set; }
 
@@ -280,17 +261,13 @@ namespace Задача_47.Война
         }
 
         public abstract void TakeDamage(float damage, TypeSoldier type);
-        public abstract TypeSoldier GetType();
-
     }
 
     class Swordsman : Soldier
     {
-        private TypeSoldier _typeSoldier;
-
         public Swordsman(int health, float damage, int armor) : base(health, damage, armor)
         {
-            _typeSoldier = TypeSoldier.swordsman;
+            TypeSoldier = TypeSoldier.swordsman;
         }
 
         public override void TakeDamage(float damage, TypeSoldier typeEnemy)
@@ -311,20 +288,13 @@ namespace Задача_47.Война
                 }
             }            
         }
-
-        public override TypeSoldier GetType()
-        {
-            return _typeSoldier;
-        }
     }
 
     class Spearman : Soldier
     {
-        private TypeSoldier _typeSoldier;
-
         public Spearman(int health, float damage, int armor) : base(health, damage, armor)
         {
-            _typeSoldier = TypeSoldier.spearman;
+            TypeSoldier = TypeSoldier.spearman;
         }
 
         public override void TakeDamage(float damage, TypeSoldier typeEnemy)
@@ -345,20 +315,13 @@ namespace Задача_47.Война
                 }
             }
         }
-
-        public override TypeSoldier GetType()
-        {
-            return _typeSoldier;
-        }
     }
 
     class Cavalry : Soldier
     {
-        private TypeSoldier _typeSoldier;
-
         public Cavalry(int health, float damage, int armor) : base(health, damage, armor)
         {
-            _typeSoldier = TypeSoldier.cavalry;
+            TypeSoldier = TypeSoldier.cavalry;
         }
 
         public override void TakeDamage(float damage, TypeSoldier typeEnemy)
@@ -378,11 +341,6 @@ namespace Задача_47.Война
                     Health -= damage - Armor;                    
                 }
             }
-        }
-
-        public override TypeSoldier GetType()
-        {
-            return _typeSoldier;
         }
     }
 }
