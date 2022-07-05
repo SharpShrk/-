@@ -18,16 +18,9 @@ namespace Задача_47.Война
             Не важно, какой будет бой, рукопашный, стрелковый.*/
 
             
-            BattleField battleField = new BattleField();
-            List<Soldier> greekArmy = new List<Soldier>();
-            List<Soldier> romanArmy = new List<Soldier>();
-            
-            Squad squad1 = new Squad(greekArmy);
-            squad1.GetArmy(ref greekArmy);
-            Squad squad2 = new Squad(romanArmy);
-            squad2.GetArmy(ref romanArmy);
-
-            battleField.Battle(greekArmy, romanArmy);
+            BattleField battleField = new BattleField();                        
+                        
+            battleField.Battle();
         }
     }
 
@@ -40,46 +33,85 @@ namespace Задача_47.Война
 
     class Squad
     {
-        private List<Soldier> _squad = new List<Soldier>();
+        private List<Soldier> _army = new List<Soldier>();
 
-        public Squad(List<Soldier> squad)
+        public Squad()
         {
-            _squad = squad;
-            Recruiting recruiting = new Recruiting(_squad);
+            Recruiting recruiting = new Recruiting(_army);
             recruiting.CreateArmy();
-            recruiting.GetArmy(ref _squad);
+            _army = recruiting.GetArmy();
         }
 
-        public void GetArmy(ref List<Soldier> army)
+        public Soldier GetGreekSoldier()
         {
-            army = _squad;
+            Soldier soldier = null;
+
+            if (_army.Count >= 0)
+            {
+                soldier = _army[0];
+                _army.Remove(soldier);
+                return soldier;
+            }
+
+            return soldier;
+        }
+
+        public int GetCount()
+        {
+            return _army.Count;
         }
     }
 
     class BattleField
     {
-        public void Battle(List<Soldier> greekArmy, List<Soldier> romanArmy)
+        private Soldier _greekSoldier = null;
+        private Soldier _romanSoldier = null;
+        private int _greekCount = 0;
+        private int _romanCount = 0;
+
+        public void Battle()
         {
+            Squad greekArmy = new Squad();
+            Squad romanArmy = new Squad();
+            _greekSoldier = greekArmy.GetGreekSoldier();
+            _romanSoldier = romanArmy.GetGreekSoldier();
             bool isWin = false;
             bool isEnterPressed = false;
+            bool isRomanDead = false;
+            bool isGreekDead = false;            
             int numberGreekSoldiers = 0;
             int numberRomanSoldiers = 0;
 
             while (isWin == false)
-            {                                
-                greekArmy[0].TakeDamage(romanArmy[0].Damage, romanArmy[0].TypeSoldier);
-                romanArmy[0].TakeDamage(greekArmy[0].Damage, greekArmy[0].TypeSoldier);
-                Console.WriteLine($"\nГреческий воин получил {romanArmy[0].Damage} урона. Здоровья осталось: {greekArmy[0].Health}");
-                Console.WriteLine($"Римский воин получил {greekArmy[0].Damage} урона. Здоровья осталось: {romanArmy[0].Health}\n");
+            {
+                _greekCount = greekArmy.GetCount();
+                _romanCount = romanArmy.GetCount();
 
-                GetInfo(greekArmy, romanArmy, ref isEnterPressed, ref numberGreekSoldiers, ref numberRomanSoldiers);
+                if (isGreekDead)
+                {
+                    _greekSoldier = greekArmy.GetGreekSoldier();
+                    isGreekDead = false;
+                }
 
-                if (greekArmy.Count == 0)
+                if (isRomanDead)
+                {
+                    _romanSoldier = romanArmy.GetGreekSoldier();
+                    isRomanDead = false;
+                }
+
+                _greekSoldier.TakeDamage(_romanSoldier.Damage, _romanSoldier.TypeSoldier);
+                _romanSoldier.TakeDamage(_greekSoldier.Damage, _greekSoldier.TypeSoldier);
+                Console.WriteLine($"\nГреческий воин получил {_romanSoldier.Damage} урона. Здоровья осталось: {_greekSoldier.Health}");
+                Console.WriteLine($"Римский воин получил {_greekSoldier.Damage} урона. Здоровья осталось: {_romanSoldier.Health}\n");
+
+                GetInfo(ref isEnterPressed, ref numberGreekSoldiers, ref numberRomanSoldiers, ref isGreekDead, ref isRomanDead);
+
+                if (_greekCount == 0 && _greekSoldier.Health <= 0)
                 {
                     isWin = true;
                     Console.WriteLine("\nГреческая армия повержена.");
                 }
-                else if (romanArmy.Count == 0)
+                else if (_romanCount == 0 && _romanSoldier.Health <= 0)
                 {
                     isWin = true;
                     Console.WriteLine("\nРимская армия повержена.");
@@ -87,30 +119,31 @@ namespace Задача_47.Война
             }         
 
             Console.WriteLine($"\nГреков убито - {numberGreekSoldiers}. Римлян убито - {numberRomanSoldiers}.");
-            Console.WriteLine($"Осталось греков - {greekArmy.Count}. Осталось римлян - {romanArmy.Count}");
+            Console.WriteLine($"Осталось греков - {_greekCount}. Осталось римлян - {_romanCount}");
         }
 
-        private void GetInfo(List<Soldier> greekArmy, List<Soldier> romanArmy, ref bool isEnterPressed, ref int numberGreekSoldiers, ref int numberRomanSoldiers)
+        private void GetInfo(ref bool isEnterPressed, ref int numberGreekSoldiers, ref int numberRomanSoldiers, ref bool isGreekDead, ref bool isRomanDead)
         {            
-            if (greekArmy[0].Health <= 0)
+            if (_greekSoldier.Health <= 0)
             {
-                greekArmy.Remove(greekArmy[0]);
+                isGreekDead = true;
                 Console.WriteLine("Грек пал смертью война.");
                 numberGreekSoldiers++;
-                ReadEnter(ref isEnterPressed, greekArmy, romanArmy);
+                ReadEnter(ref isEnterPressed, _greekSoldier, _romanSoldier);
             }
-            else if (romanArmy[0].Health <= 0)
+            else if (_romanSoldier.Health <= 0)
             {
-                romanArmy.Remove(romanArmy[0]);
+                isRomanDead = true;
                 Console.WriteLine("Римлянин пал смертью война.");
                 numberRomanSoldiers++;
-                ReadEnter(ref isEnterPressed, greekArmy, romanArmy);
+                ReadEnter(ref isEnterPressed, _greekSoldier, _romanSoldier);
             }
         }
 
-        private void ReadEnter(ref bool isEnterPressed, List<Soldier> greekArmy, List<Soldier> romanArmy)
+        private void ReadEnter(ref bool isEnterPressed, Soldier greekSoldier, Soldier romanSoldier)
         {
-            Console.WriteLine($"Осталось греков - {greekArmy.Count}. Осталось римлян - {romanArmy.Count}");
+            
+            Console.WriteLine($"Осталось греков - {_romanCount}. Осталось римлян - {_greekCount}");
 
             if (isEnterPressed == false)
             {
@@ -152,9 +185,9 @@ namespace Задача_47.Война
             Shuffle(ref _squad);
         }
 
-        public void GetArmy(ref List<Soldier> squad)
+        public List<Soldier> GetArmy()
         {
-            squad = _squad;
+            return new List<Soldier> (_squad);
         }
 
         private void Shuffle(ref List<Soldier> squad)
