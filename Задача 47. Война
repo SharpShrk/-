@@ -42,7 +42,7 @@ namespace Задача_47.Война
             _army = recruiting.GetArmy();
         }
 
-        public Soldier GetGreekSoldier()
+        public Soldier GetSoldier()
         {
             Soldier soldier = null;
 
@@ -68,34 +68,35 @@ namespace Задача_47.Война
         private Soldier _romanSoldier = null;
         private int _greekCount = 0;
         private int _romanCount = 0;
+        private bool _isWin = false;
 
         public void Battle()
         {
             Squad greekArmy = new Squad();
             Squad romanArmy = new Squad();
-            _greekSoldier = greekArmy.GetGreekSoldier();
-            _romanSoldier = romanArmy.GetGreekSoldier();
-            bool isWin = false;
+            _greekSoldier = greekArmy.GetSoldier();
+            _romanSoldier = romanArmy.GetSoldier();
+            
             bool isEnterPressed = false;
             bool isRomanDead = false;
             bool isGreekDead = false;            
             int numberGreekSoldiers = 0;
             int numberRomanSoldiers = 0;
 
-            while (isWin == false)
+            while (_isWin == false)
             {
                 _greekCount = greekArmy.GetCount();
                 _romanCount = romanArmy.GetCount();
 
                 if (isGreekDead)
                 {
-                    _greekSoldier = greekArmy.GetGreekSoldier();
+                    _greekSoldier = greekArmy.GetSoldier();
                     isGreekDead = false;
                 }
 
                 if (isRomanDead)
                 {
-                    _romanSoldier = romanArmy.GetGreekSoldier();
+                    _romanSoldier = romanArmy.GetSoldier();
                     isRomanDead = false;
                 }
 
@@ -106,20 +107,25 @@ namespace Задача_47.Война
 
                 GetInfo(ref isEnterPressed, ref numberGreekSoldiers, ref numberRomanSoldiers, ref isGreekDead, ref isRomanDead);
 
-                if (_greekCount == 0 && _greekSoldier.Health <= 0)
-                {
-                    isWin = true;
-                    Console.WriteLine("\nГреческая армия повержена.");
-                }
-                else if (_romanCount == 0 && _romanSoldier.Health <= 0)
-                {
-                    isWin = true;
-                    Console.WriteLine("\nРимская армия повержена.");
-                }
+                WriteWinner();
             }         
 
             Console.WriteLine($"\nГреков убито - {numberGreekSoldiers}. Римлян убито - {numberRomanSoldiers}.");
             Console.WriteLine($"Осталось греков - {_greekCount}. Осталось римлян - {_romanCount}");
+        }
+
+        private void WriteWinner()
+        {
+            if (_greekCount == 0 && _greekSoldier.Health <= 0)
+            {
+                _isWin = true;
+                Console.WriteLine("\nГреческая армия повержена.");
+            }
+            else if (_romanCount == 0 && _romanSoldier.Health <= 0)
+            {
+                _isWin = true;
+                Console.WriteLine("\nРимская армия повержена.");
+            }
         }
 
         private void GetInfo(ref bool isEnterPressed, ref int numberGreekSoldiers, ref int numberRomanSoldiers, ref bool isGreekDead, ref bool isRomanDead)
