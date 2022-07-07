@@ -20,6 +20,8 @@ namespace Задача_48.Аквариум
             //вывести информацию о полноте аквариума и сколько рыб внутри и снаружи
             //достать и добавить рыбу
             //завершить программу
+            //добавить счетчик погибших рыб
+            //вывести текст если аквариум заполнен
 
             int maxCapacity = 10;
             bool isExit = false;
@@ -27,20 +29,25 @@ namespace Задача_48.Аквариум
 
             while (isExit == false)
             {
-
+                ShowInfo(aquarium);
+                aquarium.GrowOld();
+                aquarium.AddFish();
+                Console.ReadKey();
+                Console.Clear();
             }
 
         }
 
-        static void ShowInfo()
+        static void ShowInfo(Aquarium aquarium)
         {
-
+            Console.WriteLine("В аквариуме сейчас плавают:");
+            aquarium.ShowFishInside();
         }
     }
 
     enum KindFish
     {
-        Carp,
+        Carp = 1,
         Ide,
         Mackerel,
         Piranha,
@@ -52,18 +59,89 @@ namespace Задача_48.Аквариум
     {
         private static Random _random = new Random();
         private int _maxCapacity;
+        private int _startCapacity = 6;
         private List<Fish> _fishes;
 
         public Aquarium(int maxCapacity)
         {
             _fishes = new List<Fish>();
             _maxCapacity = maxCapacity;
-            CreateFishes();
+            CreateRandomFishes();
         }
 
-        public void ShowInfo()
+        public void ShowFishInside()
         {
+            for (int i = 0; i < _fishes.Count; i++)
+            {
+                Console.Write($"{i+1}.");
+                _fishes[i].ShowFishInfo();
+            }
+        }
 
+        public void RemoveFish()
+        {
+            string userInput;
+            int number;
+
+            Console.WriteLine("\nСейчас в аквариуме плавают:\n");
+
+            for (int i = 0; i < _fishes.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {_fishes[i].Kind}");
+            }
+
+            Console.WriteLine("\nКакую рыбу вы хотите убрать из аквариума?\n");
+            userInput = Console.ReadLine();
+
+            bool success = int.TryParse(userInput, out number);
+
+            if (success && number <= _fishes.Count && number > 0)
+            {
+                _fishes.RemoveAt(number - 1);
+            }
+            else
+            {
+                Console.WriteLine("Рыбы с таким индексом в аквариуме нет.");
+            }
+            
+        }
+
+        public void AddFish()
+        {
+            int count = 1;
+            string userInput;
+            int number;
+
+            Console.WriteLine("\nСписок рыб, которые можно подсадить в аквариум:\n");
+
+            foreach (string fish in Enum.GetNames(typeof(KindFish)))
+            {
+                Console.WriteLine($"{count}. {fish}");
+                count++;
+            }
+
+            Console.Write("\nВведите индекс рыбы, которую вы хотите добавить в аквариум: ");
+            userInput = Console.ReadLine();
+
+            bool success = int.TryParse(userInput, out number);
+
+            if (success && number <= Enum.GetNames(typeof(KindFish)).Length && number > 0)
+            {
+                string kind = Enum.GetName(typeof(KindFish), number).ToString();
+                _fishes.Add(kind);
+            }
+            else
+            {
+                Console.WriteLine("Рыбы с таким индексом в списке нет.");
+            }
+        }
+
+        public void GrowOld()
+        {
+            for (int i = 0; i < _fishes.Count; i++)
+            {
+                _fishes[i].GrowOld();
+            }
         }
 
         public bool IsFullCapacity()
@@ -71,9 +149,9 @@ namespace Задача_48.Аквариум
             return _fishes.Count == _maxCapacity;
         }
 
-        private void CreateFishes()
+        private void CreateRandomFishes()
         {
-            for (int i = 0; i < _maxCapacity; i++)
+            for (int i = 0; i < _startCapacity; i++)
             {
                 _fishes.Add(new Fish(GetRandomKind()));
             }
@@ -81,14 +159,13 @@ namespace Задача_48.Аквариум
 
         private string GetRandomKind()
         {
-            return ((KindFish)_random.Next(0, Enum.GetValues((KindFish)).Length)).ToString();
+            return ((KindFish)_random.Next(0, Enum.GetValues(typeof(KindFish)).Length)).ToString();
         }
-
     }
 
     class Fish
     {
-        private static Random _random;
+        private static Random _random = new Random();
         private readonly int _agingRate;
         private readonly int _maxAge;
 
@@ -97,7 +174,6 @@ namespace Задача_48.Аквариум
 
         public Fish(string kind)
         {
-            _random = new Random();
             Age = 0;
             Kind = kind;
             _maxAge = _random.Next(8, 20);
