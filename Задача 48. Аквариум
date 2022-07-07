@@ -24,6 +24,7 @@ namespace Задача_48.Аквариум
             {
                 ShowInfo(aquarium);
                 aquarium.GrowOld();
+                aquarium.RemoveDeadFishes();
 
                 userInput = Console.ReadKey().KeyChar;
 
@@ -152,24 +153,32 @@ namespace Задача_48.Аквариум
         }
 
         public void GrowOld()
-        {
-            bool isAlive;
-
+        {           
             for (int i = 0; i < _fishes.Count; i++)
             {
-                _fishes[i].GrowOld();
-                isAlive = _fishes[i].IsAlive();
-                
-                if (isAlive == false)
-                {
-                    _fishes.Remove(_fishes[i]);
-                }
+                _fishes[i].GrowOld();                
             }
         }
 
         public bool IsFullCapacity()
         {
             return _fishes.Count == MaxCapacity;
+        }
+
+        public void RemoveDeadFishes()
+        {
+            bool isAlive;
+
+            for (int i = 0; i < _fishes.Count; i++)
+            {
+                isAlive = _fishes[i].IsAlive();
+
+                if (isAlive == false)
+                {
+                    _fishes.Remove(_fishes[i]);
+                }
+            }
+            
         }
 
         private void CreateRandomFishes()
