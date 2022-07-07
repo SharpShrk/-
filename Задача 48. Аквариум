@@ -16,23 +16,30 @@ namespace Задача_48.Аквариум
             За 1 итерацию рыбы стареют на определенное кол-во жизней и могут умереть. 
             Рыб также вывести в консоль, чтобы можно было мониторить показатели.*/
 
-            //вывести информацию о рыбах
-            //вывести информацию о полноте аквариума и сколько рыб внутри и снаружи
-            //достать и добавить рыбу
-            //завершить программу
-            //добавить счетчик погибших рыб
-            //вывести текст если аквариум заполнен
-
-            int maxCapacity = 10;
             bool isExit = false;
-            Aquarium aquarium = new Aquarium(maxCapacity);
+            char userInput;
+            Aquarium aquarium = new Aquarium();
 
             while (isExit == false)
             {
                 ShowInfo(aquarium);
                 aquarium.GrowOld();
-                aquarium.AddFish();
-                Console.ReadKey();
+
+                userInput = Console.ReadKey().KeyChar;
+
+                if (userInput == '1')
+                {
+                    aquarium.AddFish();
+                }
+                else if (userInput == '2')
+                {
+                    aquarium.RemoveFish();
+                }
+                else if (userInput == '3')
+                {
+                    isExit = true;
+                }
+
                 Console.Clear();
             }
 
@@ -40,8 +47,16 @@ namespace Задача_48.Аквариум
 
         static void ShowInfo(Aquarium aquarium)
         {
-            Console.WriteLine("В аквариуме сейчас плавают:");
+            Console.WriteLine($"Аквариум вмещает {aquarium.MaxCapacity} рыб. В аквариуме сейчас {aquarium.CountFish} рыб.");
+            Console.WriteLine("В аквариуме сейчас плавают:\n");
+
             aquarium.ShowFishInside();
+
+            Console.WriteLine("\n1. Добавить рыбу в аквариум;");
+            Console.WriteLine("2. Извлечь рыбу из аквариума;");
+            Console.WriteLine("3. Выйти из программы;");
+            Console.WriteLine("Нажмите любую кнопку, чтобы подождать до завтра.\n");
+            Console.Write("Выберите пункт меню: ");
         }
     }
 
@@ -58,14 +73,15 @@ namespace Задача_48.Аквариум
     class Aquarium
     {
         private static Random _random = new Random();
-        private int _maxCapacity;
         private int _startCapacity = 6;
         private List<Fish> _fishes;
+        public int MaxCapacity { get; private set; }
+        public int CountFish => _fishes.Count;
 
-        public Aquarium(int maxCapacity)
+        public Aquarium()
         {
             _fishes = new List<Fish>();
-            _maxCapacity = maxCapacity;
+            MaxCapacity = 10;
             CreateRandomFishes();
         }
 
@@ -127,8 +143,7 @@ namespace Задача_48.Аквариум
 
             if (success && number <= Enum.GetNames(typeof(KindFish)).Length && number > 0)
             {
-                string kind = Enum.GetName(typeof(KindFish), number).ToString();
-                _fishes.Add(kind);
+                _fishes.Add(new Fish(Enum.GetName(typeof(KindFish), number).ToString()));
             }
             else
             {
@@ -138,15 +153,23 @@ namespace Задача_48.Аквариум
 
         public void GrowOld()
         {
+            bool isAlive;
+
             for (int i = 0; i < _fishes.Count; i++)
             {
                 _fishes[i].GrowOld();
+                isAlive = _fishes[i].IsAlive();
+                
+                if (isAlive == false)
+                {
+                    _fishes.Remove(_fishes[i]);
+                }
             }
         }
 
         public bool IsFullCapacity()
         {
-            return _fishes.Count == _maxCapacity;
+            return _fishes.Count == MaxCapacity;
         }
 
         private void CreateRandomFishes()
@@ -159,7 +182,7 @@ namespace Задача_48.Аквариум
 
         private string GetRandomKind()
         {
-            return ((KindFish)_random.Next(0, Enum.GetValues(typeof(KindFish)).Length)).ToString();
+            return ((KindFish)_random.Next(1, Enum.GetValues(typeof(KindFish)).Length)).ToString();
         }
     }
 
