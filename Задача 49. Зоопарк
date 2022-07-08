@@ -10,8 +10,13 @@ namespace Задача_49.Зоопарк
     {
         static void Main(string[] args)
         {
+            /*Пользователь запускает приложение и перед ним находится меню, в котором он может выбрать, к какому вольеру подойти. 
+            При приближении к вольеру, пользователю выводится информация о том, что это за вольер, сколько животных там обитает, их пол и какой звук издает животное.
+            Вольеров в зоопарке может быть много, в решении нужно создать минимум 4 вольера.*/
+
             bool isExit = false;
             string userInput;
+            int inputIndex;
             int indexAviary;
             Zoo zoo = new Zoo();
 
@@ -28,41 +33,26 @@ namespace Задача_49.Зоопарк
                 Console.Write("\nКуда вы хотите пойти? ");
                 userInput = Console.ReadLine();
 
-                switch (userInput)
+                bool result = Int32.TryParse(userInput, out inputIndex);
+
+                if (result == false && userInput == "exit")
                 {
-                    case "1":
-                        indexAviary = 0;
-                        ComeToAviary(indexAviary, zoo);
-                        break;
-                    case "2":
-                        indexAviary = 1;
-                        ComeToAviary(indexAviary, zoo);
-                        break;
-                    case "3":
-                        indexAviary = 2;
-                        ComeToAviary(indexAviary, zoo);
-                        break;
-                    case "4":
-                        indexAviary = 3;
-                        ComeToAviary(indexAviary, zoo);
-                        break;
-                    case "exit":
-                        isExit = true;
-                        break;
-                    default:
-                        Console.WriteLine("Такого пункта назначения нет.");
-                        break;
+                    isExit = true;
+                }                
+                else if (result == true && inputIndex > 0 && inputIndex <= zoo.CountAviaries)
+                {
+                    indexAviary = inputIndex - 1;
+                    zoo.ShowInfo(indexAviary);
                 }
+                else
+                {
+                    Console.WriteLine("\nТакого пункта назначения нет.");
+                }
+
+                Console.WriteLine("\nНажмите любую клавишу чтобы вернуться обратно...");
+                Console.ReadKey();
+                Console.Clear();
             }           
-        }
-
-        static void ComeToAviary(int index, Zoo zoo)
-        {
-            zoo.ShowInfo(index);
-            Console.WriteLine("\nНажмите любую клавишу чтобы вернуться обратно...");
-
-            Console.ReadKey();
-            Console.Clear();
         }
     }
 
