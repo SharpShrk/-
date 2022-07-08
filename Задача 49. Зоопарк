@@ -1,0 +1,235 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_49.Зоопарк
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            bool isExit = false;
+            string userInput;
+            int indexAviary;
+            Zoo zoo = new Zoo();
+
+            while (isExit == false)
+            {
+                Console.WriteLine($"Добро пожаловать в зоопарк <Зверополис>. В зоопарке есть {zoo.CountAviaries} вольера:\n");
+
+                for (int i = 0; i < zoo.CountAviaries; i++)
+                {
+                    Console.WriteLine($"{i + 1}. Подойти к вольеру №{i+1}");
+                }
+
+                Console.WriteLine("exit - выйти из зоопарка");
+                Console.Write("\nКуда вы хотите пойти? ");
+                userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case "1":
+                        indexAviary = 0;
+                        ComeToAviary(indexAviary, zoo);
+                        break;
+                    case "2":
+                        indexAviary = 1;
+                        ComeToAviary(indexAviary, zoo);
+                        break;
+                    case "3":
+                        indexAviary = 2;
+                        ComeToAviary(indexAviary, zoo);
+                        break;
+                    case "4":
+                        indexAviary = 3;
+                        ComeToAviary(indexAviary, zoo);
+                        break;
+                    case "exit":
+                        isExit = true;
+                        break;
+                    default:
+                        Console.WriteLine("Такого пункта назначения нет.");
+                        break;
+                }
+            }           
+        }
+
+        static void ComeToAviary(int index, Zoo zoo)
+        {
+            zoo.ShowInfo(index);
+            Console.WriteLine("\nНажмите любую клавишу чтобы вернуться обратно...");
+
+            Console.ReadKey();
+            Console.Clear();
+        }
+    }
+
+    enum KindAnimal
+    {
+        Boar,
+        Horse,
+        Lion,
+        Parrot
+    }
+
+    enum Sound
+    {
+        Oink,
+        Neigh,
+        Roar,
+        Chirp
+    }
+
+    enum Gender
+    {
+        Male,
+        Female
+    }
+
+    enum NameMale
+    {
+        Cooper,
+        Milo,
+        Finn,
+        Charlie,
+        Tucker,
+        Max,
+        Marty,
+        Moby,
+        Toby,
+        Vix,
+        Onyx,
+    }
+
+    enum NameFemale
+    {
+        Noel,
+        Puffi,
+        Erin,
+        Isha,
+        Kelly,
+        Luna,
+        Mandy,
+        Shelby,
+        Odie,
+        Hussy
+    }
+
+    class Zoo
+    {
+        private List<Aviary> _aviaries = new List<Aviary>();
+
+        public int CountAviaries => _aviaries.Count;
+
+        public Zoo()
+        {
+            CreateAviaries();
+        }
+
+        private void CreateAviaries()
+        {
+            for (int i = 0; i < Enum.GetValues(typeof(KindAnimal)).Length; i++)
+            {
+                _aviaries.Add(new Aviary(i));
+            }
+        }
+        
+        public void ShowInfo(int index)
+        {
+            _aviaries[index].ShowInfo();
+        }
+    }
+
+    class Aviary
+    {
+        private static Random _random = new Random();
+        private List<Animal> _animals = new List<Animal>();
+        private int _indexAnimal;
+        
+        public Aviary (int indexAnimal)
+        {
+            _indexAnimal = indexAnimal;
+            int minNumberAnimals = 5;
+            int maxNumberAnimals = 10;
+            int minAge = 1;
+            int maxAge = 15;
+
+            CreateAnimals(minNumberAnimals,maxNumberAnimals, minAge, maxAge);
+        }
+
+        private void CreateAnimals(int minAnimals, int maxAnimals, int minAge, int maxAge)
+        {
+            int numberAnimals = _random.Next(minAnimals, maxAnimals);
+
+            for (int i = 0; i <= numberAnimals; i++)
+            {                
+                string kind = Enum.GetName(typeof(KindAnimal), _indexAnimal).ToString();
+                string sound = Enum.GetName(typeof(Sound), _indexAnimal).ToString();
+                string gender = GetRandomGender();
+                string name = GetRandomName(gender);
+                int age = _random.Next(minAge, maxAge);
+
+                _animals.Add(new Animal(kind, sound, gender, age, name));
+            }
+        }
+
+        private string GetRandomGender()
+        {
+            return ((Gender)_random.Next(0, Enum.GetValues(typeof(Gender)).Length)).ToString();
+        }
+
+        private string GetRandomName(string gender)
+        {
+            string name = null;
+
+            if (gender == "Male")
+            {
+                name = ((NameMale)_random.Next(0, Enum.GetValues(typeof(NameMale)).Length)).ToString();
+            }
+            else if (gender == "Female")
+            {
+                name = ((NameFemale)_random.Next(0, Enum.GetValues(typeof(NameFemale)).Length)).ToString();
+            }
+
+            return name;
+        }
+
+        public void ShowInfo()
+        {
+            string kind = Enum.GetName(typeof(KindAnimal), _indexAnimal).ToString();
+
+            Console.WriteLine($"\nВид животных в этом вольере: {kind}. Всего животных в вольере - {_animals.Count}.\n");
+            
+            for(int i = 0; i < _animals.Count; i++)
+            {
+                Console.Write((i + 1) + ". ");
+                _animals[i].ShowInfo();
+            }
+        }
+    }
+
+    class Animal
+    {
+        private string _kind;
+        private string _sound;
+        private string _gender;
+        private string _name;
+        private int _age;
+
+        public Animal (string kind, string sound, string gender, int age, string name)
+        {
+            _kind = kind;
+            _sound = sound;
+            _gender = gender;
+            _age = age;
+            _name = name;
+        }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine($"Кличка: {_name}. Возраст {_age} лет. Пол - {_gender}. Звук животного {_sound}");
+        }
+    }
+}
