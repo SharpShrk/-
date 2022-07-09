@@ -1,0 +1,411 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_50.Автосервис
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            /*У вас есть автосервис, в который приезжают люди, чтобы починить свои автомобили.
+            У вашего автосервиса есть баланс денег и склад деталей.
+            Когда приезжает автомобиль, у него сразу ясна его поломка, и эта поломка отображается у вас в консоли 
+            вместе с ценой за починку(цена за починку складывается из цены детали + цена за работу).
+            Поломка всегда чинится заменой детали, но количество деталей ограничено тем, что находится на вашем складе деталей.
+            Если у вас нет нужной детали на складе, то вы можете отказать клиенту, и в этом случае вам придется выплатить штраф.
+            Если вы замените не ту деталь, то вам придется возместить ущерб клиенту.
+            За каждую удачную починку вы получаете выплату за ремонт, которая указана в чек-листе починки.
+            Класс Деталь не может содержать значение “количество”. Деталь всего одна, за количество отвечает тот, кто хранит детали. 
+            При необходимости можно создать дополнительный класс для конкретной детали и работе с количеством.*/
+
+
+
+            //Классы: автосервис, клиент, склад, деталь
+
+            //Автосервис: хранит список клиентов, склад, ведутся все операции по ремонту
+            //Клиент: показывает поломку, хранит сумму денег, если денег не хватит, то уходит без ремонта
+            //склад: хранит определенное количество деталей
+            //деталь: стоимость детали, наименование детали
+            //Чек-лист??? Хранит список поломок, какую деталь нужно поставить, стоимость работы и стоимость детали, штраф и возмещение ущерба
+
+            CarService carService = new CarService();
+
+            Console.WriteLine("\nДобро пожаловать в автосервис.\nНажмите любую клавишу, чтобы начать обслуживать клиентов...");
+            Console.ReadKey();
+            carService.Working();
+        }
+    }
+
+    enum TypeDetail
+    {
+        ШРУС,
+        Гидронасос,
+        Распредвал,
+        Амортизатор,
+        Маховик,
+        Аккумулятор
+    }
+
+    class CarService //отсортировать методы
+    {
+        static private Random _random = new Random();
+        private Checklist _checklist = new Checklist();
+        private List<Client> _clients = new List<Client>();
+        private Storage _storage = new Storage();
+        private int _money = 3000;
+        private int _forfeit = 1000;
+        private bool _isBankrupt => _money < 0;
+
+        public CarService()
+        {
+            GetClients();            
+        }
+
+        public void Working()
+        {
+            Repair();
+
+            if (_isBankrupt)
+            {
+                Console.WriteLine("\nК концу рабочего дня у вас отрицательный баланс. Руководство приняло решение уволить Вас. Досвидания");
+            }
+            else
+            {
+                Console.WriteLine($"Рабочий день подошел к концу. Сегодня вас посетили {_clients.Count} человек. Денег на счету {_money}");
+            }
+        }
+
+        private void Repair()
+        {
+            for (int i = 0; i < _clients.Count; i++)
+            {
+                int repairCost = 0;
+                TypeDetail typeOfFailure = _clients[i].TypeOfFailure;
+                Detail detailForRepair = new Detail(typeOfFailure);
+                bool isDetailAvailable = _storage.IsAvailable(typeOfFailure);
+
+                Console.WriteLine($"\nКлиенту №{i + 1} нужно отремонтировать {typeOfFailure}.");
+
+                if (isDetailAvailable)
+                {
+                    repairCost = _checklist.GetDetailCost(typeOfFailure) + _checklist.GetRepairCost(typeOfFailure);
+
+                    if (repairCost < _clients[i].Money)
+                    {
+                        bool isItemReceived = false;
+                        GetDetailForRepair(ref detailForRepair, ref isItemReceived);
+
+                        if (detailForRepair.Type == typeOfFailure && isItemReceived)
+                        {
+                            _clients[i].PayForRepair(repairCost);
+                            _money += repairCost;
+                            _clients.Remove(_clients[i]);
+                            Console.WriteLine($"Машина клиента успешно отремонтирована. Автосервис заработал {repairCost} рублей. Денег в кассе {_money} рублей");
+                        }
+                        else
+                        {
+                            _money -= _forfeit;
+                            _clients.Remove(_clients[i]);
+                            Console.WriteLine($"Клиент ушел недовольный. Штраф {_forfeit} рублей. Денег в кассе {_money} рублей");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"\nУ клиента не хватило денег на ремонт. Стоимость ремонта {repairCost}. Денег у клиента {_clients[i].Money}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"\nДеталей {typeOfFailure} на складе больше не осталось. Автосервис выплатит штраф, за то, что не подготовился как следует.");
+                    _money -= _forfeit;
+                }
+
+                Console.WriteLine("Нажмите любую клавишу, чтобы перейти к следующему клиенту.");
+                Console.ReadKey();
+                Console.Clear();
+            }
+        }
+
+        private void GetDetailForRepair(ref Detail detail, ref bool isItemReceived)
+        {
+            string userInput;
+            int numberDetailInput;
+            int numberOfDetails;
+
+            Console.WriteLine("\nВыберите номер детали, которую нужно взять со склада для ремонта?");
+            _storage.ShowInfo();
+            userInput = Console.ReadLine();
+
+            bool result = Int32.TryParse(userInput, out numberDetailInput);
+
+            if (result && numberDetailInput > 0 && numberDetailInput <= Enum.GetValues(typeof(TypeDetail)).Length)
+            {
+                detail = new Detail((TypeDetail)Enum.GetValues(typeof(TypeDetail)).GetValue(numberDetailInput - 1));
+                numberOfDetails = _storage.GetNumberDetails(detail);
+
+                if (numberOfDetails > 0)
+                {                                        
+                    RemoveDetail(detail.Type);
+                    isItemReceived = true;
+                }
+                else
+                {
+                    Console.WriteLine($"Запчасть {detail.Type} закончилась на складе. Вы заплатите штраф.");
+                    _money -= _forfeit;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Такой детали в списке нет");
+            }
+        }
+
+        public void RemoveDetail(TypeDetail type)
+        {
+            _storage.RemoveDetail(type);
+        }
+
+        public void ShowStorage()
+        {
+            _storage.ShowInfo();            
+        }
+
+        public void ShowClients()
+        {
+            for (int i = 0; i < _clients.Count; i++)
+            {
+                _clients[i].ShowInfo();
+            }
+        }
+
+        private void GetClients()
+        {
+            int minNumberClients = 8;
+            int maxNumberClients = 15;
+            int numberClients = _random.Next(minNumberClients, maxNumberClients);
+
+            for (int i = 0; i < numberClients; i++)
+            {
+                _clients.Add(new Client());
+            }
+        }
+    }    
+
+    class Storage
+    {
+        private static Random _random = new Random();
+        private List<Detail> _details = new List<Detail>();        
+
+        public Storage()
+        {            
+            CreateDetails();
+        }
+        private void CreateDetails()
+        {
+            int minNumberDetails = 1;
+            int maxNumberDetails = 4;
+            int numberDetails;
+
+            for (int i = 0; i < Enum.GetValues(typeof(TypeDetail)).Length; i++)
+            {
+                numberDetails = _random.Next(minNumberDetails, maxNumberDetails);
+
+                for (int j = 0; j < numberDetails; j++)
+                {
+                    _details.Add(new Detail((TypeDetail)Enum.GetValues(typeof(TypeDetail)).GetValue(i)));
+                }
+            }
+        }
+
+        public bool IsAvailable(TypeDetail typeDetail)
+        {
+            bool available = false;
+
+            for (int i = 0; i < _details.Count; i++)
+            {
+                if (_details[i].Type == typeDetail)
+                {
+                    available = true;                    
+                }
+            }
+
+            return available;
+        }
+
+        public void RemoveDetail (TypeDetail typeDetail)
+        {
+            for (int i = 0; i < _details.Count; i++)
+            {
+                if (_details[i].Type == typeDetail)
+                {
+                    _details.Remove(_details[i]);
+                    return;
+                }
+            }            
+        }
+
+        public int GetNumberDetails(Detail detail)
+        {
+            int numberDetails = 0;
+
+            for (int i = 0; i < _details.Count; i++)
+            {
+                if(detail.Type == _details[i].Type)
+                {
+                    numberDetails++;
+                }
+            }
+
+            return numberDetails;
+        }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine("\nСписок запчастей на складе:\n");
+            for (int i = 0; i < Enum.GetValues(typeof(TypeDetail)).Length; i++)
+            {
+                int numberDetails = 0;
+                Detail detail = new Detail((TypeDetail)Enum.GetValues(typeof(TypeDetail)).GetValue(i));
+
+                for (int j = 0; j < _details.Count; j++)
+                {
+                    if (detail.Type == _details[j].Type)
+                    {
+                        numberDetails++;
+                    }
+                }
+
+                Console.WriteLine($"{i+1}. {detail.Type}. Количество: {numberDetails} шт.");
+            }
+        }
+    }
+
+    class Checklist
+    {
+        private List<CheckSheetLine> _checklist = new List<CheckSheetLine>();
+
+        public Checklist()
+        {
+            int shrusRepairCost = 500;
+            int shrusDetailCost = 300;
+            int pumpRepairCost = 600;
+            int pumpDetailCost = 400;
+            int camshaftRepairCost = 500;
+            int camshaftDetailCost = 500;
+            int shockAbsorberRepairCost = 250;
+            int shockAbsorberDetailCost = 150;
+            int flywheelRepairCost = 900;
+            int flywheelDetailCost = 150;
+            int accumulatorRepairCost = 100;
+            int accumulatorDetailCost = 150;
+
+            _checklist.Add(new CheckSheetLine(TypeDetail.ШРУС, shrusRepairCost, shrusDetailCost));
+            _checklist.Add(new CheckSheetLine(TypeDetail.Гидронасос, pumpRepairCost, pumpDetailCost));
+            _checklist.Add(new CheckSheetLine(TypeDetail.Распредвал, camshaftRepairCost, camshaftDetailCost));
+            _checklist.Add(new CheckSheetLine(TypeDetail.Амортизатор, shockAbsorberRepairCost, shockAbsorberDetailCost));
+            _checklist.Add(new CheckSheetLine(TypeDetail.Маховик, flywheelRepairCost, flywheelDetailCost));
+            _checklist.Add(new CheckSheetLine(TypeDetail.Аккумулятор, accumulatorRepairCost, accumulatorDetailCost));
+        }
+
+        public int GetRepairCost(TypeDetail type)
+        {
+            int repairCost = 0;
+
+            for (int i = 0; i < _checklist.Count; i++)
+            {
+                if (_checklist[i].Type == type)
+                {
+                    repairCost = _checklist[i].RepairCost;
+                }
+            }
+
+            return repairCost;
+        }
+
+        public int GetDetailCost(TypeDetail type)
+        {
+            int detailCost = 0;
+
+            for (int i = 0; i < _checklist.Count; i++)
+            {
+                if (_checklist[i].Type == type)
+                {
+                    detailCost = _checklist[i].DetailCost;
+                }
+            }
+
+            return detailCost;
+        }
+    }
+
+    class CheckSheetLine
+    {
+        public int RepairCost { get; private set; }
+        public int DetailCost { get; private set; }
+        public TypeDetail Type { get; private set; }
+
+        public CheckSheetLine(TypeDetail type, int repairCost, int detailCost)
+        {
+            RepairCost = repairCost;
+            DetailCost = detailCost;
+            Type = type;
+        }
+    }
+
+    class Client
+    {
+        static private Random _random = new Random();
+        public int Money { get; private set; }
+        public TypeDetail TypeOfFailure { get; private set; }
+
+        public Client ()
+        {
+            Money = GetRandomMoney();
+            TypeOfFailure = GetRandomTypeOfFailure();
+        }
+
+        public void PayForRepair(int cost)
+        {
+            Money -= cost;
+        }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine($"Поврежденная деталь: {TypeOfFailure}. Денег у клиента {Money}");
+        }
+
+        private int GetRandomMoney()
+        {
+            int minMoney = 500;
+            int maxMoney = 1200;
+            int money = _random.Next(minMoney, maxMoney);
+
+            return money;
+        }
+
+        private TypeDetail GetRandomTypeOfFailure()
+        {
+            TypeDetail typeOfFailure;
+            typeOfFailure = ((TypeDetail)_random.Next(0, Enum.GetValues(typeof(TypeDetail)).Length));
+            return typeOfFailure;
+        }
+    }
+
+    class Detail
+    {
+        public TypeDetail Type { get; private set; }
+
+        public Detail(TypeDetail type)
+        {
+            Type = type;
+        }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine($"Деталь - {Type}");
+        }
+    }
+}
