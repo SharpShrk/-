@@ -1,0 +1,158 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_51.Поиск_преступника
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            /*У нас есть список всех преступников.
+            В преступнике есть поля: ФИО, заключен ли он под стражу, рост, вес, национальность.
+            Вашей программой будут пользоваться детективы.
+            У детектива запрашиваются данные (рост, вес, национальность), и детективу выводятся все преступники, 
+            которые подходят под эти параметры, но уже заключенные под стражу выводиться не должны.*/
+
+            bool isExit = false;
+            string userInput;
+
+            Detective detective = new Detective();
+
+            while (isExit == false)
+            {
+                Console.WriteLine("Вы находитесь в меню программы для поиска преступников по базе данных:\n");
+                Console.WriteLine("1 - Вывести список всех преступников;");
+                Console.WriteLine("2 - Поиск по базе данных;");
+                Console.WriteLine("3 - Выйти из программы.\n");
+                Console.Write("Выберите пункт меню: ");
+                userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case "1":
+                        detective.ShowAllCriminals();
+                        break;
+                    case "2":
+                        detective.SearchInDatabase();
+                        break;
+                    case "3":
+                        isExit = true;
+                        break;
+                    default:
+                        Console.WriteLine("\nТакого пукнта в меню нет");
+                        break;
+                }
+
+                Console.WriteLine("\nДля продолжения нажмите любую клавишу...");
+                Console.ReadKey();
+                Console.Clear();
+            }
+        }
+
+        class Detective
+        {
+            private List<Criminal> _criminals = new List<Criminal>();
+
+            public Detective()
+            {
+                CreateCriminals();
+            }
+
+            public void ShowAllCriminals()
+            {
+                foreach (Criminal criminal in _criminals)
+                {
+                    criminal.ShowInfo();
+                }
+            }
+
+            public void SearchInDatabase()
+            {
+                string userInput;
+                string nationality = null;
+                int growth = 0;
+                int weight = 0;
+
+                Console.WriteLine("\nДля поиска по базе данных укажите параметры поиска.");
+                Console.Write("Введите национальность: ");
+                nationality = Console.ReadLine();
+
+                Console.Write("Введите рост: ");
+                userInput = Console.ReadLine();
+                bool growthConverted = Int32.TryParse(userInput, out growth);
+
+                if (growthConverted == false)
+                {
+                    Console.WriteLine("Ошибка ввода");
+                    return;
+                }
+
+                Console.Write("Введите вес: ");
+                userInput = Console.ReadLine();
+                bool weightConverted = Int32.TryParse(userInput, out weight);
+
+                if (weightConverted == false)
+                {
+                    Console.WriteLine("Ошибка ввода");
+                    return;
+                }
+
+                var filteredCriminals = from Criminal criminal in _criminals
+                                        where criminal.Nationality == nationality && criminal.Weight == weight && criminal.Growth == growth && criminal.IsArested == false
+                                        select criminal;
+
+                foreach (var criminal in filteredCriminals)
+                {
+                    criminal.ShowInfo();
+                }
+            }
+
+            private void CreateCriminals()
+            {
+                _criminals.Add(new Criminal("Джим Хокинс", "Англичанин", 165, 55, false));
+                _criminals.Add(new Criminal("Билли Бонс", "Испанец", 170, 85, true));
+                _criminals.Add(new Criminal("Доктор Дэвид Ливси", "Англичанин", 170, 80, true));
+                _criminals.Add(new Criminal("Сквайр Джон Трелони", "Англичанин", 180, 80, false));
+                _criminals.Add(new Criminal("Капитан Александр Смолетт", "Испанец", 165, 85, false));
+                _criminals.Add(new Criminal("Джон Сильвер", "Испанец", 180, 75, true));
+                _criminals.Add(new Criminal("Бен Ганн", "Англичанин", 170, 85, true));
+                _criminals.Add(new Criminal("Том Редрут", "Испанец", 180, 75, false));
+                _criminals.Add(new Criminal("Джон Хантер", "Англичанин", 170, 85, false));
+                _criminals.Add(new Criminal("Джоб Эндерсон", "Испанец", 180, 90, false));
+            }
+        }
+
+        class Criminal
+        {
+            public string Name { get; private set; }
+            public string Nationality { get; private set; }
+            public int Growth { get; private set; }
+            public int Weight { get; private set; }
+            public bool IsArested { get; private set; }
+
+            public Criminal(string name, string nationality, int growth, int weight, bool isArested)
+            {
+                Name = name;
+                Nationality = nationality;
+                Growth = growth;
+                Weight = weight;
+                IsArested = isArested;
+            }
+
+            public void ShowInfo()
+            {
+                if (IsArested)
+                {
+                    Console.WriteLine($"\nИзвестный пират {Name}\nНациональность: {Nationality}\nРост: {Growth}\nВес: {Weight}\nСтатус: Арестован");
+                }
+                else
+                {
+                    Console.WriteLine($"\nИзвестный пират {Name}\nНациональность: {Nationality}\nРост: {Growth}\nВес: {Weight}\nСтатус: В розыске");
+                }    
+            }
+        }
+    }
+}
