@@ -1,0 +1,155 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_52.Амнистия
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            /*В нашей великой стране Арстоцка произошла амнистия!
+            Всех людей, заключенных за преступление "Антиправительственное", следует исключить из списка заключенных.
+            Есть список заключенных, каждый заключенный состоит из полей: ФИО, преступление.
+            Вывести список до амнистии и после.*/
+
+            int numberCriminals = 20;
+
+            Database database = new Database(numberCriminals);
+
+            Console.WriteLine("Cписок заключенных до амнистии:\n");
+            database.ShowInfo();
+
+            Console.WriteLine("\nCписок заключенных после амнистии:\n");
+            database.Amnesty();
+            database.ShowInfo();
+
+        }
+
+        
+    }
+
+    enum TypeCrime
+    {
+        Антиправительственное,
+        Уголовное,
+        Военное
+    }
+
+    enum NameList
+    {
+        Артемий,
+        Мирослав,
+        Савелий,
+        Марк,
+        Максим,
+        Александр,
+        Глеб,
+        Никита,
+        Тимофей,
+        Матвей,
+        Виктор,
+        Макар,
+        Богдан,
+        Лука,
+    }
+
+    enum SurnameList
+    {
+        Крюков,
+        Новиков,
+        Князев,
+        Попов,
+        Васильев,
+        Зайцев,
+        Филиппов,
+        Крылов,
+        Константинов,
+        Вавилов,
+        Львов,
+        Покровский,
+        Дроздов,
+        Шилов,
+        Максимов
+    }
+
+    enum PatronymicList
+    {
+        Артёмович,
+        Алексеевич,
+        Егорович,
+        Игоревич,
+        Викторович,
+        Евгеньевич,
+        Макарович,
+        Денисович,
+        Тимофеевич,
+        Ильич,
+        Георгиевич,
+        Романович,
+        Павлович,
+    }
+
+    class Database
+    {
+        static private Random _random = new Random();
+        private List<Criminal> _criminals = new List<Criminal>();
+
+        public Database(int numberCriminals)
+        {            
+            CreateCriminals(numberCriminals);
+        }
+
+        private void CreateCriminals(int numberCriminals)
+        {
+            
+            for (int i = 0; i < numberCriminals; i++)
+            {
+                NameList name = ((NameList)_random.Next(0, Enum.GetValues(typeof(NameList)).Length));
+                SurnameList surname = ((SurnameList)_random.Next(0, Enum.GetValues(typeof(SurnameList)).Length));
+                PatronymicList patronymic = ((PatronymicList)_random.Next(0, Enum.GetValues(typeof(PatronymicList)).Length));
+                TypeCrime crime = ((TypeCrime)_random.Next(0, Enum.GetValues(typeof(TypeCrime)).Length));
+
+                _criminals.Add(new Criminal(name, surname, patronymic, crime));
+            }
+        }
+
+        public void Amnesty()
+        {
+            var filterAmnestied = _criminals.Where(criminal => criminal.Crime != TypeCrime.Антиправительственное).ToList<Criminal>();
+
+            _criminals = filterAmnestied;
+        }
+
+        public void ShowInfo()
+        {
+            for (int i = 0; i < _criminals.Count; i++)
+            {
+                _criminals[i].ShowInfo();
+            }
+        }
+    }
+
+    class Criminal
+    {
+        public NameList Name { get; private set; }
+        public SurnameList Surname { get; private set; }
+        public PatronymicList Patronymic { get; private set; }
+        public TypeCrime Crime { get; private set; }
+
+        public Criminal(NameList name, SurnameList surname, PatronymicList patronymic, TypeCrime crime)
+        {
+            Name = name;
+            Surname = surname;
+            Patronymic = patronymic;
+            Crime = crime;
+        }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine($"ФИО: {Surname} {Name} {Patronymic}. Вид преступления - <{Crime}>");
+        }
+    }
+}
