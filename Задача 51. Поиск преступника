@@ -51,107 +51,109 @@ namespace Задача_51.Поиск_преступника
                 Console.Clear();
             }
         }
+    }
 
-        class Detective
+    class Detective
+    {
+        private List<Criminal> _criminals = new List<Criminal>();
+
+        public Detective()
         {
-            private List<Criminal> _criminals = new List<Criminal>();
+            CreateCriminals();
+        }
 
-            public Detective()
+        public void ShowAllCriminals()
+        {
+            foreach (Criminal criminal in _criminals)
             {
-                CreateCriminals();
-            }
-
-            public void ShowAllCriminals()
-            {
-                foreach (Criminal criminal in _criminals)
-                {
-                    criminal.ShowInfo();
-                }
-            }
-
-            public void SearchInDatabase()
-            {
-                string userInput;
-                string nationality = null;
-                int growth = 0;
-                int weight = 0;
-
-                Console.WriteLine("\nДля поиска по базе данных укажите параметры поиска.");
-                Console.Write("Введите национальность: ");
-                nationality = Console.ReadLine();
-
-                Console.Write("Введите рост: ");
-                userInput = Console.ReadLine();
-                bool growthConverted = Int32.TryParse(userInput, out growth);
-
-                if (growthConverted == false)
-                {
-                    Console.WriteLine("Ошибка ввода");
-                    return;
-                }
-
-                Console.Write("Введите вес: ");
-                userInput = Console.ReadLine();
-                bool weightConverted = Int32.TryParse(userInput, out weight);
-
-                if (weightConverted == false)
-                {
-                    Console.WriteLine("Ошибка ввода");
-                    return;
-                }
-
-                var filteredCriminals = from Criminal criminal in _criminals
-                                        where criminal.Nationality == nationality && criminal.Weight == weight && criminal.Growth == growth && criminal.IsArested == false
-                                        select criminal;
-
-                foreach (var criminal in filteredCriminals)
-                {
-                    criminal.ShowInfo();
-                }
-            }
-
-            private void CreateCriminals()
-            {
-                _criminals.Add(new Criminal("Джим Хокинс", "Англичанин", 165, 55, false));
-                _criminals.Add(new Criminal("Билли Бонс", "Испанец", 170, 85, true));
-                _criminals.Add(new Criminal("Доктор Дэвид Ливси", "Англичанин", 170, 80, true));
-                _criminals.Add(new Criminal("Сквайр Джон Трелони", "Англичанин", 180, 80, false));
-                _criminals.Add(new Criminal("Капитан Александр Смолетт", "Испанец", 165, 85, false));
-                _criminals.Add(new Criminal("Джон Сильвер", "Испанец", 180, 75, true));
-                _criminals.Add(new Criminal("Бен Ганн", "Англичанин", 170, 85, true));
-                _criminals.Add(new Criminal("Том Редрут", "Испанец", 180, 75, false));
-                _criminals.Add(new Criminal("Джон Хантер", "Англичанин", 170, 85, false));
-                _criminals.Add(new Criminal("Джоб Эндерсон", "Испанец", 180, 90, false));
+                criminal.ShowInfo();
             }
         }
 
-        class Criminal
+        public void SearchInDatabase()
         {
-            public string Name { get; private set; }
-            public string Nationality { get; private set; }
-            public int Growth { get; private set; }
-            public int Weight { get; private set; }
-            public bool IsArested { get; private set; }
+            string nationality = null;
+            int growth = 0;
+            int weight = 0;
 
-            public Criminal(string name, string nationality, int growth, int weight, bool isArested)
+            Console.WriteLine("\nДля поиска по базе данных укажите параметры поиска.");
+            Console.Write("Введите национальность: ");
+            nationality = Console.ReadLine();
+
+            Console.Write("Введите рост: ");
+
+            if (Int32.TryParse(Console.ReadLine(), out growth) == false)
             {
-                Name = name;
-                Nationality = nationality;
-                Growth = growth;
-                Weight = weight;
-                IsArested = isArested;
+                Console.WriteLine("Ошибка ввода");
+                return;
             }
 
-            public void ShowInfo()
+            Console.Write("Введите вес: ");
+
+            if (Int32.TryParse(Console.ReadLine(), out weight) == false)
             {
-                if (IsArested)
-                {
-                    Console.WriteLine($"\nИзвестный пират {Name}\nНациональность: {Nationality}\nРост: {Growth}\nВес: {Weight}\nСтатус: Арестован");
-                }
-                else
-                {
-                    Console.WriteLine($"\nИзвестный пират {Name}\nНациональность: {Nationality}\nРост: {Growth}\nВес: {Weight}\nСтатус: В розыске");
-                }    
+                Console.WriteLine("Ошибка ввода");
+                return;
+            }
+
+            var filteredCriminals = from Criminal criminal in _criminals
+                                    where criminal.Nationality == nationality && criminal.Weight == weight && criminal.Growth == growth && criminal.IsArested == false
+                                    select criminal;
+
+            ShowFilteredCriminals(filteredCriminals);
+        }
+
+        private void ShowFilteredCriminals(IEnumerable<Criminal> filteredCriminals)
+        {
+            foreach (var criminal in filteredCriminals)
+            {
+                criminal.ShowInfo();
+            }
+        }
+
+        private void CreateCriminals()
+        {
+            _criminals.Add(new Criminal("Джим Хокинс", "Англичанин", 165, 55, false));
+            _criminals.Add(new Criminal("Билли Бонс", "Испанец", 170, 85, true));
+            _criminals.Add(new Criminal("Доктор Дэвид Ливси", "Англичанин", 170, 80, true));
+            _criminals.Add(new Criminal("Сквайр Джон Трелони", "Англичанин", 180, 80, false));
+            _criminals.Add(new Criminal("Капитан Александр Смолетт", "Испанец", 165, 85, false));
+            _criminals.Add(new Criminal("Джон Сильвер", "Испанец", 180, 75, true));
+            _criminals.Add(new Criminal("Бен Ганн", "Англичанин", 170, 85, true));
+            _criminals.Add(new Criminal("Том Редрут", "Испанец", 180, 75, false));
+            _criminals.Add(new Criminal("Джон Хантер", "Англичанин", 170, 85, false));
+            _criminals.Add(new Criminal("Джоб Эндерсон", "Испанец", 180, 90, false));
+        }
+    }
+
+    class Criminal
+    {
+        public string Name { get; private set; }
+        public string Nationality { get; private set; }
+        public int Growth { get; private set; }
+        public int Weight { get; private set; }
+        public bool IsArested { get; private set; }
+
+        public Criminal(string name, string nationality, int growth, int weight, bool isArested)
+        {
+            Name = name;
+            Nationality = nationality;
+            Growth = growth;
+            Weight = weight;
+            IsArested = isArested;
+        }
+
+        public void ShowInfo()
+        {
+            Console.Write($"\nИзвестный пират {Name}\nНациональность: {Nationality}\nРост: {Growth}\nВес: {Weight}\nСтатус: ");
+
+            if (IsArested)
+            {
+                Console.WriteLine("Арестован");
+            }
+            else
+            {
+                Console.WriteLine("В розыске");
             }
         }
     }
