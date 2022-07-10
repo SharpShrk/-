@@ -25,10 +25,7 @@ namespace Задача_52.Амнистия
             Console.WriteLine("\nCписок заключенных после амнистии:\n");
             database.Amnesty();
             database.ShowInfo();
-
-        }
-
-        
+        }       
     }
 
     enum TypeCrime
@@ -103,8 +100,7 @@ namespace Задача_52.Амнистия
         }
 
         private void CreateCriminals(int numberCriminals)
-        {
-            
+        {            
             for (int i = 0; i < numberCriminals; i++)
             {
                 NameList name = ((NameList)_random.Next(0, Enum.GetValues(typeof(NameList)).Length));
