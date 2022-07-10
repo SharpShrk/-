@@ -1,0 +1,153 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_53.Анархия_в_больнице
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            /*У вас есть список больных(минимум 10 записей)
+            Класс больного состоит из полей: ФИО, возраст, заболевание.
+            Требуется написать программу больницы, в которой перед пользователем будет меню со следующими пунктами:
+            1)Отсортировать всех больных по фио
+            2)Отсортировать всех больных по возрасту
+            3)Вывести больных с определенным заболеванием
+            (название заболевания вводится пользователем с клавиатуры)*/
+
+            string userInput;
+            bool isExit = false;
+
+            Hospital hospital = new Hospital();
+
+            while (isExit == false)
+            {
+                Console.WriteLine("Добро пожаловать в базу данных госпиталя.");
+                Console.WriteLine("\n1 - Вывести список всех больных");
+                Console.WriteLine("2 - Отсортировать список всех больных по ФИО");
+                Console.WriteLine("3 - Отсортировать список всех больных по возрасту");
+                Console.WriteLine("4 - Найти в списке больных с определенным заболеванием");
+                Console.WriteLine("5 - Выйти из программы");
+                Console.Write("\nВведите пункт меню: ");
+                userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case "1":
+                        hospital.ShowAllPatients();
+                        break;
+                    case "2":
+                        hospital.SortingByName();
+                        break;
+                    case "3":
+                        hospital.SortingByAge();
+                        break;
+                    case "4":
+                        hospital.SearchByDisease();
+                        break;
+                    case "5":
+                        isExit = true;
+                        break;
+                    default:
+                        Console.WriteLine("\nОшибка ввода!");
+                        break;
+                }
+
+                Console.WriteLine("\nНажмите любую клавишу для продолжения...");
+                Console.ReadKey();
+                Console.Clear();
+            }
+        }
+    }
+
+    class Hospital
+    {
+        static private Random _random = new Random();
+        private List<Patient> _patients = new List<Patient>();
+
+        public Hospital()
+        {
+            CreatePatients();
+        }
+
+        public void SearchByDisease()
+        {
+            string disease = null;
+
+            Console.Write("\nВведите заболевание: ");
+            disease = Console.ReadLine();
+
+            var filteredPatients = _patients.Where(patient => patient.Disease == disease).ToList();
+
+            if (filteredPatients.Count == 0)
+            {
+                Console.Write("\nБольных с таким диагнозом в списке нет.");
+            }
+            else
+            {
+                foreach (var patient in filteredPatients)
+                {
+                    patient.ShowInfo();
+                }
+            }            
+        }
+
+        public void SortingByName()
+        {
+            var sortByName = _patients.OrderBy(patient => patient.FullName).ToList<Patient>();
+            _patients = sortByName;
+        }
+
+        public void SortingByAge()
+        {
+            var sortByAge = _patients.OrderBy(patient => patient.Age).ToList<Patient>();
+            _patients = sortByAge;
+        }
+
+        public void ShowAllPatients()
+        {
+            foreach (Patient patient in _patients)
+            {
+                patient.ShowInfo();
+            }
+        }
+
+        private void CreatePatients()
+        {
+            int minAge = 30;
+            int maxAge = 65;
+            _patients.Add(new Patient("Еремин Марк Павлович", "Астма", _random.Next(minAge,maxAge)));
+            _patients.Add(new Patient("Григорьев Ярослав Романович", "ОРВИ", _random.Next(minAge, maxAge)));
+            _patients.Add(new Patient("Колесников Даниил Матвеевич", "Гепатит", _random.Next(minAge, maxAge)));
+            _patients.Add(new Patient("Калмыков Максим Денисович", "Астма", _random.Next(minAge, maxAge)));
+            _patients.Add(new Patient("Дьяконов Иван Александрович", "ОРВИ", _random.Next(minAge, maxAge)));
+            _patients.Add(new Patient("Демидов Артём Кириллович", "Астма", _random.Next(minAge, maxAge)));
+            _patients.Add(new Patient("Ильин Артём Владимирович", "Гепатит", _random.Next(minAge, maxAge)));
+            _patients.Add(new Patient("Волков Родион Максимович", "ОРВИ", _random.Next(minAge, maxAge)));
+            _patients.Add(new Patient("Майоров Павел Даниэльевич", "Астма", _random.Next(minAge, maxAge)));
+            _patients.Add(new Patient("Денисов Михаил Данилович", "Гепатит", _random.Next(minAge, maxAge)));
+        }
+    }
+
+    class Patient
+    {
+        public string FullName { get; private set; }
+        public string Disease { get; private set; }
+        public int Age { get; private set; }
+
+        public Patient(string fullName, string disease, int age)
+        {
+            FullName = fullName;
+            Disease = disease;
+            Age = age;
+        }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine($"{FullName}. Возраст: {Age} лет. Заболевание - {Disease}");
+        }
+    }
+}
