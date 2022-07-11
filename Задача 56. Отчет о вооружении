@@ -1,0 +1,68 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_56.Отчет_о_вооружении
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            /*Существует класс солдата. В нём есть поля: имя, вооружение, звание, срок службы(в месяцах).
+            Написать запрос, при помощи которого получить набор данных состоящий из имени и звания.
+            Вывести все полученные данные в консоль.
+            (Не менее 5 записей)*/
+
+            Database database = new Database();
+
+            database.GetInfo();
+        }
+    }
+
+    class Database
+    {
+        private List<Soldier> _soldiers = new List<Soldier>();
+
+        public Database()
+        {
+            CreateSoldiers();
+        }
+
+        public void GetInfo()
+        {
+            var filteredSoldiers = from soldier in _soldiers select new { Name = soldier.Name, Rank = soldier.Rank };
+
+            foreach (var soldier in filteredSoldiers)
+            {
+                Console.WriteLine(soldier.Name + " - " + soldier.Rank);
+            }
+        }
+
+        private void CreateSoldiers()
+        {
+            _soldiers.Add(new Soldier("Сидоров В.А.", "АК-47М", "Рядовой", 24));
+            _soldiers.Add(new Soldier("Петров Н.Е.", "ВСС <Винторез>", "Сержант", 35));
+            _soldiers.Add(new Soldier("Иванов А.А.", "Пулемет <Печенег>", "Ст.Сержант", 41));
+            _soldiers.Add(new Soldier("Егоров П.Н.", "Пулемет <НСВ>", "Лейтенант", 62));
+            _soldiers.Add(new Soldier("Ветров И.Л.", "СВД", "Капитан", 78));
+        }
+    }
+
+    class Soldier
+    {
+        public string Name { get; private set; }
+        public string Armament { get; private set; }
+        public string Rank { get; private set; }
+        public int TermOfService { get; private set; }
+
+        public Soldier(string name, string armament, string rank, int termOfService)
+        {
+            Name = name;
+            Armament = armament;
+            Rank = rank;
+            TermOfService = termOfService;
+        }
+    }
+}
