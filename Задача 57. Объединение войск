@@ -1,0 +1,96 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_57.Объединение_войск
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            /*Есть 2 списка в солдатами.
+            Всех бойцов из отряда 1, у которых фамилия начинается на букву Б, требуется перевести в отряд 2.*/
+
+            Database database = new Database();
+
+            database.Start();
+        }
+    }
+
+    class Database
+    {
+        private List<Soldier> _soldiers1 = new List<Soldier>();
+        private List<Soldier> _soldiers2 = new List<Soldier>();
+        private List<Soldier> _sortedSoldiers1 = new List<Soldier>();
+        private List<Soldier> _sortedSoldiers2 = new List<Soldier>();
+
+        public Database()
+        {
+            CreateSoldiers();
+        }
+
+        public void Start()
+        {
+            Console.WriteLine("Список солдат до сортировки:\n");
+            Console.WriteLine("1 отряд:");
+            ShowSoldiers(_soldiers1);
+            Console.WriteLine("\n2 отряд:");
+            ShowSoldiers(_soldiers2);
+
+            SortingSoldiers();
+
+            Console.WriteLine("\nСписок солдат после сортировки:\n");
+            Console.WriteLine("1 отряд:");
+            ShowSoldiers(_sortedSoldiers1);
+            Console.WriteLine("\n2 отряд:");
+            ShowSoldiers(_sortedSoldiers2);
+        }       
+
+        private void CreateSoldiers()
+        {
+            _soldiers1.Add(new Soldier("Баранов"));
+            _soldiers1.Add(new Soldier("Петров"));
+            _soldiers1.Add(new Soldier("Борисов"));
+            _soldiers1.Add(new Soldier("Иванов"));
+            _soldiers1.Add(new Soldier("Сидоров"));
+
+            _soldiers2.Add(new Soldier("Авраамов"));
+            _soldiers2.Add(new Soldier("Авдотьев"));
+            _soldiers2.Add(new Soldier("Абрамов"));
+            _soldiers2.Add(new Soldier("Армянов"));
+            _soldiers2.Add(new Soldier("Антонов"));
+        }
+
+        private void SortingSoldiers()
+        {
+            var filteredSoldiers = _soldiers1.Where(soldier => soldier.Surname.StartsWith("Б")).ToList<Soldier>();
+            _sortedSoldiers2 = _soldiers2.Union(filteredSoldiers).ToList<Soldier>();
+            _sortedSoldiers1 = _soldiers1.Except(filteredSoldiers).ToList<Soldier>();
+        }
+
+        private void ShowSoldiers(List<Soldier> soldiers)
+        {
+            foreach(var soldier in soldiers)
+            {
+                soldier.ShowSurname();
+            }
+        }
+    }
+
+    class Soldier
+    {
+        public string Surname { get; private set; }
+
+        public Soldier(string surname)
+        {
+         Surname = surname;
+        }
+
+        public void ShowSurname()
+        {
+            Console.WriteLine(Surname);
+        }
+    }
+}
