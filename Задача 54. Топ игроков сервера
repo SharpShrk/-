@@ -39,6 +39,7 @@ namespace Задача_54.Топ_игроков_сервера
     {
         static private Random _random = new Random();
         private List<Player> _players = new List<Player>();
+        private int _numberTopPlayers = 3;
 
         public Database()
         {
@@ -60,23 +61,26 @@ namespace Задача_54.Топ_игроков_сервера
 
         public void FilterByLevel()
         {
-            var filteredByLevel = _players.OrderByDescending(player => player.Level).Take(3).ToList<Player>();
+
+            var filteredByLevel = _players.OrderByDescending(player => player.Level).Take(_numberTopPlayers).ToList<Player>();
 
             Console.WriteLine("\nТоп 3 игроков по уровню:\n");
 
-            foreach (var player in filteredByLevel)
-            {
-                player.ShowInfo();
-            }
+            ShowPlayers(filteredByLevel);
         }
 
         public void FilterByStrenght()
         {
-            var filteredByStrenght = _players.OrderByDescending(player => player.Strength).Take(3).ToList<Player>();
+            var filteredByStrenght = _players.OrderByDescending(player => player.Strength).Take(_numberTopPlayers).ToList<Player>();
 
             Console.WriteLine("\nТоп 3 игроков по силе:\n");
 
-            foreach (var player in filteredByStrenght)
+            ShowPlayers(filteredByStrenght);
+        }
+
+        public void ShowPlayers(List<Player> players)
+        {
+            foreach (var player in players)
             {
                 player.ShowInfo();
             }
