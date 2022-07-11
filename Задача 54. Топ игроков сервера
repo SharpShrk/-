@@ -1,0 +1,104 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Задача_54.Топ_игроков_сервера
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            /*У нас есть список всех игроков(минимум 10). 
+             * У каждого игрока есть поля: имя, уровень, сила. 
+             * Требуется написать запрос для определения топ 3 игроков по уровню и топ 3 игроков по силе, после чего вывести каждый топ.
+             2 запроса получится.*/
+
+            Database database = new Database();
+            database.FilterByLevel();
+            database.FilterByStrenght();
+        }
+    }
+
+    enum NameList
+    {
+        Onnan,
+        Jaristancho,
+        Japhneasar,
+        Xterystac,
+        Conleynarde,
+        Quenadi,
+        Vioushaunus,
+        Helseymon,
+        Runeenich,
+        Gemmervi
+    }
+
+    class Database
+    {
+        static private Random _random = new Random();
+        private List<Player> _players = new List<Player>();
+
+        public Database()
+        {
+            CreatePlayers();
+        }
+
+        public void CreatePlayers()
+        {
+            int minLevel = 1;
+            int maxLevel = 100;
+            int minStrength = 10;
+            int maxStrength = 100;
+
+            for (int i = 0; i < Enum.GetValues(typeof(NameList)).Length; i++)
+            {
+                _players.Add(new Player((NameList)Enum.GetValues(typeof(NameList)).GetValue(i), _random.Next(minLevel, maxLevel), _random.Next(minStrength, maxStrength)));
+            }
+        }
+
+        public void FilterByLevel()
+        {
+            var filteredByLevel = _players.OrderByDescending(player => player.Level).Take(3).ToList<Player>();
+
+            Console.WriteLine("\nТоп 3 игроков по уровню:\n");
+
+            foreach (var player in filteredByLevel)
+            {
+                player.ShowInfo();
+            }
+        }
+
+        public void FilterByStrenght()
+        {
+            var filteredByStrenght = _players.OrderByDescending(player => player.Strength).Take(3).ToList<Player>();
+
+            Console.WriteLine("\nТоп 3 игроков по силе:\n");
+
+            foreach (var player in filteredByStrenght)
+            {
+                player.ShowInfo();
+            }
+        }
+    }
+
+    class Player
+    {
+        public NameList Name { get; private set; }
+        public int Level { get; private set; }
+        public int Strength { get; private set; }
+
+        public Player(NameList name, int level, int strength)
+        {
+            Name = name;
+            Level = level;
+            Strength = strength;
+        }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine($"Никнейм: {Name}\nУровень: {Level}\nСила: {Strength}\n");
+        }
+    }
+}
