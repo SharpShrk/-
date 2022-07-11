@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Задача_54.Топ_игроков_сервера
 {
@@ -64,7 +62,7 @@ namespace Задача_54.Топ_игроков_сервера
 
             var filteredByLevel = _players.OrderByDescending(player => player.Level).Take(_numberTopPlayers).ToList<Player>();
 
-            Console.WriteLine("\nТоп 3 игроков по уровню:\n");
+            Console.WriteLine($"\nТоп {_numberTopPlayers} игроков по уровню:\n");
 
             ShowPlayers(filteredByLevel);
         }
@@ -73,7 +71,7 @@ namespace Задача_54.Топ_игроков_сервера
         {
             var filteredByStrenght = _players.OrderByDescending(player => player.Strength).Take(_numberTopPlayers).ToList<Player>();
 
-            Console.WriteLine("\nТоп 3 игроков по силе:\n");
+            Console.WriteLine($"\nТоп {_numberTopPlayers} игроков по силе:\n");
 
             ShowPlayers(filteredByStrenght);
         }
