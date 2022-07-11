@@ -1,0 +1,102 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Задача_55.Опредление_просрочки
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            /*Есть набор тушенки. У тушенки есть название, год производства и срок годности.
+            Написать запрос для получения всех просроченных банок тушенки.
+            Чтобы не заморачиваться, можете думать, что считаем только года, без месяцев.*/
+
+            Console.WriteLine("Список всей тушенки на складе:\n");
+            Database database = new Database();
+            Console.WriteLine("\nСписок просроченной тушенки на складе:\n");
+            database.SearchOverdue();            
+        }
+    }
+
+    enum NameList
+    {
+        Гродфуд,
+        Барс,
+        Совок,
+        Вкусвилл,
+        Микоян,
+        ОМКК,
+        Кронидов
+    }
+
+    class Database
+    {
+        static private Random _random = new Random();
+        private List<CannedMeat> _cannedMeats = new List<CannedMeat>();
+
+        public Database()
+        {
+            CreateCannedMeat();
+            ShowCannedMeat(_cannedMeats);
+        }
+
+        public void CreateCannedMeat()
+        {
+            int minYearProduction = 1990;
+            int maxYearProduction = 2022;
+            int minShelfLife = 5;
+            int maxShelfLife = 15;
+            int numberCannedMeat = 15;
+
+            for (int i = 0; i < numberCannedMeat; i++)
+            {
+                _cannedMeats.Add(new CannedMeat((NameList)Enum.GetValues(typeof(NameList)).GetValue(_random.Next(0, Enum.GetValues(typeof(NameList)).Length)),
+                    _random.Next(minYearProduction, maxYearProduction), _random.Next(minShelfLife, maxShelfLife)));
+            }
+        }
+
+        public void SearchOverdue()
+        {
+            int currentYear = 2022;
+            
+            var filteredCannedMeat = _cannedMeats.Where(cannedMeat => cannedMeat.YearProduction + cannedMeat.ShelfLife < currentYear).ToList<CannedMeat>();
+
+            ShowCannedMeat(filteredCannedMeat);
+        }
+
+        public void ShowCannedMeat(List<CannedMeat> cannedMeats)
+        {            
+            if (cannedMeats.Count == 0)
+            {
+                Console.WriteLine("\nПросроченной тушенки нет в списке.");
+            }
+            else
+            {
+                foreach (var cannedMeat in cannedMeats)
+                {
+                    cannedMeat.ShowInfo();
+                }
+            }
+        }
+    }
+
+    class CannedMeat
+    {
+        public NameList Name { get; private set; }
+        public int YearProduction { get; private set; }
+        public int ShelfLife { get; private set; }
+
+        public CannedMeat(NameList name, int yearProduction, int shelfLife)
+        {
+            Name = name;
+            YearProduction = yearProduction;
+            ShelfLife = shelfLife;
+        }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine($"Фирма тушенки: {Name}. Год изготовления: {YearProduction}. Срок годности: {ShelfLife} лет");
+        }
+    }
+}
